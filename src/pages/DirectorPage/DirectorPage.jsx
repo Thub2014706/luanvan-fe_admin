@@ -30,7 +30,7 @@ const DirectorPage = () => {
             setLength(data.sumPage);
         };
         fetch();
-    }, [number]);
+    }, [number, idDelete]);
 
     const handleNumberPage = (value) => {
         setNumberPage(value);

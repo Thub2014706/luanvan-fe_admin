@@ -43,7 +43,7 @@ const FoodPage = () => {
             setSumPage(data.sumPage);
         };
         fetch();
-    }, [number, action]);
+    }, [number, action, idDelete]);
 
     const handleShowDelete = (id, name) => {
         setShowDelete(true);

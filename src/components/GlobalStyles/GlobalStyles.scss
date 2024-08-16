@@ -296,8 +296,21 @@ body {
     width: 35px;
     height: 35px;
     margin: 2px;
+    cursor: pointer;
 
     &.standard {
         background-color: #c6d067;
+    }
+
+    &.vip {
+        background-color: #5d821a;
+    }
+
+    &.couple {
+        background-color: #dc9bd2;
+    }
+
+    &.inaction {
+        background-color: #0f1b07;
     }
 }

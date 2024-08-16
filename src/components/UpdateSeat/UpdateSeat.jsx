@@ -1,22 +1,29 @@
 import React, { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import { typeSeat } from '~/constants';
-import { updateRowSeat } from '~/services/SeatService';
+import { deleteSeat, updateSeat } from '~/services/SeatService';
 
-const UpdateRowSeat = ({ show, handleClose, row, room }) => {
+const UpdateSeat = ({ show, handleClose, id }) => {
     const [type, setType] = useState('');
-    const [status, setStatus] = useState(true)
+    const [status, setStatus] = useState(true);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await updateRowSeat({numRow: row, room, type, status})
+        await updateSeat(id, { type, status });
+        handleClose()
         // console.log({numRow: row, room, type, status})
+    };
+
+    const handleDelete = async () => {
+        await deleteSeat(id)
+        handleClose()
     }
+
     return (
         <Modal centered show={show} onHide={handleClose}>
             <Form onSubmit={handleSubmit}>
                 <Modal.Header>
-                    <Modal.Title>Cập nhật hàng ghế</Modal.Title>
+                    <Modal.Title>Cập nhật ghế</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group className="mt-3">
@@ -42,8 +49,8 @@ const UpdateRowSeat = ({ show, handleClose, row, room }) => {
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Đóng
+                    <Button variant="danger" onClick={handleDelete}>
+                        Xóa
                     </Button>
                     <Button type="submit" variant="primary">
                         Lưu
@@ -54,4 +61,4 @@ const UpdateRowSeat = ({ show, handleClose, row, room }) => {
     );
 };
 
-export default UpdateRowSeat;
+export default UpdateSeat;

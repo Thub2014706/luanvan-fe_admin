@@ -30,7 +30,7 @@ const PerformerPage = () => {
             setLength(data.sumPage);
         };
         fetch();
-    }, [performers]);
+    }, [number, idDelete]);
 
     const handleNumberPage = (value) => {
         setNumberPage(value);

@@ -58,6 +58,12 @@ export const typeSeat = [
     // 'T16 - Cấm người dưới 16 tuổi',
 ];
 
+export const typeSeatEnum = {
+    0: 'Ghế thường',
+    1: 'Ghế VIP',
+    2: 'Ghế Couple'
+}
+
 export const showToast = (message, type) => {
     toast(message, {
         position: 'top-center',

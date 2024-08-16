@@ -45,28 +45,34 @@ const ComboPage = () => {
             setSumPage(data.sumPage);
         };
         fetch();
-    }, [number, action]);
+    }, [number, action, idDelete]);
 
     useEffect(() => {
         const fetch = async () => {
             const data = combo.flatMap((item) => item.variants.flatMap((mini) => mini.food));
-
+    
             const uniqueData = [...new Set(data)];
             const nameFoodMap = {};
-
-            await Promise.all(
-                uniqueData.map(async (id) => {
-                    const food = await detailFood(id);
-                    nameFoodMap[id] = food.name;
-                }),
-            );
-            setNameFood(nameFoodMap);
+    
+            try {
+                await Promise.all(
+                    uniqueData.map(async (id) => {
+                        const food = await detailFood(id);
+                        nameFoodMap[id] = food.name;
+                    }),
+                );
+                setNameFood(nameFoodMap);
+            } catch (error) {
+                console.error('Error fetching food details:', error);
+                // Bạn có thể xử lý lỗi ở đây nếu cần
+            }
         };
-
+    
         if (combo.length > 0) {
             fetch();
         }
     }, [combo]);
+    
 
     const handleShowDelete = (id, name) => {
         setShowDelete(true);

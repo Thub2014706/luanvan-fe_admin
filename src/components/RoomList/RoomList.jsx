@@ -2,7 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
 import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faCouch, faGrip, faPenToSquare, faTableCells, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import {
+    faArrowRight,
+    faCouch,
+    faGrip,
+    faPenToSquare,
+    faTableCells,
+    faTrashCan,
+} from '@fortawesome/free-solid-svg-icons';
 import ModalQuestion from '../ModalQuestion/ModalQuestion';
 import { allRoom, deleteRoom, statusRoom } from '~/services/RoomService';
 import AddRoom from '../AddRoom/AddRoom';
@@ -16,8 +23,8 @@ const RoomList = ({ idTheater }) => {
     const [action, setAction] = useState(false);
     const [showAdd, setShowAdd] = useState(false);
     const [idUpdate, setIdUpdate] = useState(null);
-    const [showSeat, setShowSeat] = useState(false)
-    const [idRoomSeat, setIdRoomSeat] = useState(null)
+    const [showSeat, setShowSeat] = useState(false);
+    const [idRoomSeat, setIdRoomSeat] = useState(null);
 
     const handleStatus = async (id) => {
         await statusRoom(id);
@@ -27,14 +34,6 @@ const RoomList = ({ idTheater }) => {
     useEffect(() => {
         setAction(false);
     }, [action]);
-
-    useEffect(() => {
-        const fetch = async () => {
-            const data = await allRoom(idTheater);
-            setRoom(data);
-        };
-        fetch();
-    }, [action, room]);
 
     const handleShowDelete = (id, name) => {
         setShowDelete(true);
@@ -53,6 +52,14 @@ const RoomList = ({ idTheater }) => {
         handleCloseDelete();
     };
 
+    useEffect(() => {
+        const fetch = async () => {
+            const data = await allRoom(idTheater);
+            setRoom(data);
+        };
+        fetch();
+    }, [action, room]);
+
     const handleShowAdd = (id) => {
         setShowAdd(true);
         setIdUpdate(id);
@@ -64,14 +71,14 @@ const RoomList = ({ idTheater }) => {
     };
 
     const handleShowSeat = (id) => {
-        setShowSeat(true)
-        setIdRoomSeat(id)
-    }
+        setShowSeat(true);
+        setIdRoomSeat(id);
+    };
 
     const handleCloseSeat = () => {
-        setShowSeat(false)
-        setIdRoomSeat(null)
-    }
+        setShowSeat(false);
+        setIdRoomSeat(null);
+    };
 
     return (
         <div className="p-4">
