@@ -73,7 +73,7 @@ const AddRoom = ({ show, handleClose, id, idTheater }) => {
                             Số hàng <span style={{ color: 'red' }}>*</span>
                         </Form.Label>
                         <Form.Control
-                            type="text"
+                            type="number"
                             placeholder="Số hàng"
                             name="numRow"
                             value={numRow}
@@ -85,7 +85,7 @@ const AddRoom = ({ show, handleClose, id, idTheater }) => {
                             Số cột <span style={{ color: 'red' }}>*</span>
                         </Form.Label>
                         <Form.Control
-                            type="text"
+                            type="number"
                             placeholder="Số cột"
                             name="numCol"
                             value={numCol}

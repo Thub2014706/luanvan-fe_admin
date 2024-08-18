@@ -47,17 +47,22 @@ const SeatGrid = ({ show, handleClose, idRoom }) => {
 
     // console.log(seats);
 
+    // const renderSeat = (row) => {
+    //     const cells = [];
+
+    //     return cells;
+    // };
     return (
         <div>
-            <Modal size="lg" centered show={show} onHide={handleClose}>
+            <Modal size="lg" className='py-2' centered show={show} onHide={handleClose}>
                 <Modal.Header>
                     <Modal.Title>Cập nhật ghế phòng chiếu</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <p className="text-center fw-bold">Màn hình</p>
-                    <div className="screen-modal"></div>
-                    <Table className="w-auto mx-auto mt-5">
-                        {rows.map((row) => (
+                    <div className="screen-modal mb-5"></div>
+                    {rows.map((row) => (
+                        <Table className="w-auto mx-auto my-1">
                             <tr key={row}>
                                 {seats
                                     .filter((seat) => seat.row === row)
@@ -70,6 +75,11 @@ const SeatGrid = ({ show, handleClose, idRoom }) => {
                                                     } ${seat.type === typeSeatEnum[2] && 'couple'} ${
                                                         !seat.status && 'inaction'
                                                     } `}
+                                                    style={{
+                                                        marginBottom: `${seat.bottom * 17.5}px`,
+                                                        marginLeft: `${seat.left * 17.5 + seat.left * 2 + 2}px`,
+                                                        marginRight: `${seat.right * 17.5 + seat.right * 2 + 2}px`,
+                                                    }}
                                                     onClick={() => handleShowSeat(seat._id)}
                                                 >
                                                     <p className="text-white">
@@ -80,18 +90,18 @@ const SeatGrid = ({ show, handleClose, idRoom }) => {
                                             )}
                                         </td>
                                     ))}
+                                {/* {renderSeat(row)} */}
                                 <td>
                                     <FontAwesomeIcon
-                                        className="me-4"
                                         icon={faPenToSquare}
                                         style={{ cursor: 'pointer', color: 'green' }}
                                         onClick={() => handleShowRow(row)}
                                     />
                                 </td>
                             </tr>
-                        ))}
-                    </Table>
-                    <Row className="d-flex justify-content-center">
+                        </Table>
+                    ))}
+                    <Row className="mt-5 d-flex justify-content-center">
                         <Col className="d-flex align-items-center justify-content-end">
                             <div className="seat standard"></div>
                             <p className="ms-2 mb-0">Ghế thường</p>
@@ -114,16 +124,6 @@ const SeatGrid = ({ show, handleClose, idRoom }) => {
                         </Col>
                     </Row>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Đóng
-                    </Button>
-                    <Button type="submit" variant="primary">
-                        Lưu
-                    </Button>
-                </Modal.Footer>
-                {/* <Form onSubmit={handleSubmit}>
-                </Form> */}
             </Modal>
             {idSeat !== null && <UpdateSeat show={showSeat} handleClose={handleCloseSeat} id={idSeat} />}
             {numRow !== null && (
