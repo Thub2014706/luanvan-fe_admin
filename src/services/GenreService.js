@@ -12,9 +12,11 @@ export const allGenre = async (search, number, show) => {
     }
 };
 
-export const updateGenre = async (id, data) => {
+export const updateGenre = async (id, data, token) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/genre/${id}`, data);
+        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/genre/${id}`, data, {
+            headers: { authorization: `Bearer ${token}` },
+        });
         showToast('Cập nhật thành công', 'success');
         return response.data;
     } catch (error) {
@@ -23,9 +25,11 @@ export const updateGenre = async (id, data) => {
     }
 };
 
-export const deleteGenre = async (id) => {
+export const deleteGenre = async (id, token) => {
     try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/api/genre/${id}`);
+        await axios.delete(`${process.env.REACT_APP_API_URL}/api/genre/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+        });
         showToast('Xóa thành công', 'success');
     } catch (error) {
         showToast('Xóa không thành công', 'error');
@@ -42,9 +46,11 @@ export const detailGenre = async (id) => {
     }
 };
 
-export const addGenre = async (data) => {
+export const addGenre = async (data, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/genre`, data);
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/genre`, data, {
+            headers: { authorization: `Bearer ${token}` },
+        });
         showToast('Thêm mới thành công', 'success');
         return response.data;
     } catch (error) {

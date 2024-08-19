@@ -14,6 +14,7 @@ import GenrePage from '~/pages/GenrePage/GenrePage';
 import HomePage from '~/pages/HomePage/HomePage';
 import LoginPage from '~/pages/LoginPage/LoginPage';
 import PerformerPage from '~/pages/PerformerPage/PerformerPage';
+import StaffPage from '~/pages/StaffPage/StaffPage';
 import TheaterPage from '~/pages/TheaterPage/TheaterPage';
 import UserPage from '~/pages/UserPage/UserPage';
 
@@ -118,6 +119,11 @@ const routes = [
     {
         path: '/theater/update/:id',
         component: AddTheaterPage,
+    },
+
+    {
+        path: '/staff',
+        component: StaffPage,
     },
 ];
 

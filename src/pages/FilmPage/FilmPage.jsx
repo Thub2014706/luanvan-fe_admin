@@ -19,7 +19,6 @@ const FilmPage = () => {
     const [search, setSearch] = useState('');
     const [number, setNumber] = useState(1);
     const [sumPage, setSumPage] = useState(0);
-    const [genreNames, setGenreNames] = useState({});
     const [numberPage, setNumberPage] = useState(5);
     const [action, setAction] = useState(false);
 
@@ -42,30 +41,6 @@ const FilmPage = () => {
         fetchFilms();
     }, [number, action]);
 
-    useEffect(() => {
-        const fetchGenres = async () => {
-            try {
-                const genreIds = films.flatMap((film) => film.genre);
-                const uniqueGenreIds = [...new Set(genreIds)];
-                const genreNamesMap = {};
-
-                await Promise.all(
-                    uniqueGenreIds.map(async (id) => {
-                        const genre = await detailGenre(id);
-                        genreNamesMap[id] = genre.name;
-                    }),
-                );
-                setGenreNames(genreNamesMap);
-            } catch (error) {
-                console.error('Error fetching genres:', error);
-            }
-        };
-
-        if (films.length > 0) {
-            fetchGenres();
-        }
-    }, [films]);
-
     const handleSearch = (value) => {
         setSearch(value);
         setNumber(1);
@@ -82,6 +57,20 @@ const FilmPage = () => {
     const handleNumberPage = (value) => {
         console.log(value);
         setNumberPage(value);
+    };
+
+    const GenreName = ({ id }) => {
+        const [name, setName] = useState('');
+    
+        useEffect(() => {
+            const fetch = async () => {
+                const data = await detailGenre(id);
+                setName(data.name);
+            };
+            fetch();
+        }, [id]);
+    
+        return <p>{name}</p>;
     };
 
     return (
@@ -117,46 +106,42 @@ const FilmPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {films.length !== 0 ? (
-                            films.map((item, index) => (
-                                <tr key={item._id}>
-                                    <td className="text-center align-middle">{index + 1}</td>
-                                    <td className="text-center align-middle">
-                                        {/* <img src={item.image} style={{ height: '60px' }} alt="" /> */}
-                                        <ImageBase pathImg={item.image} style={{ height: '60px' }} />
-                                    </td>
-                                    <td className="align-middle">{item.name}</td>
-                                    <td className="text-center align-content-center">
-                                        {item.genre.map((name) => (
-                                            <p className="align-middle">{genreNames[name] || 'Loading'}</p>
-                                        ))}
-                                    </td>
-                                    <td className="text-center align-middle">{item.time} phút</td>
-                                    <td className="text-center align-middle">{item.nation}</td>
-                                    <td className="text-center align-middle">
-                                        {moment(item.releaseDate).format('DD-MM-YYYY')}
-                                    </td>
-                                    <td className="text-center align-middle">
-                                        {moment(item.endDate).format('DD-MM-YYYY')}
-                                    </td>
-                                    <td className="align-content-center">
-                                        <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
-                                    </td>
-                                    <td className="text-center align-middle">
-                                        <Link to={`/film/update/${item._id}`}>
-                                            <FontAwesomeIcon
-                                                icon={faPenToSquare}
-                                                color="green"
-                                                style={{ cursor: 'pointer' }}
-                                                // onClick={() => handleShowAdd(item._id)}
-                                            />
-                                        </Link>
-                                    </td>
-                                </tr>
-                            ))
-                        ) : (
-                            <p>Loading...</p>
-                        )}
+                        {films.map((item, index) => (
+                            <tr key={item._id}>
+                                <td className="text-center align-middle">{index + 1}</td>
+                                <td className="text-center align-middle">
+                                    {/* <img src={item.image} style={{ height: '60px' }} alt="" /> */}
+                                    <ImageBase pathImg={item.image} style={{ height: '60px' }} />
+                                </td>
+                                <td className="align-middle">{item.name}</td>
+                                <td className="text-center align-content-center">
+                                    {item.genre.map((name) =>
+                                        <GenreName id={name} />,
+                                    )}
+                                </td>
+                                <td className="text-center align-middle">{item.time} phút</td>
+                                <td className="text-center align-middle">{item.nation}</td>
+                                <td className="text-center align-middle">
+                                    {moment(item.releaseDate).format('DD-MM-YYYY')}
+                                </td>
+                                <td className="text-center align-middle">
+                                    {moment(item.endDate).format('DD-MM-YYYY')}
+                                </td>
+                                <td className="align-content-center">
+                                    <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
+                                </td>
+                                <td className="text-center align-middle">
+                                    <Link to={`/film/update/${item._id}`}>
+                                        <FontAwesomeIcon
+                                            icon={faPenToSquare}
+                                            color="green"
+                                            style={{ cursor: 'pointer' }}
+                                            // onClick={() => handleShowAdd(item._id)}
+                                        />
+                                    </Link>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </Table>
             </Row>

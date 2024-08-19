@@ -1,7 +1,7 @@
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Modal, Row, Table } from 'react-bootstrap';
+import { Col, Modal, Row, Table } from 'react-bootstrap';
 import UpdateRowSeat from '../UpdateRowSeat/UpdateRowSeat';
 import { allSeatRoom } from '~/services/SeatService';
 import { typeSeatEnum } from '~/constants';

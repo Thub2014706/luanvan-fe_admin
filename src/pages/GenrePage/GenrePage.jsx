@@ -9,8 +9,10 @@ import { allGenre, deleteGenre, updateGenre } from '~/services/GenreService';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
+import { useSelector } from 'react-redux';
 
 const GenrePage = () => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const [genre, setGenre] = useState([]);
     const [length, setLength] = useState(0);
     const [number, setNumber] = useState(1);
@@ -27,7 +29,7 @@ const GenrePage = () => {
     };
 
     const handleStatus = async (id, name, status) => {
-        await updateGenre(id, { name: name, status: !status });
+        await updateGenre(id, { name: name, status: !status }, user?.accessToken);
     };
 
     const handleSearch = (value) => {
@@ -57,7 +59,7 @@ const GenrePage = () => {
     };
 
     const handleDelete = async () => {
-        await deleteGenre(idDelete);
+        await deleteGenre(idDelete, user?.accessToken);
         handleCloseDelete();
     };
 

@@ -47,7 +47,7 @@ const UpdateRowSeat = ({ show, handleClose, row, room }) => {
                             name="bottom"
                             value={bottom}
                             type="number"
-                            onChange={(e) => setBottom(e.target.value)}
+                            onChange={(e) => setBottom(Math.max(e.target.value, 0))}
                         />
                     </Form.Group>
                 </Modal.Body>

@@ -23,7 +23,7 @@ export const statusRoom = async (id) => {
 
 export const deleteRoom = async (id) => {
     try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/api/room/${id}`);
+        await axios.patch(`${process.env.REACT_APP_API_URL}/api/room/delete/${id}`);
         showToast('Xóa thành công', 'success');
     } catch (error) {
         showToast('Xóa không thành công', 'error');

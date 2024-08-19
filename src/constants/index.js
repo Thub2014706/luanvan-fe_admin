@@ -1,4 +1,4 @@
-import { faBurger, faClapperboard, faFilm, faMasksTheater, faTag, faTv, faUser, faUsersRectangle, faUtensils } from '@fortawesome/free-solid-svg-icons';
+import { faBurger, faClapperboard, faFilm, faMasksTheater, faTag, faTv, faUser, faUsersRectangle, faUserTie, faUtensils } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 
 export const modules = {
@@ -132,5 +132,11 @@ export const itemMenu = [
         icon: faTv,
         name: 'Rạp phim',
         link: '/theater'
+    },
+    {
+        index: 10,
+        icon: faUserTie,
+        name: 'Nhân viên',
+        link: '/staff'
     },
 ];

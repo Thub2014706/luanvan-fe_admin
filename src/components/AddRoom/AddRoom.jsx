@@ -31,10 +31,10 @@ const AddRoom = ({ show, handleClose, id, idTheater }) => {
         e.preventDefault();
         if (id !== null) {
             await updateRoom(id, { name, type, numRow, numCol, theater: idTheater });
-            handleClose()
+            handleClose();
         } else {
             await addRoom({ name, type, numRow, numCol, theater: idTheater });
-            handleClose()
+            handleClose();
         }
     };
 
@@ -77,7 +77,7 @@ const AddRoom = ({ show, handleClose, id, idTheater }) => {
                             placeholder="Số hàng"
                             name="numRow"
                             value={numRow}
-                            onChange={(e) => setNumRow(e.target.value)}
+                            onChange={(e) => setNumRow(Math.max(e.target.value, 0))}
                         />
                     </Form.Group>
                     <Form.Group className="mt-3">
@@ -89,7 +89,7 @@ const AddRoom = ({ show, handleClose, id, idTheater }) => {
                             placeholder="Số cột"
                             name="numCol"
                             value={numCol}
-                            onChange={(e) => setNumCol(e.target.value)}
+                            onChange={(e) => setNumCol(Math.max(e.target.value, 0))}
                         />
                     </Form.Group>
                 </Modal.Body>

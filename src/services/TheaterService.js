@@ -23,7 +23,7 @@ export const statusTheater = async (id) => {
 
 export const deleteTheater = async (id) => {
     try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/api/theater/${id}`);
+        await axios.patch(`${process.env.REACT_APP_API_URL}/api/theater/delete/${id}`);
         showToast('Xóa thành công', 'success');
     } catch (error) {
         showToast('Xóa không thành công', 'error');
@@ -44,7 +44,7 @@ export const addTheater = async (data) => {
 
 export const updateTheater = async (id, data) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/theater/update/${id}`, data);
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/theater/update/${id}`, data);
         showToast('Cập nhật thành công', 'success')
         return response.data;
     } catch (error) {

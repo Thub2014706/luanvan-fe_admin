@@ -73,7 +73,7 @@ const UpdateSeat = ({ show, handleClose, id }) => {
                             name="left"
                             value={left}
                             type="number"
-                            onChange={(e) => setLeft(e.target.value)}
+                            onChange={(e) => setLeft(Math.max(e.target.value, 0))}
                         />
                     </Form.Group>
 
@@ -83,7 +83,7 @@ const UpdateSeat = ({ show, handleClose, id }) => {
                             name="right"
                             value={right}
                             type="number"
-                            onChange={(e) => setRight(e.target.value)}
+                            onChange={(e) => setRight(Math.max(e.target.value, 0))}
                         />
                     </Form.Group>
                 </Modal.Body>

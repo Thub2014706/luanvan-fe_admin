@@ -4,11 +4,12 @@ import { Fragment } from 'react';
 import MainLayout from './layouts/MainLayout/MainLayout';
 import { ToastContainer } from 'react-toastify';
 import { useSelector } from 'react-redux';
+import useUser from './hooks/useUser';
 
 function App() {
     // const isAuthenticated = false;
-    const user = useSelector(state => state.auth.login.currentUser)
-    console.log('aaa', user)
+    const user = useSelector((state) => state.auth.login.currentUser);
+    console.log('aaa', user);
     return (
         <Router>
             <div className="App">
@@ -19,6 +20,19 @@ function App() {
                             key={index}
                             path={route.path}
                             element={
+                                // !user ? (
+                                //     route.layout === null ? (
+                                //         <Fragment>
+                                //             <route.component />
+                                //         </Fragment>
+                                //     ) : (
+                                //         <MainLayout>
+                                //             <route.component />
+                                //         </MainLayout>
+                                //     )
+                                // ) : (
+                                //     <Navigate to="/" replace />
+                                // )
                                 route.layout === null ? (
                                     <Fragment>
                                         <route.component />

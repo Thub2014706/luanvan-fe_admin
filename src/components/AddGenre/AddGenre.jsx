@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import { addGenre, detailGenre, updateGenre } from '~/services/GenreService';
 
 const AddGenre = ({ show, handleClose, id }) => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const [name, setName] = useState('');
     const [status, setStatus] = useState(false);
 
@@ -10,10 +12,10 @@ const AddGenre = ({ show, handleClose, id }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (id !== null) {
-            await updateGenre(id, { name, status });
+            await updateGenre(id, { name, status }, user?.accessToken);
             handleClose();
         } else {
-            await addGenre({ name });
+            await addGenre({ name }, user?.accessToken);
             handleClose();
         }
     };
