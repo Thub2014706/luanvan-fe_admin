@@ -13,6 +13,7 @@ import FoodPage from '~/pages/FoodPage/FoodPage';
 import GenrePage from '~/pages/GenrePage/GenrePage';
 import HomePage from '~/pages/HomePage/HomePage';
 import LoginPage from '~/pages/LoginPage/LoginPage';
+import NotFoundPage from '~/pages/NotFoundPage/NotFoundPage';
 import PerformerPage from '~/pages/PerformerPage/PerformerPage';
 import StaffPage from '~/pages/StaffPage/StaffPage';
 import TheaterPage from '~/pages/TheaterPage/TheaterPage';
@@ -124,6 +125,11 @@ const routes = [
     {
         path: '/staff',
         component: StaffPage,
+    },
+    {
+        path: '/*',
+        component: NotFoundPage,
+        layout: null
     },
 ];
 

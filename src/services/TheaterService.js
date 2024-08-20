@@ -1,5 +1,5 @@
-import axios from "axios";
-import { showToast } from "~/constants";
+import axios from 'axios';
+import { showToast } from '~/constants';
 
 export const allTheater = async (search, number, show) => {
     try {
@@ -12,18 +12,26 @@ export const allTheater = async (search, number, show) => {
     }
 };
 
-export const statusTheater = async (id) => {
+export const statusTheater = async (id, token) => {
     try {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/theater/status/${id}`, {});
+        const response = await axios.patch(
+            `${process.env.REACT_APP_API_URL}/api/theater/status/${id}`,
+            {},
+            {
+                headers: { authorization: `Bearer ${token}` },
+            },
+        );
         return response.data;
     } catch (error) {
         console.log('loi', error);
     }
 };
 
-export const deleteTheater = async (id) => {
+export const deleteTheater = async (id, token) => {
     try {
-        await axios.patch(`${process.env.REACT_APP_API_URL}/api/theater/delete/${id}`);
+        await axios.patch(`${process.env.REACT_APP_API_URL}/api/theater/delete/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+        });
         showToast('Xóa thành công', 'success');
     } catch (error) {
         showToast('Xóa không thành công', 'error');
@@ -31,24 +39,28 @@ export const deleteTheater = async (id) => {
     }
 };
 
-export const addTheater = async (data) => {
+export const addTheater = async (data, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/theater/`, data);
-        showToast('Thêm mới thành công', 'success')
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/theater/`, data, {
+            headers: { authorization: `Bearer ${token}` },
+        });
+        showToast('Thêm mới thành công', 'success');
         return response.data;
     } catch (error) {
-        showToast(error.response.data.message, 'error')
+        showToast(error.response.data.message, 'error');
         console.log('loi', error);
     }
 };
 
-export const updateTheater = async (id, data) => {
+export const updateTheater = async (id, data, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/theater/update/${id}`, data);
-        showToast('Cập nhật thành công', 'success')
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/theater/update/${id}`, data, {
+            headers: { authorization: `Bearer ${token}` },
+        });
+        showToast('Cập nhật thành công', 'success');
         return response.data;
     } catch (error) {
-        showToast(error.response.data.message, 'error')
+        showToast(error.response.data.message, 'error');
         console.log('loi', error);
     }
 };

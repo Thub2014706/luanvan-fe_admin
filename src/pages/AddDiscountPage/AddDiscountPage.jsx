@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { addDiscount, detailDiscount, updateDiscount } from '~/services/DiscountService';
 
 const AddDiscountPage = () => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const { id } = useParams();
     const navigate = useNavigate();
     const [name, setName] = useState('');
@@ -27,11 +29,11 @@ const AddDiscountPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (id) {
-            if (await updateDiscount(id, { name, code, percent, quantity })) {
+            if (await updateDiscount(id, { name, code, percent, quantity }, user?.accessToken)) {
                 navigate('/discount');
             }
         } else {
-            if (await addDiscount({ name, code, percent, quantity })) {
+            if (await addDiscount({ name, code, percent, quantity }, user?.accessToken)) {
                 navigate('/discount');
             }
         }

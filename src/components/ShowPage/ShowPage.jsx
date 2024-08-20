@@ -6,8 +6,8 @@ const ShowPage = ({ numberPage, handleNumberPage }) => {
         handleNumberPage(e.target.value);
     };
     return (
-        <div className="d-flex align-items-center justify-content-end">
-            <p className="mb-0 mx-2">Hiển thị</p>
+        <div className="d-flex align-items-center">
+            <p className="mb-0 me-2">Hiển thị</p>
             <Form.Select className="page-number" value={numberPage} onChange={handleChange}>
                 <option value="5">5</option>
                 <option value="10">10</option>

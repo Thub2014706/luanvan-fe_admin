@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import { typeSeat } from '~/constants';
 import { updateRowSeat } from '~/services/SeatService';
 
 const UpdateRowSeat = ({ show, handleClose, row, room }) => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const [type, setType] = useState(typeSeat[0]);
     const [status, setStatus] = useState(true)
     const [bottom, setBottom] = useState(0)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await updateRowSeat({numRow: row, room, type, status, bottom})
+        await updateRowSeat({numRow: row, room, type, status, bottom}, user?.accessToken)
     }
 
     return (

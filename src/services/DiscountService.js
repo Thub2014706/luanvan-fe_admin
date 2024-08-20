@@ -12,18 +12,26 @@ export const allDiscount = async (search, number, show) => {
     }
 };
 
-export const statusDiscount = async (id) => {
+export const statusDiscount = async (id, token) => {
     try {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/discount/status/${id}`, {});
+        const response = await axios.patch(
+            `${process.env.REACT_APP_API_URL}/api/discount/status/${id}`,
+            {},
+            {
+                headers: { authorization: `Bearer ${token}` },
+            },
+        );
         return response.data;
     } catch (error) {
         console.log('loi', error);
     }
 };
 
-export const deleteDiscount = async (id) => {
+export const deleteDiscount = async (id, token) => {
     try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/api/discount/${id}`);
+        await axios.delete(`${process.env.REACT_APP_API_URL}/api/discount/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+        });
         showToast('Xóa thành công', 'success');
     } catch (error) {
         showToast('Xóa không thành công', 'error');
@@ -31,9 +39,11 @@ export const deleteDiscount = async (id) => {
     }
 };
 
-export const addDiscount = async (data) => {
+export const addDiscount = async (data, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/discount/`, data);
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/discount/`, data, {
+            headers: { authorization: `Bearer ${token}` },
+        });
         showToast('Thêm mới thành công', 'success');
         return response.data;
     } catch (error) {
@@ -42,9 +52,11 @@ export const addDiscount = async (data) => {
     }
 };
 
-export const updateDiscount = async (id, data) => {
+export const updateDiscount = async (id, data, token) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/discount/update/${id}`, data);
+        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/discount/update/${id}`, data, {
+            headers: { authorization: `Bearer ${token}` },
+        });
         showToast('Cập nhật thành công', 'success');
         return response.data;
     } catch (error) {

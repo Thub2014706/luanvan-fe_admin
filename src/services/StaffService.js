@@ -39,12 +39,13 @@ export const loginStaff = async (user, navigate, dispatch) => {
     }
 };
 
-export const createStaff = async (data) => {
+export const createStaff = async (data, token) => {
     // dispatch(createStart)
     try {
         const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/staff/create`, data, {
             headers: {
                 'content-type': 'multipart/form-data',
+                authorization: `Bearer ${token}`,
             },
         });
         // dispatch(createSuccess)
@@ -84,18 +85,26 @@ export const allStaff = async (search, number, show) => {
     }
 };
 
-export const statusStaff = async (id) => {
+export const statusStaff = async (id, token) => {
     try {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/staff/status/${id}`, {});
+        const response = await axios.patch(
+            `${process.env.REACT_APP_API_URL}/api/staff/status/${id}`,
+            {},
+            {
+                headers: { authorization: `Bearer ${token}` },
+            },
+        );
         return response.data;
     } catch (error) {
         console.log('loi', error);
     }
 };
 
-export const deleteStaff = async (id) => {
+export const deleteStaff = async (id, token) => {
     try {
-        await axios.patch(`${process.env.REACT_APP_API_URL}/api/staff/delete/${id}`);
+        await axios.patch(`${process.env.REACT_APP_API_URL}/api/staff/delete/${id}`, {}, {
+            headers: { authorization: `Bearer ${token}` },
+        });
         showToast('Xóa thành công', 'success');
     } catch (error) {
         showToast(error.response.data.message, 'error');
@@ -112,9 +121,11 @@ export const detailStaff = async (id) => {
     }
 };
 
-export const accessStaff = async (id, access) => {
+export const accessStaff = async (id, access, token) => {
     try {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/staff/access/${id}`, access);
+        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/staff/access/${id}`, access, {
+            headers: { authorization: `Bearer ${token}` },
+        });
         showToast('Thêm quyền truy cập thành công', 'success');
         return response.data;
     } catch (error) {

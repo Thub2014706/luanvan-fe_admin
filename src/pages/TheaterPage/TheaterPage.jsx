@@ -2,6 +2,7 @@ import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
 import Pagination from '~/components/Pagination/Pagination';
@@ -11,6 +12,7 @@ import ToggleSwitch from '~/components/ToggleSwitch/ToggleSwitch';
 import { allTheater, deleteTheater, statusTheater } from '~/services/TheaterService';
 
 const TheaterPage = () => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const navigate = useNavigate();
     const [theater, setTheater] = useState([]);
     const [showDelete, setShowDelete] = useState(false);
@@ -27,7 +29,7 @@ const TheaterPage = () => {
     };
 
     const handleStatus = async (id) => {
-        await statusTheater(id);
+        await statusTheater(id, user?.accessToken);
         setAction(true);
     };
 
@@ -42,7 +44,7 @@ const TheaterPage = () => {
             setSumPage(data.sumPage);
         };
         fetch();
-    }, [number, action, idDelete]);
+    }, [number, action, idDelete, numberPage]);
 
     const handleShowDelete = (id, name) => {
         setShowDelete(true);
@@ -57,7 +59,7 @@ const TheaterPage = () => {
     };
 
     const handleDelete = async () => {
-        await deleteTheater(idDelete);
+        await deleteTheater(idDelete, user?.accessToken);
         handleCloseDelete();
     };
 
@@ -67,6 +69,7 @@ const TheaterPage = () => {
 
     const handleNumberPage = (value) => {
         setNumberPage(value);
+        setNumber(1)
     };
 
     const handleSearch = (value) => {

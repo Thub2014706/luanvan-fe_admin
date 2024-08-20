@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
 
-export const updateRowSeat = async (data) => {
+export const updateRowSeat = async (data, token) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/seat/update-row`, data);
+        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/seat/update-row`, data, {
+            headers: { authorization: `Bearer ${token}` },
+        });
         showToast('Cập nhật thành công', 'success');
         console.log(response.data);
         return response.data;
@@ -22,9 +24,11 @@ export const allSeatRoom = async (room) => {
     }
 };
 
-export const updateSeat = async (id, data) => {
+export const updateSeat = async (id, data, token) => {
     try {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/seat/${id}`, data);
+        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/seat/${id}`, data, {
+            headers: { authorization: `Bearer ${token}` },
+        });
         showToast('Cập nhật thành công', 'success');
         return response.data;
     } catch (error) {
@@ -33,9 +37,15 @@ export const updateSeat = async (id, data) => {
     }
 };
 
-export const deleteSeat = async (id) => {
+export const deleteSeat = async (id, token) => {
     try {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/seat/delete-seat/${id}`, {});
+        const response = await axios.patch(
+            `${process.env.REACT_APP_API_URL}/api/seat/delete-seat/${id}`,
+            {},
+            {
+                headers: { authorization: `Bearer ${token}` },
+            },
+        );
         showToast('Xóa thành công', 'success');
         return response.data;
     } catch (error) {

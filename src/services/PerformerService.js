@@ -12,17 +12,18 @@ export const allPerformer = async (search, number, show) => {
     }
 };
 
-export const addPerformer = async (formData) => {
+export const addPerformer = async (formData, token) => {
     try {
         const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/performer/`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
+                authorization: `Bearer ${token}`,
             },
         });
-        showToast('Thêm mới thành công', 'success')
+        showToast('Thêm mới thành công', 'success');
         return response.data;
     } catch (error) {
-        showToast(error.response.data.message, 'error')
+        showToast(error.response.data.message, 'error');
         console.log('loi', error);
     }
 };
@@ -36,24 +37,27 @@ export const detailPerformer = async (id) => {
     }
 };
 
-export const updatePerformer = async (id, formData) => {
+export const updatePerformer = async (id, formData, token) => {
     try {
         const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/performer/${id}`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
+                authorization: `Bearer ${token}`,
             },
         });
-        showToast('Cập nhật thành công', 'success')
+        showToast('Cập nhật thành công', 'success');
         return response.data;
     } catch (error) {
-        showToast(error.response.data.message, 'error')
+        showToast(error.response.data.message, 'error');
         console.log('loi', error);
     }
 };
 
-export const deletePerformer = async (id) => {
+export const deletePerformer = async (id, token) => {
     try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/api/performer/${id}`);
+        await axios.delete(`${process.env.REACT_APP_API_URL}/api/performer/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+        });
         showToast('Xóa thành công', 'success');
     } catch (error) {
         showToast('Xóa không thành công', 'error');

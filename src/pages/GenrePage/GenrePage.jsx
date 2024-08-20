@@ -28,10 +28,6 @@ const GenrePage = () => {
         setNumber(num);
     };
 
-    const handleStatus = async (id, name, status) => {
-        await updateGenre(id, { name: name, status: !status }, user?.accessToken);
-    };
-
     const handleSearch = (value) => {
         setSearch(value);
         setNumber(1);
@@ -44,7 +40,7 @@ const GenrePage = () => {
             setLength(data.length);
         };
         fetch();
-    }, [handleStatus]);
+    }, [idDelete, showAdd, search, number, numberPage]);
 
     const handleShowDelete = (id, name) => {
         setShowDelete(true);
@@ -75,6 +71,7 @@ const GenrePage = () => {
 
     const handleNumberPage = (value) => {
         setNumberPage(value);
+        setNumber(1);
     };
 
     return (
@@ -99,7 +96,6 @@ const GenrePage = () => {
                         <tr className="text-center">
                             <th>STT</th>
                             <th>Thể loại</th>
-                            <th>Trạng thái</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
@@ -108,12 +104,6 @@ const GenrePage = () => {
                             <tr key={item._id}>
                                 <td className="text-center">{index + 1}</td>
                                 <td>{item.name}</td>
-                                <td className="d-flex justify-content-center">
-                                    <ToggleSwitch
-                                        status={item.status}
-                                        handleClick={() => handleStatus(item._id, item.name, item.status)}
-                                    />
-                                </td>
                                 <td className="text-center">
                                     <FontAwesomeIcon
                                         className="me-4"

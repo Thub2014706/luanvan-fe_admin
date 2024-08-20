@@ -2,12 +2,14 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import ImageBase from '~/components/ImageBase/ImageBase';
 import { addCombo, detailCombo, updateCombo } from '~/services/ComboService';
 import { listFood } from '~/services/FoodService';
 
 const AddComboPage = () => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const { id } = useParams();
     const navigate = useNavigate();
     const [name, setName] = useState('');
@@ -91,11 +93,11 @@ const AddComboPage = () => {
         }
         formData.append('variants', JSON.stringify(variants));
         if (id) {
-            if (await updateCombo(id, formData)) {
+            if (await updateCombo(id, formData, user?.accessToken)) {
                 navigate('/combo');
             }
         } else {
-            if (await addCombo(formData)) {
+            if (await addCombo(formData, user?.accessToken)) {
                 navigate('/combo');
             }
         }

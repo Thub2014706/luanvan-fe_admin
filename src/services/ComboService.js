@@ -12,18 +12,22 @@ export const allCombo = async (search, number, show) => {
     }
 };
 
-export const statusCombo = async (id) => {
+export const statusCombo = async (id, token) => {
     try {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/combo/status/${id}`, {});
+        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/combo/status/${id}`, {}, {
+            headers: { authorization: `Bearer ${token}` },
+        });
         return response.data;
     } catch (error) {
         console.log('loi', error);
     }
 };
 
-export const deleteCombo = async (id) => {
+export const deleteCombo = async (id, token) => {
     try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/api/combo/${id}`);
+        await axios.delete(`${process.env.REACT_APP_API_URL}/api/combo/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+        });
         showToast('Xóa thành công', 'success');
     } catch (error) {
         showToast('Xóa không thành công', 'error');
@@ -31,11 +35,12 @@ export const deleteCombo = async (id) => {
     }
 };
 
-export const addCombo = async (formData) => {
+export const addCombo = async (formData, token) => {
     try {
         const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/combo/`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
+                authorization: `Bearer ${token}`
             },
         });
         showToast('Thêm mới thành công', 'success')
@@ -46,11 +51,12 @@ export const addCombo = async (formData) => {
     }
 };
 
-export const updateCombo = async (id, formData) => {
+export const updateCombo = async (id, formData, token) => {
     try {
         const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/combo/update/${id}`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
+                authorization: `Bearer ${token}`
             },
         });
         showToast('Cập nhật thành công', 'success')

@@ -2,9 +2,9 @@ import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { Col, Form, Row, Table } from 'react-bootstrap';
+import { Col, Row, Table } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
 import ImageBase from '~/components/ImageBase/ImageBase';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
@@ -14,6 +14,7 @@ import { allFilm, statusFilm } from '~/services/FilmService';
 import { detailGenre } from '~/services/GenreService';
 
 const FilmPage = () => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const navigate = useNavigate();
     const [films, setFilms] = useState([]);
     const [search, setSearch] = useState('');
@@ -23,7 +24,7 @@ const FilmPage = () => {
     const [action, setAction] = useState(false);
 
     const handleStatus = async (id) => {
-        await statusFilm(id);
+        await statusFilm(id, user?.accessToken);
         setAction(true);
     };
 
@@ -39,7 +40,7 @@ const FilmPage = () => {
         };
 
         fetchFilms();
-    }, [number, action]);
+    }, [number, action, numberPage]);
 
     const handleSearch = (value) => {
         setSearch(value);

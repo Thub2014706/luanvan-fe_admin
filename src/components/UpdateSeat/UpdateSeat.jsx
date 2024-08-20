@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import { typeSeat } from '~/constants';
 import { deleteSeat, detailSeat, updateSeat } from '~/services/SeatService';
 
 const UpdateSeat = ({ show, handleClose, id }) => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const [type, setType] = useState('');
     const [status, setStatus] = useState(true);
     const [col, setCol] = useState();
@@ -26,13 +28,13 @@ const UpdateSeat = ({ show, handleClose, id }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await updateSeat(id, { type, status, left, right });
+        await updateSeat(id, { type, status, left, right }, user?.accessToken);
         handleClose();
         // console.log({numRow: row, room, type, status})
     };
 
     const handleDelete = async () => {
-        await deleteSeat(id);
+        await deleteSeat(id, user?.accessToken);
         handleClose();
     };
 

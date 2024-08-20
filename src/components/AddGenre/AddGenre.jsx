@@ -6,13 +6,12 @@ import { addGenre, detailGenre, updateGenre } from '~/services/GenreService';
 const AddGenre = ({ show, handleClose, id }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
     const [name, setName] = useState('');
-    const [status, setStatus] = useState(false);
 
     // console.log('dd', id);
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (id !== null) {
-            await updateGenre(id, { name, status }, user?.accessToken);
+            await updateGenre(id, { name }, user?.accessToken);
             handleClose();
         } else {
             await addGenre({ name }, user?.accessToken);
@@ -25,7 +24,6 @@ const AddGenre = ({ show, handleClose, id }) => {
             if (id !== null) {
                 const data = await detailGenre(id);
                 setName(data.name);
-                setStatus(data.status);
             } else {
                 setName('');
             }

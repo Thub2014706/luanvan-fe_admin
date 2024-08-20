@@ -6,16 +6,18 @@ import 'react-quill/dist/quill.snow.css';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { fomarts, modules, standardAge } from '~/constants';
 import moment from 'moment';
-import { listGenre } from '~/services/GenreService';
+import { detailGenre, listGenre } from '~/services/GenreService';
 import { addFilm, detailFilm, updateFilm } from '~/services/FilmService';
 import { useNavigate, useParams } from 'react-router-dom';
 import ImageBase from '~/components/ImageBase/ImageBase';
 import ReactPlayer from 'react-player';
 import Select from 'react-select';
-import { listDirector } from '~/services/DirectorService';
-import { listPerformer } from '~/services/PerformerService';
+import { detailDirector, listDirector } from '~/services/DirectorService';
+import { detailPerformer, listPerformer } from '~/services/PerformerService';
+import { useSelector } from 'react-redux';
 
 const AddFilmPage = () => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const navigate = useNavigate();
     const { id } = useParams();
     const [name, setName] = useState('');
@@ -35,44 +37,17 @@ const AddFilmPage = () => {
     const [imageId, setImageId] = useState();
     const [trailer, setTrailer] = useState('');
     const [description, setDescription] = useState('');
-    const [genreNames, setGenreNames] = useState({});
-    const [directorNames, setDirectorNames] = useState({});
-    const [performerNames, setPerfomerNames] = useState({});
 
     useEffect(() => {
         const fetch = async () => {
             const data1 = await listGenre();
             setListGenres(data1);
-            const genreNamesMap = {};
-
-            await Promise.all(
-                data1.map(async (item) => {
-                    genreNamesMap[item._id] = item.name;
-                }),
-            );
-            setGenreNames(genreNamesMap);
             //
             const data2 = await listDirector();
             setListDirectors(data2);
-            const directorNamesMap = {};
-
-            await Promise.all(
-                data2.map(async (item) => {
-                    directorNamesMap[item._id] = item.name;
-                }),
-            );
-            setDirectorNames(directorNamesMap);
             //
             const data3 = await listPerformer();
             setListPerformers(data3);
-            const perfomerNamesMap = {};
-
-            await Promise.all(
-                data3.map(async (item) => {
-                    perfomerNamesMap[item._id] = item.name;
-                }),
-            );
-            setPerfomerNames(perfomerNamesMap);
         };
         fetch();
     }, []);
@@ -84,12 +59,15 @@ const AddFilmPage = () => {
                 setName(data.name);
                 setTime(data.time);
                 setNation(data.nation);
-                setGenre(data.genre.map((item) => ({ value: item, label: genreNames[item] })));
-                setDirector(data.director.map((item) => ({ value: item, label: directorNames[item] })));
+                const genreData = await Promise.all(data.genre.map(async (item) => await detailGenre(item)));
+                setGenre(genreData.map((item) => ({ value: item._id, label: item.name })));
+                const directorData = await Promise.all(data.director.map(async (item) => await detailDirector(item)));
+                setDirector(directorData.map((item) => ({ value: item._id, label: item.name })));
                 setReleaseDate(moment(data.releaseDate).format('YYYY-MM-DD'));
                 setEndDate(moment(data.endDate).format('YYYY-MM-DD'));
                 setAge(data.age);
-                setPerformer(data.performer.map((item) => ({ value: item, label: performerNames[item] })));
+                const performerData = await Promise.all(data.performer.map(async (item) => await detailPerformer(item)));
+                setPerformer(performerData.map((item) => ({ value: item._id, label: item.name })));
                 setImageId(data.image);
                 setTrailer(data.trailer);
                 setDescription(data.description);
@@ -97,7 +75,7 @@ const AddFilmPage = () => {
             }
         };
         fetch();
-    }, [id, genreNames, directorNames, performerNames]);
+    }, [id]);
 
     const handleImg = (e) => {
         const newFiles = e.target.files[0];
@@ -126,11 +104,11 @@ const AddFilmPage = () => {
         formData.append('description', description);
 
         if (id) {
-            if (await updateFilm(id, formData)) {
+            if (await updateFilm(id, formData, user?.accessToken)) {
                 navigate('/film');
             }
         } else {
-            if (await addFilm(formData)) {
+            if (await addFilm(formData, user?.accessToken)) {
                 navigate('/film');
             }
         }

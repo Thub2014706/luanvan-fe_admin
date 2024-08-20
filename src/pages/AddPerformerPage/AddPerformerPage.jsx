@@ -7,8 +7,10 @@ import Avatar from 'react-avatar';
 import { useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';
 import { addPerformer, detailPerformer, updatePerformer } from '~/services/PerformerService';
+import { useSelector } from 'react-redux';
 
 const AddPerformerPage = () => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const navigate = useNavigate();
     const { id } = useParams();
     const [name, setName] = useState('');
@@ -35,11 +37,11 @@ const AddPerformerPage = () => {
             formData.append('avatar', avatar);
         }
         if (id) {
-            if (await updatePerformer(id, formData)) {
+            if (await updatePerformer(id, formData, user?.accessToken)) {
                 navigate('/performer');
             }
         } else {
-            if (await addPerformer(formData)) {
+            if (await addPerformer(formData, user?.accessToken)) {
                 navigate('/performer');
             }
         }
@@ -88,14 +90,13 @@ const AddPerformerPage = () => {
                             onChange={(e) => handleAvatar(e)}
                             className="mb-3"
                         />
-                        {avatar && <Avatar src={avatarBase} round={true} alt="" />}
+                        {avatar && <Avatar src={avatarBase} color='gray' round={true} alt="" />}
                         {avatarId && (
                             <ImageBase
                                 pathImg={avatarId}
                                 style={{ height: '100px', width: '100px', borderRadius: '50%', objectFit: 'cover' }}
                             />
                         )}
-                        {!avatar && !avatarId && <Avatar name={name} round={true} />}
                     </Col>
                     <Col>
                         <Form.Label className="fw-bold">

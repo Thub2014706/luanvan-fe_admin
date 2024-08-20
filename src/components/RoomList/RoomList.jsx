@@ -2,20 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
 import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faArrowRight,
-    faCouch,
-    faGrip,
-    faPenToSquare,
-    faTableCells,
-    faTrashCan,
-} from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faPenToSquare, faTableCells, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import ModalQuestion from '../ModalQuestion/ModalQuestion';
 import { allRoom, deleteRoom, statusRoom } from '~/services/RoomService';
 import AddRoom from '../AddRoom/AddRoom';
 import SeatGrid from '../SeatGrid/SeatGrid';
+import { useSelector } from 'react-redux';
 
 const RoomList = ({ idTheater }) => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const [room, setRoom] = useState([]);
     const [showDelete, setShowDelete] = useState(false);
     const [idDelete, setIdDelete] = useState(null);
@@ -27,7 +22,7 @@ const RoomList = ({ idTheater }) => {
     const [idRoomSeat, setIdRoomSeat] = useState(null);
 
     const handleStatus = async (id) => {
-        await statusRoom(id);
+        await statusRoom(id, user?.accessToken);
         setAction(true);
     };
 
@@ -48,7 +43,7 @@ const RoomList = ({ idTheater }) => {
     };
 
     const handleDelete = async () => {
-        await deleteRoom(idDelete);
+        await deleteRoom(idDelete, user?.accessToken);
         handleCloseDelete();
     };
 

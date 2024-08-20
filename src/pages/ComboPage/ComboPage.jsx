@@ -2,6 +2,7 @@ import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import ImageBase from '~/components/ImageBase/ImageBase';
 import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
@@ -13,6 +14,7 @@ import { allCombo, deleteCombo, statusCombo } from '~/services/ComboService';
 import { detailFood } from '~/services/FoodService';
 
 const ComboPage = () => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const navigate = useNavigate();
     const [combo, setCombo] = useState([]);
     const [showDelete, setShowDelete] = useState(false);
@@ -29,7 +31,7 @@ const ComboPage = () => {
     };
 
     const handleStatus = async (id) => {
-        await statusCombo(id);
+        await statusCombo(id, user?.accessToken);
         setAction(true);
     };
 
@@ -44,7 +46,7 @@ const ComboPage = () => {
             setSumPage(data.sumPage);
         };
         fetch();
-    }, [number, action, idDelete]);
+    }, [number, action, idDelete, numberPage]);
 
     const handleShowDelete = (id, name) => {
         setShowDelete(true);
@@ -59,7 +61,7 @@ const ComboPage = () => {
     };
 
     const handleDelete = async () => {
-        await deleteCombo(idDelete);
+        await deleteCombo(idDelete, user?.accessToken);
         handleCloseDelete();
     };
 
@@ -69,6 +71,7 @@ const ComboPage = () => {
 
     const handleNumberPage = (value) => {
         setNumberPage(value);
+        setNumber(1)
     };
 
     const handleSearch = (value) => {
@@ -76,20 +79,20 @@ const ComboPage = () => {
         setNumber(1);
     };
 
-    const NameFood = ({id}) => {
-        const [name, setName] = useState('')
+    const NameFood = ({ id }) => {
+        const [name, setName] = useState('');
 
         useEffect(() => {
             const fetch = async () => {
-                const data = await detailFood(id)
-                console.log(id)
-                setName(data.name)
-            }
-            fetch()
-        }, [id])
+                const data = await detailFood(id);
+                console.log(id);
+                setName(data.name);
+            };
+            fetch();
+        }, [id]);
 
-        return <span>{name}</span>
-    }
+        return <span>{name}</span>;
+    };
 
     return (
         <div className="p-4">
@@ -130,10 +133,12 @@ const ComboPage = () => {
                                 <td className="text-center align-middle">{item.name}</td>
                                 <td className="text-center align-middle">
                                     {item.variants.map((com) => (
-                                        <p><NameFood id={com.food} /> x {com.quantity}</p>
+                                        <p>
+                                            <NameFood id={com.food} /> x {com.quantity}
+                                        </p>
                                     ))}
                                 </td>
-                                    {/* // {nameFood[com.food]} x {com.quantity} */}
+                                {/* // {nameFood[com.food]} x {com.quantity} */}
                                 <td className="text-center align-middle">
                                     {item.price.toLocaleString('it-IT')}
                                     <span>&#8363;</span>

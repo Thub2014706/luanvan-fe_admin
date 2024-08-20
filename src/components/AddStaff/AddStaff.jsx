@@ -3,8 +3,10 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import { createStaff } from '~/services/StaffService';
 import ImageBase from '../ImageBase/ImageBase';
 import Avatar from 'react-avatar';
+import { useSelector } from 'react-redux';
 
 const AddStaff = ({ show, handleClose }) => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
@@ -28,7 +30,9 @@ const AddStaff = ({ show, handleClose }) => {
         formData.append('password', password);
         formData.append('confirmPassword', confirmPassword);
         formData.append('avatar', avatar);
-        await createStaff(formData);
+        if (await createStaff(formData, user?.accessToken)) {
+            handleClose();
+        }
     };
 
     return (
@@ -39,7 +43,7 @@ const AddStaff = ({ show, handleClose }) => {
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group>
-                        <Form.Label className='fw-bold'>
+                        <Form.Label className="fw-bold">
                             Tên nhân viên <span style={{ color: 'red' }}>*</span>
                         </Form.Label>
                         <Form.Control
@@ -52,7 +56,7 @@ const AddStaff = ({ show, handleClose }) => {
                     </Form.Group>
 
                     <Form.Group className="mt-3">
-                        <Form.Label className='fw-bold'>
+                        <Form.Label className="fw-bold">
                             Email <span style={{ color: 'red' }}>*</span>
                         </Form.Label>
                         <Form.Control
@@ -65,7 +69,7 @@ const AddStaff = ({ show, handleClose }) => {
                     </Form.Group>
 
                     <Form.Group className="mt-3">
-                        <Form.Label className='fw-bold'>
+                        <Form.Label className="fw-bold">
                             Số điện thoại <span style={{ color: 'red' }}>*</span>
                         </Form.Label>
                         <Form.Control
@@ -78,7 +82,7 @@ const AddStaff = ({ show, handleClose }) => {
                     </Form.Group>
 
                     <Form.Group className="mt-3">
-                        <Form.Label className='fw-bold'>
+                        <Form.Label className="fw-bold">
                             Mật khẩu <span style={{ color: 'red' }}>*</span>
                         </Form.Label>
                         <Form.Control
@@ -91,7 +95,7 @@ const AddStaff = ({ show, handleClose }) => {
                     </Form.Group>
 
                     <Form.Group className="mt-3">
-                        <Form.Label className='fw-bold'>
+                        <Form.Label className="fw-bold">
                             Nhập lại mật khẩu <span style={{ color: 'red' }}>*</span>
                         </Form.Label>
                         <Form.Control
@@ -104,18 +108,16 @@ const AddStaff = ({ show, handleClose }) => {
                     </Form.Group>
 
                     <Form.Group className="my-3">
-                        <Form.Label className='fw-bold'>
-                            Avatar
-                        </Form.Label>
+                        <Form.Label className="fw-bold">Avatar</Form.Label>
                         <Form.Control multiple accept=".jpg, .png" type="file" onChange={handleAvatar} />
                     </Form.Group>
-                    <Avatar src={avatarCode} round={true} color='gray' alt="" />
+                    <Avatar src={avatarCode} round={true} color="gray" alt="" />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
                         Đóng
                     </Button>
-                    <Button type="submit" variant="primary" onClick={handleClose}>
+                    <Button type="submit" variant="primary">
                         Lưu
                     </Button>
                 </Modal.Footer>

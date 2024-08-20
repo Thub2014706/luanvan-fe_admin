@@ -1,5 +1,5 @@
-import axios from "axios";
-import { showToast } from "~/constants";
+import axios from 'axios';
+import { showToast } from '~/constants';
 
 export const allFood = async (search, number, show) => {
     try {
@@ -12,18 +12,26 @@ export const allFood = async (search, number, show) => {
     }
 };
 
-export const statusFood = async (id) => {
+export const statusFood = async (id, token) => {
     try {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/food/status/${id}`, {});
+        const response = await axios.patch(
+            `${process.env.REACT_APP_API_URL}/api/food/status/${id}`,
+            {},
+            {
+                headers: { authorization: `Bearer ${token}` },
+            },
+        );
         return response.data;
     } catch (error) {
         console.log('loi', error);
     }
 };
 
-export const deleteFood = async (id) => {
+export const deleteFood = async (id, token) => {
     try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/api/food/${id}`);
+        await axios.delete(`${process.env.REACT_APP_API_URL}/api/food/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+        });
         showToast('Xóa thành công', 'success');
     } catch (error) {
         showToast('Xóa không thành công', 'error');
@@ -31,32 +39,34 @@ export const deleteFood = async (id) => {
     }
 };
 
-export const addFood = async (formData) => {
+export const addFood = async (formData, token) => {
     try {
         const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/food/`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
+                authorization: `Bearer ${token}`,
             },
         });
-        showToast('Thêm mới thành công', 'success')
+        showToast('Thêm mới thành công', 'success');
         return response.data;
     } catch (error) {
-        showToast(error.response.data.message, 'error')
+        showToast(error.response.data.message, 'error');
         console.log('loi', error);
     }
 };
 
-export const updateFood = async (id, formData) => {
+export const updateFood = async (id, formData, token) => {
     try {
         const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/food/update/${id}`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
+                authorization: `Bearer ${token}`,
             },
         });
-        showToast('Cập nhật thành công', 'success')
+        showToast('Cập nhật thành công', 'success');
         return response.data;
     } catch (error) {
-        showToast(error.response.data.message, 'error')
+        showToast(error.response.data.message, 'error');
         console.log('loi', error);
     }
 };

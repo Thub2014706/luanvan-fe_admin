@@ -11,8 +11,10 @@ import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
 import { Link, useNavigate } from 'react-router-dom';
 import { allPerformer, deletePerformer } from '~/services/PerformerService';
+import { useSelector } from 'react-redux';
 
 const PerformerPage = () => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const navigate = useNavigate();
     const [performers, setPerformers] = useState([]);
     const [search, setSearch] = useState('');
@@ -30,10 +32,11 @@ const PerformerPage = () => {
             setLength(data.sumPage);
         };
         fetch();
-    }, [number, idDelete]);
+    }, [number, idDelete, numberPage]);
 
     const handleNumberPage = (value) => {
         setNumberPage(value);
+        setNumber(1)
     };
 
     const handleSearch = (value) => {
@@ -54,7 +57,7 @@ const PerformerPage = () => {
     };
 
     const handleDelete = async () => {
-        await deletePerformer(idDelete);
+        await deletePerformer(idDelete, user?.accessToken);
         handleCloseDelete();
     };
 
@@ -110,7 +113,7 @@ const PerformerPage = () => {
                                             }}
                                         />
                                     ) : (
-                                        <Avatar name={item.name} size="50" round={true} />
+                                        <Avatar name={item.name.charAt(0)} color='gray' size="50" round={true} />
                                     )}
                                 </td>
                                 <td className="text-center align-middle">{item.name}</td>

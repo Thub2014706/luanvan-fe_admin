@@ -2,6 +2,7 @@ import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
 import Pagination from '~/components/Pagination/Pagination';
@@ -11,6 +12,7 @@ import ToggleSwitch from '~/components/ToggleSwitch/ToggleSwitch';
 import { allDiscount, deleteDiscount, statusDiscount } from '~/services/DiscountService';
 
 const DiscountPage = () => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const navigate = useNavigate();
     const [discount, setDiscount] = useState([]);
     const [showDelete, setShowDelete] = useState(false);
@@ -27,7 +29,7 @@ const DiscountPage = () => {
     };
 
     const handleStatus = async (id) => {
-        await statusDiscount(id);
+        await statusDiscount(id, user?.accessToken);
         setAction(true);
     };
 
@@ -42,7 +44,7 @@ const DiscountPage = () => {
             setSumPage(data.sumPage);
         };
         fetch();
-    }, [number, action, idDelete]);
+    }, [number, action, idDelete, numberPage]);
 
     const handleShowDelete = (id, name) => {
         setShowDelete(true);
@@ -57,7 +59,7 @@ const DiscountPage = () => {
     };
 
     const handleDelete = async () => {
-        await deleteDiscount(idDelete);
+        await deleteDiscount(idDelete, user?.accessToken);
         handleCloseDelete();
     };
 
@@ -67,6 +69,7 @@ const DiscountPage = () => {
 
     const handleNumberPage = (value) => {
         setNumberPage(value);
+        setNumber(1)
     };
 
     const handleSearch = (value) => {

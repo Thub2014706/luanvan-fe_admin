@@ -2,6 +2,7 @@ import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import ImageBase from '~/components/ImageBase/ImageBase';
 import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
@@ -12,6 +13,7 @@ import ToggleSwitch from '~/components/ToggleSwitch/ToggleSwitch';
 import { allFood, deleteFood, statusFood } from '~/services/FoodService';
 
 const FoodPage = () => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const navigate = useNavigate();
     const [food, setFood] = useState([]);
     const [showDelete, setShowDelete] = useState(false);
@@ -28,7 +30,7 @@ const FoodPage = () => {
     };
 
     const handleStatus = async (id) => {
-        await statusFood(id);
+        await statusFood(id, user?.accessToken);
         setAction(true);
     };
 
@@ -43,7 +45,7 @@ const FoodPage = () => {
             setSumPage(data.sumPage);
         };
         fetch();
-    }, [number, action, idDelete]);
+    }, [number, action, idDelete, numberPage]);
 
     const handleShowDelete = (id, name) => {
         setShowDelete(true);
@@ -58,7 +60,7 @@ const FoodPage = () => {
     };
 
     const handleDelete = async () => {
-        await deleteFood(idDelete);
+        await deleteFood(idDelete, user?.accessToken);
         handleCloseDelete();
     };
 
@@ -68,6 +70,7 @@ const FoodPage = () => {
 
     const handleNumberPage = (value) => {
         setNumberPage(value);
+        setNumber(1)
     };
 
     const handleSearch = (value) => {

@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import Avatar from 'react-avatar';
 import { Col, Row, Table } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import AddStaff from '~/components/AddStaff/AddStaff';
 import AllAccess from '~/components/AllAccess/AllAccess';
@@ -15,7 +16,7 @@ import ToggleSwitch from '~/components/ToggleSwitch/ToggleSwitch';
 import { allStaff, deleteStaff, statusStaff } from '~/services/StaffService';
 
 const StaffPage = () => {
-    const navigate = useNavigate();
+    const user = useSelector((state) => state.auth.login.currentUser);
     const [staff, setStaff] = useState([]);
     const [showDelete, setShowDelete] = useState(false);
     const [idDelete, setIdDelete] = useState(null);
@@ -34,7 +35,7 @@ const StaffPage = () => {
     };
 
     const handleStatus = async (id) => {
-        await statusStaff(id);
+        await statusStaff(id, user?.accessToken);
         setAction(true);
     };
 
@@ -49,7 +50,7 @@ const StaffPage = () => {
             setSumPage(data.sumPage);
         };
         fetch();
-    }, [number, action, idDelete, showAdd]);
+    }, [number, action, idDelete, showAdd, numberPage]);
 
     const handleShowDelete = (id, name) => {
         setShowDelete(true);
@@ -64,7 +65,7 @@ const StaffPage = () => {
     };
 
     const handleDelete = async () => {
-        await deleteStaff(idDelete);
+        await deleteStaff(idDelete, user?.accessToken);
         handleCloseDelete();
     };
 
@@ -78,6 +79,7 @@ const StaffPage = () => {
 
     const handleNumberPage = (value) => {
         setNumberPage(value);
+        setNumber(1);
     };
 
     const handleSearch = (value) => {
@@ -97,17 +99,21 @@ const StaffPage = () => {
 
     return (
         <div className="p-4">
-            <h5 className="mb-4 fw-bold">Tài khoản nhân viên</h5>
-            <Row className="mb-3">
-                <Col xs={6}>
-                    <div className="button add" onClick={handleShowAdd}>
+            <Row className="mb-4">
+                <Col>
+                    <h5 className="fw-bold">Tài khoản nhân viên</h5>
+                </Col>
+                <Col>
+                    <div className="button add float-end" onClick={handleShowAdd}>
                         Thêm mới
                     </div>
                 </Col>
-                <Col xs={3}>
+            </Row>
+            <Row className="mb-3">
+                <Col>
                     <ShowPage numberPage={numberPage} handleNumberPage={handleNumberPage} />
                 </Col>
-                <Col xs={3}>
+                <Col>
                     <SearchBar handleSubmit={handleSearch} />
                 </Col>
             </Row>
@@ -149,11 +155,16 @@ const StaffPage = () => {
                                 <td className="text-center align-middle">{item.email}</td>
                                 <td className="text-center align-middle">{item.phone}</td>
                                 <td className="text-center align-middle">{item.role === 0 ? 'Admin' : 'Nhân viên'}</td>
-                                <td className="text-center align-middle" style={{ color: 'red' }}>
-                                    <span style={{ cursor: 'pointer' }} onClick={() => handleShowAccess(item._id)}>
+                                <td
+                                    className="text-center align-middle"
+                                    style={{ color: item.role !== 0 ? 'red' : 'rgb(255, 133, 133)' }}
+                                >
+                                    <span
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => item.role !== 0 && handleShowAccess(item._id)}
+                                    >
                                         Quyền truy cập{' '}
                                         <FontAwesomeIcon
-                                            className="me-4"
                                             icon={faPenToSquare}
                                             color="red"
                                             style={{ cursor: 'pointer' }}
@@ -161,7 +172,10 @@ const StaffPage = () => {
                                     </span>
                                 </td>
                                 <td className="align-content-center">
-                                    <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
+                                    <ToggleSwitch
+                                        status={item.status}
+                                        handleClick={() => item.role !== 0 && handleStatus(item._id)}
+                                    />
                                 </td>
                                 <td className="text-center align-middle">
                                     <FontAwesomeIcon

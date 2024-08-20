@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getDistrictsByProvinceCode, getProvinces, getWardsByDistrictCode } from 'sub-vn';
 import RoomList from '~/components/RoomList/RoomList';
 import { addTheater, detailTheater, updateTheater } from '~/services/TheaterService';
 
 const AddTheaterPage = () => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const { id } = useParams();
     const [name, setName] = useState('');
     const [province, setProvince] = useState('');
@@ -69,21 +71,28 @@ const AddTheaterPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (id) {
-            await updateTheater(id, {
-                name,
-                province: nameProvince,
-                district: nameDistrict,
-                ward: nameWard,
-                address,
-            });
+            await updateTheater(
+                id,
+                {
+                    name,
+                    province: nameProvince,
+                    district: nameDistrict,
+                    ward: nameWard,
+                    address,
+                },
+                user?.accessToken,
+            );
         } else {
-            const data = await addTheater({
-                name,
-                province: nameProvince,
-                district: nameDistrict,
-                ward: nameWard,
-                address,
-            });
+            const data = await addTheater(
+                {
+                    name,
+                    province: nameProvince,
+                    district: nameDistrict,
+                    ward: nameWard,
+                    address,
+                },
+                user?.accessToken,
+            );
             setIdAdd(data._id);
         }
     };

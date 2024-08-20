@@ -65,3 +65,18 @@ export const allUser = async (search, number, show) => {
         console.log('loi', error);
     }
 };
+
+export const statusUser = async (id, token) => {
+    try {
+        const response = await axios.patch(
+            `${process.env.REACT_APP_API_URL}/api/user/status/${id}`,
+            {},
+            {
+                headers: { authorization: `Bearer ${token}` },
+            },
+        );
+        return response.data;
+    } catch (error) {
+        console.log('loi', error);
+    }
+};

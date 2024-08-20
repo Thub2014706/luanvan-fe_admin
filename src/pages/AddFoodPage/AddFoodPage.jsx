@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import ImageBase from '~/components/ImageBase/ImageBase';
 import { addFood, detailFood, updateFood } from '~/services/FoodService';
 
 const AddFoodPage = () => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const { id } = useParams();
     const navigate = useNavigate();
     const [name, setName] = useState('');
@@ -43,11 +45,11 @@ const AddFoodPage = () => {
             formData.append('image', image);
         }
         if (id) {
-            if (await updateFood(id, formData)) {
+            if (await updateFood(id, formData, user?.accessToken)) {
                 navigate('/food');
             }
         } else {
-            if (await addFood(formData)) {
+            if (await addFood(formData, user?.accessToken)) {
                 navigate('/food');
             }
         }
