@@ -17,6 +17,7 @@ import NotFoundPage from '~/pages/NotFoundPage/NotFoundPage';
 import PerformerPage from '~/pages/PerformerPage/PerformerPage';
 import StaffPage from '~/pages/StaffPage/StaffPage';
 import TheaterPage from '~/pages/TheaterPage/TheaterPage';
+import TicketPricePage from '~/pages/TicketPricePage/TicketPricePage';
 import UserPage from '~/pages/UserPage/UserPage';
 
 const routes = [
@@ -126,6 +127,12 @@ const routes = [
         path: '/staff',
         component: StaffPage,
     },
+
+    {
+        path: '/ticket-price',
+        component: TicketPricePage,
+    },
+
     {
         path: '/*',
         component: NotFoundPage,

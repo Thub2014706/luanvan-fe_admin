@@ -115,7 +115,7 @@ const FilmPage = () => {
                                     <ImageBase pathImg={item.image} style={{ height: '60px' }} />
                                 </td>
                                 <td className="align-middle">{item.name}</td>
-                                <td className="text-center align-content-center">
+                                <td className="text-center">
                                     {item.genre.map((name) =>
                                         <GenreName id={name} />,
                                     )}
