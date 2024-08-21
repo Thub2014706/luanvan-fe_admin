@@ -50,7 +50,7 @@ export const addFilm = async (formData, token) => {
 
 export const detailFilm = async (id) => {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/film/${id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/film/detail/${id}`);
         return response.data;
     } catch (error) {
         console.log('loi', error);
@@ -69,6 +69,15 @@ export const updateFilm = async (id, formData, token) => {
         return response.data;
     } catch (error) {
         showToast(error.response.data.message, 'error')
+        console.log('loi', error);
+    }
+};
+
+export const listFilm = async () => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/film/list`);
+        return response.data;
+    } catch (error) {
         console.log('loi', error);
     }
 };

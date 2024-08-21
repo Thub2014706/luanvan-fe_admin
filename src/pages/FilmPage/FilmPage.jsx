@@ -62,7 +62,7 @@ const FilmPage = () => {
 
     const GenreName = ({ id }) => {
         const [name, setName] = useState('');
-    
+
         useEffect(() => {
             const fetch = async () => {
                 const data = await detailGenre(id);
@@ -70,8 +70,8 @@ const FilmPage = () => {
             };
             fetch();
         }, [id]);
-    
-        return <p>{name}</p>;
+
+        return <span>{name}</span>;
     };
 
     return (
@@ -115,10 +115,13 @@ const FilmPage = () => {
                                     <ImageBase pathImg={item.image} style={{ height: '60px' }} />
                                 </td>
                                 <td className="align-middle">{item.name}</td>
-                                <td className="text-center">
-                                    {item.genre.map((name) =>
-                                        <GenreName id={name} />,
-                                    )}
+                                <td className="text-center align-middle">
+                                    {item.genre.map((name) => (
+                                        <span>
+                                            <GenreName id={name} />
+                                            <br />
+                                        </span>
+                                    ))}
                                 </td>
                                 <td className="text-center align-middle">{item.time} phút</td>
                                 <td className="text-center align-middle">{item.nation}</td>

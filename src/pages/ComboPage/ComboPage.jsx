@@ -71,7 +71,7 @@ const ComboPage = () => {
 
     const handleNumberPage = (value) => {
         setNumberPage(value);
-        setNumber(1)
+        setNumber(1);
     };
 
     const handleSearch = (value) => {
@@ -133,9 +133,10 @@ const ComboPage = () => {
                                 <td className="text-center align-middle">{item.name}</td>
                                 <td className="text-center align-middle">
                                     {item.variants.map((com) => (
-                                        <p>
+                                        <span>
                                             <NameFood id={com.food} /> x {com.quantity}
-                                        </p>
+                                            <br />
+                                        </span>
                                     ))}
                                 </td>
                                 {/* // {nameFood[com.food]} x {com.quantity} */}

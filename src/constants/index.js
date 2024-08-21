@@ -1,4 +1,4 @@
-import { faBurger, faClapperboard, faFilm, faMasksTheater, faMoneyBill1Wave, faTag, faTv, faUser, faUsersRectangle, faUserTie, faUtensils } from '@fortawesome/free-solid-svg-icons';
+import { faBurger, faCalendarDays, faClapperboard, faFilm, faMasksTheater, faMoneyBill1Wave, faTag, faTv, faUser, faUsersRectangle, faUserTie, faUtensils } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 
 export const modules = {
@@ -144,6 +144,12 @@ export const itemMenu = [
         icon: faMoneyBill1Wave,
         name: 'Giá vé',
         link: '/ticket-price'
+    },
+    {
+        index: 12,
+        icon: faCalendarDays,
+        name: 'Lịch chiếu',
+        link: '/schedule'
     },
 ];
 
