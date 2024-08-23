@@ -44,7 +44,7 @@ const TheaterPage = () => {
             setSumPage(data.sumPage);
         };
         fetch();
-    }, [number, action, idDelete, numberPage]);
+    }, [number, action, idDelete, numberPage, search]);
 
     const handleShowDelete = (id, name) => {
         setShowDelete(true);

@@ -44,7 +44,7 @@ const UserPage = () => {
             setSumPage(data.sumPage);
         };
         fetch();
-    }, [number, action, numberPage]);
+    }, [number, action, numberPage, search]);
 
     const handleNumberPage = (value) => {
         setNumberPage(value);

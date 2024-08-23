@@ -32,11 +32,11 @@ const DirectorPage = () => {
             setLength(data.sumPage);
         };
         fetch();
-    }, [number, idDelete, numberPage]);
+    }, [number, idDelete, numberPage, search]);
 
     const handleNumberPage = (value) => {
         setNumberPage(value);
-        setNumber(1)
+        setNumber(1);
     };
 
     const handleSearch = (value) => {
@@ -113,11 +113,13 @@ const DirectorPage = () => {
                                             }}
                                         />
                                     ) : (
-                                        <Avatar name={item.name.charAt(0)} color='gray' size="50" round={true} />
+                                        <Avatar name={item.name.charAt(0)} color="gray" size="50" round={true} />
                                     )}
                                 </td>
                                 <td className="text-center align-middle">{item.name}</td>
-                                <td className="text-center align-middle">{moment(item.birth).format('DD-MM-YYYY')}</td>
+                                <td className="text-center align-middle">
+                                    {item.birth && moment(item.birth).format('DD-MM-YYYY')}
+                                </td>
                                 <td className="text-center align-middle">
                                     <Link to={`/director/update/${item._id}`}>
                                         <FontAwesomeIcon

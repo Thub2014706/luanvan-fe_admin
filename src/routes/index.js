@@ -16,6 +16,7 @@ import LoginPage from '~/pages/LoginPage/LoginPage';
 import NotFoundPage from '~/pages/NotFoundPage/NotFoundPage';
 import PerformerPage from '~/pages/PerformerPage/PerformerPage';
 import SchedulePage from '~/pages/SchedulePage/SchedulePage';
+import ShowTimePage from '~/pages/ShowTimePage/ShowTimePage';
 import StaffPage from '~/pages/StaffPage/StaffPage';
 import TheaterPage from '~/pages/TheaterPage/TheaterPage';
 import TicketPricePage from '~/pages/TicketPricePage/TicketPricePage';
@@ -137,6 +138,11 @@ const routes = [
     {
         path: '/schedule',
         component: SchedulePage,
+    },
+
+    {
+        path: '/showtime',
+        component: ShowTimePage,
     },
 
     {

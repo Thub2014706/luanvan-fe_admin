@@ -1,10 +1,9 @@
-import { faL, faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import Avatar from 'react-avatar';
 import { Col, Row, Table } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import AddStaff from '~/components/AddStaff/AddStaff';
 import AllAccess from '~/components/AllAccess/AllAccess';
 import ImageBase from '~/components/ImageBase/ImageBase';
@@ -50,7 +49,7 @@ const StaffPage = () => {
             setSumPage(data.sumPage);
         };
         fetch();
-    }, [number, action, idDelete, showAdd, numberPage]);
+    }, [number, action, idDelete, showAdd, numberPage, search]);
 
     const handleShowDelete = (id, name) => {
         setShowDelete(true);

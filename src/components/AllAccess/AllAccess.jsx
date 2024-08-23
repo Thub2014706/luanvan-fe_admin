@@ -1,5 +1,4 @@
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { CFormCheck, CModal } from '@coreui/react-pro';
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
@@ -53,39 +52,19 @@ const AllAccess = ({ show, handleClose, id }) => {
                 </Modal.Header>
                 <Modal.Body>
                     {itemMenu.map((item) => (
-                        <div className="d-flex">
-                            <div
-                                style={{
-                                    background: array.includes(item.name)
-                                        ? 'linear-gradient(#4e337a, #264c9a)'
-                                        : 'initial',
-                                }}
-                                className="button-check mt-1"
-                                onClick={() => handleSelect(item.name)}
-                            >
-                                {array.includes(item.name) && (
-                                    <FontAwesomeIcon icon={faCheck} size="sm" className="icon" color="white" />
-                                )}
-                            </div>
-                            <p className="ms-1 name-check" onClick={() => handleSelect(item.name)}>
-                                {item.name}
-                            </p>
-                        </div>
+                        <CFormCheck
+                            label={item.name}
+                            id={item.name}
+                            value={item.name}
+                            defaultChecked={array.includes(item.name)}
+                            onClick={() => handleSelect(item.name)}
+                            className='mb-2 ms-3'
+                        />
                     ))}
                 </Modal.Body>
                 <Modal.Footer>
-                    <span
-                        style={{
-                            background: all ? 'linear-gradient(#4e337a, #264c9a)' : 'initial',
-                        }}
-                        className="button-check mt-1"
-                        onClick={() => setAll(!all)}
-                    >
-                        {all && <FontAwesomeIcon icon={faCheck} size="sm" className="icon" color="white" />}
-                    </span>
-                    <p className="ms-1 name-check" onClick={handleAll}>
-                        Chọn tất cả
-                    </p>
+
+                    <CFormCheck id="flexCheckDefault" label="Chọn tất cả" defaultChecked={all} onClick={handleAll} />
                     <Button variant="secondary" onClick={handleClose}>
                         Đóng
                     </Button>

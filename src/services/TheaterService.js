@@ -73,3 +73,12 @@ export const detailTheater = async (id) => {
         console.log('loi', error);
     }
 };
+
+export const listTheater = async () => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/theater/list`);
+        return response.data;
+    } catch (error) {
+        console.log('loi', error);
+    }
+};

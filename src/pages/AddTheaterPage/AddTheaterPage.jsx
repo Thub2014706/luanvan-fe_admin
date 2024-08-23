@@ -1,7 +1,8 @@
+import { CCol, CForm, CFormInput, CFormLabel, CFormSelect, CRow } from '@coreui/react-pro';
 import React, { useEffect, useState } from 'react';
-import { Col, Form, Row } from 'react-bootstrap';
+// import { CCol, Form, CRow } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getDistrictsByProvinceCode, getProvinces, getWardsByDistrictCode } from 'sub-vn';
 import RoomList from '~/components/RoomList/RoomList';
 import { addTheater, detailTheater, updateTheater } from '~/services/TheaterService';
@@ -101,23 +102,24 @@ const AddTheaterPage = () => {
         <div>
             <div className="p-4">
                 <h5 className="mb-4 fw-bold">Rạp phim</h5>
-                <Form>
-                    <Row className="mb-3">
-                        <Col>
+                <CForm>
+                    <CRow className="mb-3">
+                        <CCol>
                             <h6>{id ? 'Cập nhật' : 'Thêm'} rạp phim</h6>
-                        </Col>
-                        <Col>
+                        </CCol>
+                        <CCol>
                             <div className="button add float-end" onClick={handleSubmit}>
                                 Chấp nhận
                             </div>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Form.Label className="fw-bold">
+                        </CCol>
+                    </CRow>
+                    <CRow>
+                        <CCol>
+                            <CFormLabel className="fw-bold" htmlFor="name">
                                 Tên <span style={{ color: 'red' }}>*</span>
-                            </Form.Label>
-                            <Form.Control
+                            </CFormLabel>
+                            <CFormInput
+                                id="name"
                                 type="text"
                                 name="name"
                                 value={name}
@@ -125,48 +127,49 @@ const AddTheaterPage = () => {
                                 className="mb-3"
                                 placeholder="Tên"
                             />
-                        </Col>
-                        <Col>
-                            <Form.Label className="fw-bold">
+                        </CCol>
+                        <CCol>
+                            <CFormLabel className="fw-bold" htmlFor="province">
                                 Tỉnh <span style={{ color: 'red' }}>*</span>
-                            </Form.Label>
-                            <Form.Select value={province} onChange={handleProvince} required>
+                            </CFormLabel>
+                            <CFormSelect id="province" value={province} onChange={handleProvince} required>
                                 <option value="">---Chọn Tỉnh---</option>
                                 {provinces.map((item) => (
                                     <option value={item.code}>{item.name}</option>
                                 ))}
-                            </Form.Select>
-                        </Col>
-                    </Row>
+                            </CFormSelect>
+                        </CCol>
+                    </CRow>
 
-                    <Row>
-                        <Col>
-                            <Form.Label className="fw-bold">
+                    <CRow>
+                        <CCol>
+                            <CFormLabel className="fw-bold" htmlFor="district">
                                 Quận/Huyện <span style={{ color: 'red' }}>*</span>
-                            </Form.Label>
-                            <Form.Select value={district} onChange={handleDistrict} required>
+                            </CFormLabel>
+                            <CFormSelect id="district" value={district} onChange={handleDistrict} required>
                                 <option value="">---Chọn Quận/Huyện---</option>
                                 {districts.map((item) => (
                                     <option value={item.code}>{item.name}</option>
                                 ))}
-                            </Form.Select>
-                        </Col>
-                        <Col>
-                            <Form.Label className="fw-bold">
+                            </CFormSelect>
+                        </CCol>
+                        <CCol>
+                            <CFormLabel className="fw-bold" htmlFor="ward">
                                 Phường/Xã <span style={{ color: 'red' }}>*</span>
-                            </Form.Label>
-                            <Form.Select value={ward} onChange={handleWard} required>
+                            </CFormLabel>
+                            <CFormSelect id="ward" value={ward} onChange={handleWard} required>
                                 <option value="">---Chọn Phường/Xã---</option>
                                 {wards.map((item) => (
                                     <option value={item.code}>{item.name}</option>
                                 ))}
-                            </Form.Select>
-                        </Col>
-                        <Col>
-                            <Form.Label className="fw-bold">
+                            </CFormSelect>
+                        </CCol>
+                        <CCol>
+                            <CFormLabel className="fw-bold" htmlFor="address">
                                 Số nhà <span style={{ color: 'red' }}>*</span>
-                            </Form.Label>
-                            <Form.Control
+                            </CFormLabel>
+                            <CFormInput
+                                id="address"
                                 type="text"
                                 name="address"
                                 value={address}
@@ -174,9 +177,9 @@ const AddTheaterPage = () => {
                                 onChange={(e) => setAddress(e.target.value)}
                                 className="mb-3"
                             />
-                        </Col>
-                    </Row>
-                </Form>
+                        </CCol>
+                    </CRow>
+                </CForm>
             </div>
             <hr />
             {id && <RoomList idTheater={id} />}

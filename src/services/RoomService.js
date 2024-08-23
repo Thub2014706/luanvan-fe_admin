@@ -71,3 +71,23 @@ export const detailRoom = async (id) => {
         console.log('loi', error);
     }
 };
+
+export const listRoomByTheater = async (id) => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/room/list-by-theater/${id}`);
+        return response.data;
+    } catch (error) {
+        console.log('loi', error);
+    }
+};
+
+export const filterRoomByTheater = async (theater, room) => {
+    try {
+        const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/room/filter-by-theater?theare=${theater}&room=${room}`,
+        );
+        return response.data;
+    } catch (error) {
+        console.log('loi', error);
+    }
+};

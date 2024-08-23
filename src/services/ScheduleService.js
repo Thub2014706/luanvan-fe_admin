@@ -40,7 +40,16 @@ export const updateSchedule = async (id, data, token) => {
 
 export const detailSchedule = async (id) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/schedule/detail/${id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/schedule/detail/${id}`);
+        return response.data;
+    } catch (error) {
+        console.log('loi', error);
+    }
+};
+
+export const listSchedule = async () => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/schedule/list`);
         return response.data;
     } catch (error) {
         console.log('loi', error);

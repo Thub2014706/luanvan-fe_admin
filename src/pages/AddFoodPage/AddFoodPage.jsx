@@ -1,5 +1,6 @@
+import { CCol, CForm, CFormInput, CFormLabel, CRow } from '@coreui/react-pro';
 import React, { useEffect, useState } from 'react';
-import { Col, Form, Row } from 'react-bootstrap';
+// import { CCol, Form, CRow } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import ImageBase from '~/components/ImageBase/ImageBase';
@@ -58,38 +59,39 @@ const AddFoodPage = () => {
     return (
         <div className="p-4">
             <h5 className="mb-4 fw-bold">Thức ăn</h5>
-            <Form>
-                <Row className="mb-3">
-                    <Col>
+            <CForm>
+                <CRow className="mb-3">
+                    <CCol>
                         <h6>{id ? 'Cập nhật' : 'Thêm'} thức ăn</h6>
-                    </Col>
-                    <Col>
+                    </CCol>
+                    <CCol>
                         <div className="button add float-end" onClick={handleSubmit}>
                             Chấp nhận
                         </div>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Form.Label className="fw-bold">
-                            Avatar <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                    </CCol>
+                </CRow>
+                <CRow>
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="image">
+                            Hình ảnh <span style={{ color: 'red' }}>*</span>
+                        </CFormLabel>
+                        <CFormInput
+                            id="image"
                             type="file"
-                            name="avatar"
-                            multiple
+                            name="image"
                             accept=".jpg, .png"
                             onChange={(e) => handleImage(e)}
                             className="mb-3"
                         />
                         {image && <img src={imageEncode} style={{ height: '200px', marginTop: '20px' }} alt="" />}
                         {imageId && <ImageBase pathImg={imageId} style={{ height: '200px', marginTop: '20px' }} />}
-                    </Col>
-                    <Col>
-                        <Form.Label className="fw-bold">
+                    </CCol>
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="name">
                             Tên <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
+                            id="name"
                             required
                             type="text"
                             placeholder="Tên"
@@ -97,21 +99,22 @@ const AddFoodPage = () => {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                         />
-                    </Col>
-                    <Col>
-                        <Form.Label className="fw-bold">
+                    </CCol>
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="price">
                             Giá tiền <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
+                            id="price"
                             type="number"
                             placeholder="Giá tiền"
                             name="price"
                             value={price}
                             onChange={(e) => setPrice(e.target.value)}
                         />
-                    </Col>
-                </Row>
-            </Form>
+                    </CCol>
+                </CRow>
+            </CForm>
         </div>
     );
 };

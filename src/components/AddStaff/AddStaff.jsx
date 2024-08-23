@@ -1,9 +1,21 @@
 import React, { useState } from 'react';
-import { Button, Form, Modal } from 'react-bootstrap';
+// import { Button, Form, Modal } from 'react-bootstrap';
 import { createStaff } from '~/services/StaffService';
 import ImageBase from '../ImageBase/ImageBase';
 import Avatar from 'react-avatar';
 import { useSelector } from 'react-redux';
+import {
+    CButton,
+    CForm,
+    CFormInput,
+    CFormLabel,
+    div,
+    CModal,
+    CModalBody,
+    CModalFooter,
+    CModalHeader,
+    CModalTitle,
+} from '@coreui/react-pro';
 
 const AddStaff = ({ show, handleClose }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -36,93 +48,93 @@ const AddStaff = ({ show, handleClose }) => {
     };
 
     return (
-        <Modal centered show={show} onHide={handleClose}>
-            <Form onSubmit={handleSubmit}>
-                <Modal.Header>
-                    <Modal.Title>Thêm mới</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form.Group>
-                        <Form.Label className="fw-bold">
+        <CModal alignment="center" visible={show} onClose={handleClose}>
+            <CForm onSubmit={handleSubmit}>
+                <CModalHeader>
+                    <CModalTitle>Thêm mới</CModalTitle>
+                </CModalHeader>
+                <CModalBody>
+                    <div>
+                        <CFormLabel className="fw-bold">
                             Tên nhân viên <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
                             type="text"
                             placeholder="Tên nhân viên"
                             name="username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                         />
-                    </Form.Group>
+                    </div>
 
-                    <Form.Group className="mt-3">
-                        <Form.Label className="fw-bold">
+                    <div className="mt-3">
+                        <CFormLabel className="fw-bold">
                             Email <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
                             type="email"
                             placeholder="Email"
                             name="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                    </Form.Group>
+                    </div>
 
-                    <Form.Group className="mt-3">
-                        <Form.Label className="fw-bold">
+                    <div className="mt-3">
+                        <CFormLabel className="fw-bold">
                             Số điện thoại <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
                             type="text"
                             placeholder="Số điện thoại"
                             name="phone"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                         />
-                    </Form.Group>
+                    </div>
 
-                    <Form.Group className="mt-3">
-                        <Form.Label className="fw-bold">
+                    <div className="mt-3">
+                        <CFormLabel className="fw-bold">
                             Mật khẩu <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
                             type="password"
                             placeholder="Mật khẩu"
                             name="pasword"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
-                    </Form.Group>
+                    </div>
 
-                    <Form.Group className="mt-3">
-                        <Form.Label className="fw-bold">
+                    <div className="mt-3">
+                        <CFormLabel className="fw-bold">
                             Nhập lại mật khẩu <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
                             type="password"
                             placeholder="Nhập lại mật khẩu"
                             name="confirmPassword"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                         />
-                    </Form.Group>
+                    </div>
 
-                    <Form.Group className="my-3">
-                        <Form.Label className="fw-bold">Avatar</Form.Label>
-                        <Form.Control multiple accept=".jpg, .png" type="file" onChange={handleAvatar} />
-                    </Form.Group>
+                    <div className="my-3">
+                        <CFormLabel className="fw-bold">Avatar</CFormLabel>
+                        <CFormInput multiple accept=".jpg, .png" type="file" onChange={handleAvatar} />
+                    </div>
                     <Avatar src={avatarCode} round={true} color="gray" alt="" />
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
+                </CModalBody>
+                <CModalFooter>
+                    <CButton color="secondary" onClick={handleClose}>
                         Đóng
-                    </Button>
-                    <Button type="submit" variant="primary">
+                    </CButton>
+                    <CButton type="submit" color="primary">
                         Lưu
-                    </Button>
-                </Modal.Footer>
-            </Form>
-        </Modal>
+                    </CButton>
+                </CModalFooter>
+            </CForm>
+        </CModal>
     );
 };
 

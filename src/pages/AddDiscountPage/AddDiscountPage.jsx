@@ -1,5 +1,6 @@
+import { CCol, CForm, CFormInput, CFormLabel, CRow } from '@coreui/react-pro';
 import React, { useEffect, useState } from 'react';
-import { Col, Form, Row } from 'react-bootstrap';
+// import { CCol, Form, CRow } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { addDiscount, detailDiscount, updateDiscount } from '~/services/DiscountService';
@@ -42,23 +43,24 @@ const AddDiscountPage = () => {
     return (
         <div className="p-4">
             <h5 className="mb-4 fw-bold">Mã khuyến mãi</h5>
-            <Form>
-                <Row className="mb-3">
-                    <Col>
+            <CForm>
+                <CRow className="mb-3">
+                    <CCol>
                         <h6>{id ? 'Cập nhật' : 'Thêm'} mã khuyến mãi</h6>
-                    </Col>
-                    <Col>
+                    </CCol>
+                    <CCol>
                         <div className="button add float-end" onClick={handleSubmit}>
                             Chấp nhận
                         </div>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Form.Label className="fw-bold">
+                    </CCol>
+                </CRow>
+                <CRow>
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="name">
                             Tên <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
+                            id="name"
                             required
                             type="text"
                             placeholder="Tên"
@@ -66,24 +68,26 @@ const AddDiscountPage = () => {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                         />
-                    </Col>
-                    <Col>
-                        <Form.Label className="fw-bold">
+                    </CCol>
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="code">
                             Mã <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
+                            id="code"
                             type="text"
                             placeholder="Mã"
                             name="code"
                             value={code}
                             onChange={(e) => setCode(e.target.value)}
                         />
-                    </Col>
-                    <Col>
-                        <Form.Label className="fw-bold">
+                    </CCol>
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="percent">
                             Phần trăm <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
+                            id="percent"
                             type="number"
                             placeholder="Phần trăm"
                             name="percent"
@@ -93,21 +97,22 @@ const AddDiscountPage = () => {
                                 setPercent(value);
                             }}
                         />
-                    </Col>
-                    <Col>
-                        <Form.Label className="fw-bold">
+                    </CCol>
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="quantity">
                             Số lượng <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
+                            id="quantity"
                             type="number"
                             placeholder="Số lượng"
                             name="quantity"
                             value={quantity}
                             onChange={(e) => setQuantity(Math.max(e.target.value, 1))}
                         />
-                    </Col>
-                </Row>
-            </Form>
+                    </CCol>
+                </CRow>
+            </CForm>
         </div>
     );
 };

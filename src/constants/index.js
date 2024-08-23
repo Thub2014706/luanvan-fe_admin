@@ -1,4 +1,18 @@
-import { faBurger, faCalendarDays, faClapperboard, faFilm, faMasksTheater, faMoneyBill1Wave, faTag, faTv, faUser, faUsersRectangle, faUserTie, faUtensils } from '@fortawesome/free-solid-svg-icons';
+import {
+    faBurger,
+    faCalendarDays,
+    faClapperboard,
+    faFilm,
+    faMasksTheater,
+    faMoneyBill1Wave,
+    faStopwatch,
+    faTag,
+    faTv,
+    faUser,
+    faUsersRectangle,
+    faUserTie,
+    faUtensils,
+} from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 
 export const modules = {
@@ -61,8 +75,8 @@ export const typeSeat = [
 export const typeSeatEnum = {
     0: 'Ghế thường',
     1: 'Ghế VIP',
-    2: 'Ghế Couple'
-}
+    2: 'Ghế Couple',
+};
 
 export const showToast = (message, type) => {
     toast(message, {
@@ -95,61 +109,67 @@ export const itemMenu = [
         index: 3,
         icon: faClapperboard,
         name: 'Đạo diễn',
-        link: '/director'
+        link: '/director',
     },
     {
         index: 4,
         icon: faUsersRectangle,
         name: 'Diễn viên',
-        link: '/performer'
+        link: '/performer',
     },
     {
         index: 5,
         icon: faBurger,
         name: 'Thức ăn',
-        link: '/food'
+        link: '/food',
     },
     {
         index: 6,
         icon: faUtensils,
         name: 'Combo',
-        link: '/combo'
+        link: '/combo',
     },
     {
         index: 7,
         icon: faTag,
         name: 'Mã khuyến mãi',
-        link: '/discount'
+        link: '/discount',
     },
     {
         index: 8,
         icon: faUser,
         name: 'Người dùng',
-        link: '/user'
+        link: '/user',
     },
     {
         index: 9,
         icon: faTv,
         name: 'Rạp phim',
-        link: '/theater'
+        link: '/theater',
     },
     {
         index: 10,
         icon: faUserTie,
         name: 'Nhân viên',
-        link: '/staff'
+        link: '/staff',
     },
     {
         index: 11,
         icon: faMoneyBill1Wave,
         name: 'Giá vé',
-        link: '/ticket-price'
+        link: '/ticket-price',
     },
     {
         index: 12,
         icon: faCalendarDays,
         name: 'Lịch chiếu',
-        link: '/schedule'
+        link: '/schedule',
+    },
+    {
+        index: 13,
+        icon: faStopwatch,
+        name: 'Suất chiếu',
+        link: '/showtime',
     },
 ];
 
@@ -157,5 +177,7 @@ export const typeUserPrice = {
     0: 'Học sinh, sinh viên',
     1: 'Người lớn',
     2: 'Người già, trẻ em',
-    3: 'Thành viên, vé trực tuyến'
-}
+    3: 'Thành viên, vé trực tuyến',
+};
+
+export const allTranslate = ['Phụ đề', 'Lồng tiếng', 'Thuyết minh'];

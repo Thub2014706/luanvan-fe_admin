@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Form, Row } from 'react-bootstrap';
+// import { CCol, Form, CRow } from 'react-bootstrap';
 // import ListGenre from '~/components/ListGenre/ListGenre';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -11,10 +11,19 @@ import { addFilm, detailFilm, updateFilm } from '~/services/FilmService';
 import { useNavigate, useParams } from 'react-router-dom';
 import ImageBase from '~/components/ImageBase/ImageBase';
 import ReactPlayer from 'react-player';
-import Select from 'react-select';
 import { detailDirector, listDirector } from '~/services/DirectorService';
 import { detailPerformer, listPerformer } from '~/services/PerformerService';
 import { useSelector } from 'react-redux';
+import {
+    CCol,
+    CForm,
+    CFormInput,
+    CFormLabel,
+    CFormSelect,
+    CMultiSelect,
+    CRow,
+    CDatePicker,
+} from '@coreui/react-pro';
 
 const AddFilmPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -66,12 +75,14 @@ const AddFilmPage = () => {
                 setReleaseDate(moment(data.releaseDate).format('YYYY-MM-DD'));
                 setEndDate(moment(data.endDate).format('YYYY-MM-DD'));
                 setAge(data.age);
-                const performerData = await Promise.all(data.performer.map(async (item) => await detailPerformer(item)));
+                const performerData = await Promise.all(
+                    data.performer.map(async (item) => await detailPerformer(item)),
+                );
                 setPerformer(performerData.map((item) => ({ value: item._id, label: item.name })));
                 setImageId(data.image);
                 setTrailer(data.trailer);
                 setDescription(data.description);
-                console.log('aaa', data);
+                // console.log('aaa', data);
             }
         };
         fetch();
@@ -113,28 +124,28 @@ const AddFilmPage = () => {
             }
         }
     };
-    // console.log('aaa', performerNames);
+    console.log('aaa', genre);
 
     return (
         <div className="p-4">
             <h5 className="mb-4 fw-bold">Phim</h5>
-            <Form>
-                <Row className="mb-3">
-                    <Col>
+            <CForm>
+                <CRow className="mb-3">
+                    <CCol>
                         <h6>{id ? 'Cập nhật' : 'Thêm'} phim</h6>
-                    </Col>
-                    <Col>
+                    </CCol>
+                    <CCol>
                         <div className="button add float-end" onClick={handleAdd}>
                             Chấp nhận
                         </div>
-                    </Col>
-                </Row>
-                <Row className="mb-3">
-                    <Col>
-                        <Form.Label className="fw-bold" htmlFor="name">
+                    </CCol>
+                </CRow>
+                <CRow className="mb-3">
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="name">
                             Tên phim <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
                             id="name"
                             name="name"
                             value={name}
@@ -142,12 +153,12 @@ const AddFilmPage = () => {
                             onChange={(e) => setName(e.target.value)}
                             placeholder="Tên phim"
                         />
-                    </Col>
-                    <Col>
-                        <Form.Label className="fw-bold" htmlFor="time">
+                    </CCol>
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="time">
                             Thời lượng (phút) <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
                             id="time"
                             name="time"
                             value={time}
@@ -155,12 +166,12 @@ const AddFilmPage = () => {
                             onChange={(e) => setTime(e.target.value)}
                             placeholder="Thời lượng (phút)"
                         />
-                    </Col>
-                    <Col>
-                        <Form.Label className="fw-bold" htmlFor="nation">
+                    </CCol>
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="nation">
                             Quốc gia <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
                             id="nation"
                             name="nation"
                             value={nation}
@@ -168,55 +179,69 @@ const AddFilmPage = () => {
                             type="text"
                             placeholder="Quốc gia"
                         />
-                    </Col>
-                </Row>
+                    </CCol>
+                </CRow>
 
-                <Row className="mb-3">
-                    <Col xs={3}>
-                        <Form.Label className="fw-bold" htmlFor="releaseDate">
+                <CRow className="mb-3">
+                    <CCol xs={3}>
+                        <CFormLabel className="fw-bold" htmlFor="releaseDate">
                             Ngày phát hành <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CDatePicker
+                            footer
+                            // locale="en-US"
                             id="releaseDate"
                             name="releaseDate"
+                            date={releaseDate}
                             value={releaseDate}
-                            onChange={(e) => setReleaseDate(e.target.value)}
-                            type="date"
+                            onDateChange={(date) => setReleaseDate(date)}
                             placeholder="Ngày phát hành"
                         />
-                    </Col>
-                    <Col xs={3}>
-                        <Form.Label className="fw-bold" htmlFor="endDate">
+                    </CCol>
+                    <CCol xs={3}>
+                        <CFormLabel className="fw-bold" htmlFor="endDate">
                             Ngày kết thúc <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CDatePicker
                             id="endDate"
                             name="endDate"
+                            date={endDate}
                             value={endDate}
-                            onChange={(e) => setEndDate(e.target.value)}
-                            type="date"
+                            onDateChange={(date) => setEndDate(date)}
                             placeholder="Ngày kết thúc"
                         />
-                    </Col>
-                    <Col xs={6}>
-                        <Form.Label className="fw-bold" htmlFor="age">
+                    </CCol>
+                    <CCol xs={6}>
+                        <CFormLabel className="fw-bold" htmlFor="age">
                             Giới hạn độ tuổi <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Select id="age" value={age} name="age" onChange={(e) => setAge(e.target.value)}>
+                        </CFormLabel>
+                        <CFormSelect id="age" value={age} name="age" onChange={(e) => setAge(e.target.value)}>
                             <option>Giới hạn độ tuổi</option>
                             {standardAge.map((item) => (
                                 <option value={item}>{item}</option>
                             ))}
-                        </Form.Select>
-                    </Col>
-                </Row>
+                        </CFormSelect>
+                    </CCol>
+                </CRow>
 
-                <Row className="mb-3">
-                    <Col>
-                        <Form.Label className="fw-bold" htmlFor="genre">
+                <CRow className="mb-3">
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="genre">
                             Thể loại <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Select
+                        </CFormLabel>
+                        <CMultiSelect
+                            id="genre"
+                            clearSearchOnSelect
+                            value={genre}
+                            onChange={(value) => setGenre(value)}
+                            placeholder="Thể loại"
+                            options={listGenres.map((item) => ({
+                                value: item._id,
+                                label: item.name,
+                                selected: genre.find((mini) => mini.value === item._id),
+                            }))}
+                        />
+                        {/* <Select
                             id="genre"
                             isMulti
                             options={listGenres.map((item) => ({ value: item._id, label: item.name }))}
@@ -224,7 +249,7 @@ const AddFilmPage = () => {
                             onChange={(value) => setGenre(value)}
                             classNamePrefix="react-select"
                             placeholder="Thể loại"
-                        />
+                        /> */}
                         {/* <div onClick={() => handleShowGenre()} className="button select">
                             Chọn
                         </div>
@@ -233,46 +258,51 @@ const AddFilmPage = () => {
                                 {genreNames[item]}
                             </li>
                         ))} */}
-                    </Col>
-                    <Col>
-                        <Form.Label className="fw-bold" htmlFor="director">
+                    </CCol>
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="director">
                             Đạo diễn <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Select
+                        </CFormLabel>
+                        <CMultiSelect
                             id="director"
-                            isMulti
-                            options={listDirectors.map((item) => ({ value: item._id, label: item.name }))}
+                            clearSearchOnSelect
                             value={director}
                             onChange={(value) => setDirector(value)}
-                            classNamePrefix="react-select"
                             placeholder="Đạo diễn"
+                            options={listDirectors.map((item) => ({
+                                value: item._id,
+                                label: item.name,
+                                selected: director.find((mini) => mini.value === item._id),
+                            }))}
                         />
-                    </Col>
-                    <Col>
-                        <Form.Label className="fw-bold" htmlFor="performer">
+                    </CCol>
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="performer">
                             Diễn viên <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Select
+                        </CFormLabel>
+                        <CMultiSelect
                             id="performer"
-                            isMulti
-                            options={listPerformers.map((item) => ({ value: item._id, label: item.name }))}
-                            value={performer}
+                            clearSearchOnSelect
+                            value={director}
                             onChange={(value) => setPerformer(value)}
-                            classNamePrefix="react-select"
                             placeholder="Diễn viên"
+                            options={listPerformers.map((item) => ({
+                                value: item._id,
+                                label: item.name,
+                                selected: performer.find((mini) => mini.value === item._id),
+                            }))}
                         />
-                    </Col>
-                </Row>
+                    </CCol>
+                </CRow>
 
-                <Row className="mb-3">
-                    <Col>
-                        <Form.Label className="fw-bold" htmlFor="image">
+                <CRow className="mb-3">
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="image">
                             Hình ảnh <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
                             id="image"
                             name="image"
-                            multiple
                             accept=".jpg, .png"
                             type="file"
                             placeholder="Hình ảnh"
@@ -280,12 +310,12 @@ const AddFilmPage = () => {
                         />
                         {image && <img src={imageEncode} alt="" style={{ height: '200px', marginTop: '20px' }} />}
                         {imageId && <ImageBase pathImg={imageId} style={{ height: '200px', marginTop: '20px' }} />}
-                    </Col>
-                    <Col>
-                        <Form.Label className="fw-bold" htmlFor="trailer">
+                    </CCol>
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="trailer">
                             Trailer <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
                             id="trailer"
                             name="trailer"
                             value={trailer}
@@ -296,14 +326,14 @@ const AddFilmPage = () => {
                         {trailer && (
                             <ReactPlayer url={trailer} height="200px" width="400px" style={{ marginTop: '20px' }} />
                         )}
-                    </Col>
-                </Row>
-            </Form>
-            <Row className="mt-3">
-                <Col>
-                    <Form.Label className="fw-bold">
+                    </CCol>
+                </CRow>
+            </CForm>
+            <CRow className="mt-3">
+                <CCol>
+                    <CFormLabel className="fw-bold">
                         Mô tả <span style={{ color: 'red' }}>*</span>
-                    </Form.Label>
+                    </CFormLabel>
                     <ReactQuill
                         theme="snow"
                         value={description}
@@ -312,8 +342,8 @@ const AddFilmPage = () => {
                         formats={fomarts}
                         placeholder="Viết mô tả..."
                     />
-                </Col>
-            </Row>
+                </CCol>
+            </CRow>
 
             {/* <ListGenre show={showGenre} handleClose={handleCloseGenre} selected={genre} listSelect={handleGenre} /> */}
         </div>

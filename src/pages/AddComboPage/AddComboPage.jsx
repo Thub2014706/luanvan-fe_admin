@@ -1,7 +1,8 @@
+import { CButton, CCol, CForm, CFormInput, CFormLabel, CFormSelect, CInputGroup, CRow } from '@coreui/react-pro';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Form, Row } from 'react-bootstrap';
+// import { Button, CCol, Form, CRow } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import ImageBase from '~/components/ImageBase/ImageBase';
@@ -108,23 +109,23 @@ const AddComboPage = () => {
     return (
         <div className="p-4">
             <h5 className="mb-4 fw-bold">Combo</h5>
-            <Form>
-                <Row className="mb-3">
-                    <Col>
+            <CForm>
+                <CRow className="mb-3">
+                    <CCol>
                         <h6>{id ? 'Cập nhật' : 'Thêm'} Combo</h6>
-                    </Col>
-                    <Col>
+                    </CCol>
+                    <CCol>
                         <div className="button add float-end" onClick={handleSubmit}>
                             Chấp nhận
                         </div>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Form.Label className="fw-bold">
+                    </CCol>
+                </CRow>
+                <CRow>
+                    <CCol>
+                        <CFormLabel className="fw-bold">
                             Tên <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
                             required
                             type="text"
                             placeholder="Tên"
@@ -132,44 +133,43 @@ const AddComboPage = () => {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                         />
-                    </Col>
-                    <Col>
-                        <Form.Label className="fw-bold">
+                    </CCol>
+                    <CCol>
+                        <CFormLabel className="fw-bold">
                             Giá tiền <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
                             type="number"
                             placeholder="Giá tiền"
                             name="price"
                             value={price}
                             onChange={(e) => setPrice(e.target.value)}
                         />
-                    </Col>
-                </Row>
-                <Row className="mt-3">
-                    <Col>
-                        <Form.Label className="fw-bold">
-                            Avatar <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                    </CCol>
+                </CRow>
+                <CRow className="mt-3">
+                    <CCol>
+                        <CFormLabel className="fw-bold">
+                            Hình ảnh <span style={{ color: 'red' }}>*</span>
+                        </CFormLabel>
+                        <CFormInput
                             type="file"
-                            name="avatar"
-                            multiple
+                            name="image"
                             accept=".jpg, .png"
                             onChange={(e) => handleImage(e)}
                             className="mb-3"
                         />
                         {image && <img src={imageEncode} style={{ height: '200px', marginTop: '20px' }} alt="" />}
                         {imageId && <ImageBase pathImg={imageId} style={{ height: '200px', marginTop: '20px' }} />}
-                    </Col>
-                    <Col>
-                        <Form.Label className="fw-bold">
+                    </CCol>
+                    <CCol>
+                        <CFormLabel className="fw-bold">
                             Chi tiết <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
+                        </CFormLabel>
                         {food.map((mini, index) => (
-                            <Form.Group as={Row} className="d-flex align-items-center mb-2">
-                                <Col className="pe-0">
-                                    <Form.Select
+                            <CInputGroup as={CRow} className="d-flex align-items-center mb-2">
+                                <CCol className="pe-0">
+                                    <CFormSelect
                                         id="food"
                                         value={mini}
                                         name="food"
@@ -183,30 +183,30 @@ const AddComboPage = () => {
                                                     {item.name}
                                                 </option>
                                             ))}
-                                    </Form.Select>
-                                </Col>
-                                <Col className="p-0">
-                                    <Form.Control
+                                    </CFormSelect>
+                                </CCol>
+                                <CCol className="p-0">
+                                    <CFormInput
                                         value={quantity[index]}
                                         type="number"
                                         name="quantity"
                                         onChange={(e) => handleQuantity(e, index)}
                                         placeholder="Số lượng"
                                     />
-                                </Col>
-                                <Col xs="auto" className="ps-0">
-                                    <Button variant="danger" onClick={() => handleDeleteFood(index)}>
-                                        <FontAwesomeIcon icon={faXmark} />
-                                    </Button>
-                                </Col>
-                            </Form.Group>
+                                </CCol>
+                                <CCol xs="auto" className="ps-0">
+                                    <CButton color="danger" onClick={() => handleDeleteFood(index)}>
+                                        <FontAwesomeIcon icon={faXmark} color='white' />
+                                    </CButton>
+                                </CCol>
+                            </CInputGroup>
                         ))}
                         <div className="button select" onClick={handleAddFood}>
                             Thêm
                         </div>
-                    </Col>
-                </Row>
-            </Form>
+                    </CCol>
+                </CRow>
+            </CForm>
         </div>
     );
 };

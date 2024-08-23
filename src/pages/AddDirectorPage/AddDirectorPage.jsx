@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Form, Row } from 'react-bootstrap';
+// import { CCol, Form, CRow } from 'react-bootstrap';
 import ReactQuill from 'react-quill';
 import { fomarts, modules } from '~/constants';
 import { addDirector, detailDirector, updateDirector } from '~/services/DirectorService';
@@ -8,6 +8,7 @@ import Avatar from 'react-avatar';
 import { useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
+import { CCol, CDatePicker, CForm, CFormInput, CFormLabel, CRow } from '@coreui/react-pro';
 
 const AddDirectorPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -79,41 +80,44 @@ const AddDirectorPage = () => {
     return (
         <div className="p-4">
             <h5 className="mb-4 fw-bold">Đạo diễn</h5>
-            <Form>
-                <Row className="mb-3">
-                    <Col>
+            <CForm>
+                <CRow className="mb-3">
+                    <CCol>
                         <h6>{id ? 'Cập nhật' : 'Thêm'} đạo diễn</h6>
-                    </Col>
-                    <Col>
+                    </CCol>
+                    <CCol>
                         <div className="button add float-end" onClick={handleSubmit}>
                             Chấp nhận
                         </div>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Form.Label className="fw-bold">Avatar</Form.Label>
-                        <Form.Control
+                    </CCol>
+                </CRow>
+                <CRow>
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="avatar">
+                            Avatar
+                        </CFormLabel>
+                        <CFormInput
+                            id="avatar"
                             type="file"
                             name="avatar"
-                            multiple
                             accept=".jpg, .png"
                             onChange={(e) => handleAvatar(e)}
                             className="mb-3"
                         />
-                        {avatar && <Avatar src={avatarBase} color='gray' round={true} alt="" />}
+                        {avatar && <Avatar src={avatarBase} CColor="gray" round={true} alt="" />}
                         {avatarId && (
                             <ImageBase
                                 pathImg={avatarId}
                                 style={{ height: '100px', width: '100px', borderRadius: '50%', objectFit: 'cover' }}
                             />
                         )}
-                    </Col>
-                    <Col>
-                        <Form.Label className="fw-bold">
+                    </CCol>
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="name">
                             Họ Tên <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CFormInput
+                            id="name"
                             required
                             type="text"
                             placeholder="Họ tên"
@@ -121,21 +125,24 @@ const AddDirectorPage = () => {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                         />
-                    </Col>
-                    <Col>
-                        <Form.Label className="fw-bold">Ngày sinh</Form.Label>
-                        <Form.Control
-                            type="date"
+                    </CCol>
+                    <CCol>
+                        <CFormLabel className="fw-bold" htmlFor="birth">
+                            Ngày sinh
+                        </CFormLabel>
+                        <CDatePicker
+                            id="birth"
                             placeholder="Ngày sinh"
                             name="birth"
                             value={birth}
-                            onChange={(e) => setBirth(e.target.value)}
+                            date={birth}
+                            onDateChange={(date) => setBirth(date)}
                         />
-                    </Col>
-                </Row>
-                <Row className="mt-3">
-                    <Col>
-                        <Form.Label className="fw-bold">Mô tả</Form.Label>
+                    </CCol>
+                </CRow>
+                <CRow className="mt-3">
+                    <CCol>
+                        <CFormLabel className="fw-bold">Mô tả</CFormLabel>
                         <ReactQuill
                             theme="snow"
                             value={description}
@@ -144,14 +151,14 @@ const AddDirectorPage = () => {
                             formats={fomarts}
                             placeholder="Viết mô tả..."
                         />
-                    </Col>
-                </Row>
-                {/* <Row className="mt-3">
+                    </CCol>
+                </CRow>
+                {/* <CRow className="mt-3">
                     
-                </Row> */}
+                </CRow> */}
                 {/* <Avatar width={200} height={200} onCrop={onCrop} onClose={onClose} src={src} />
                         {avatar && <img src={avatar} alt="" />} */}
-            </Form>
+            </CForm>
         </div>
     );
 };

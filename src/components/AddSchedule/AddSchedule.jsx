@@ -1,3 +1,4 @@
+import { CDatePicker, CForm, CFormLabel, CMultiSelect } from '@coreui/react-pro';
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
@@ -35,66 +36,65 @@ const AddSchedule = ({ show, handleClose, id }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (id === null) {
-            await addSchedule({ film, startDate, endDate }, user?.accessToken);
+            await addSchedule({ film: film.value, startDate, endDate }, user?.accessToken);
         }
     };
 
-    console.log(film)
+    // console.log(film.value)
     return (
         <Modal centered show={show} onHide={handleClose}>
-            <Form onSubmit={handleSubmit}>
+            <CForm onSubmit={handleSubmit}>
                 <Modal.Header>
                     <Modal.Title>{id !== null ? 'Cập nhật' : 'Thêm mới'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form.Group>
-                        <Form.Label className="fw-bold" htmlFor="endDate">
+                    <div>
+                        <CFormLabel className="fw-bold" htmlFor="film">
                             Phim chiếu <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Select
+                        </CFormLabel>
+                        <CMultiSelect
                             id="film"
-                            // isMulti
-                            options={films.map((item) => ({ value: item._id, label: item.name }))}
-                            value={film.va}
-                            onChange={(value) => setFilm(value.value)}
-                            classNamePrefix="bootstrap"
-                            placeholder=""
+                            multiple={false}
+                            optionsStyle="text"
+                            clearSearchOnSelect
+                            options={films.map((item) => ({
+                                value: item._id,
+                                label: item.name,
+                                // selected: genre.find((mini) => mini.value === item._id),
+                            }))}
+                            value={film}
+                            onChange={(value) => setFilm(value)}
+                            placeholder="Phim chiếu"
                         />
-                        {/* <Form.Select value={film} name="film" onChange={(e) => setFilm(e.target.value)}>
-                            <option value="">Phim chiếu</option>
-                            {films.map((item) => (
-                                <option value={item._id}>{item.name}</option>
-                            ))}
-                        </Form.Select> */}
-                    </Form.Group>
+                    </div>
 
-                    <Form.Group className="mt-3">
-                        <Form.Label className="fw-bold" htmlFor="endDate">
+                    <div className="mt-3">
+                        <CFormLabel className="fw-bold" htmlFor="startDate">
                             Ngày bắt đầu <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CDatePicker
                             id="startDate"
                             name="startDate"
                             value={startDate}
-                            onChange={(e) => setStartDate(e.target.value)}
-                            type="date"
-                            placeholder="Ngày kết thúc"
+                            date={startDate}
+                            onDateChange={(date) => setStartDate(date)}
+                            placeholder="Ngày bắt đầu"
                         />
-                    </Form.Group>
+                    </div>
 
-                    <Form.Group className="mt-3">
-                        <Form.Label className="fw-bold" htmlFor="endDate">
+                    <div className="mt-3">
+                        <CFormLabel className="fw-bold" htmlFor="endDate">
                             Ngày kết thúc <span style={{ color: 'red' }}>*</span>
-                        </Form.Label>
-                        <Form.Control
+                        </CFormLabel>
+                        <CDatePicker
                             id="endDate"
                             name="endDate"
                             value={endDate}
-                            onChange={(e) => setEndDate(e.target.value)}
-                            type="date"
+                            date={endDate}
+                            onDateChange={(date) => setEndDate(date)}
                             placeholder="Ngày kết thúc"
                         />
-                    </Form.Group>
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
@@ -104,7 +104,7 @@ const AddSchedule = ({ show, handleClose, id }) => {
                         Lưu
                     </Button>
                 </Modal.Footer>
-            </Form>
+            </CForm>
         </Modal>
     );
 };

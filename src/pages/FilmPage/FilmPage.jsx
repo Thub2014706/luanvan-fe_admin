@@ -40,7 +40,7 @@ const FilmPage = () => {
         };
 
         fetchFilms();
-    }, [number, action, numberPage]);
+    }, [number, action, numberPage, search]);
 
     const handleSearch = (value) => {
         setSearch(value);

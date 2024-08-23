@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import AddSchedule from '~/components/AddSchedule/AddSchedule';
+import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
@@ -36,12 +37,13 @@ const SchedulePage = () => {
             console.log(data);
         };
         fetch();
-    }, [number, idDelete, showAdd, numberPage]);
+    }, [number, idDelete, showAdd, numberPage, search]);
 
-    const handleShowDelete = (id, name) => {
+    const handleShowDelete = async (id, idFilm) => {
         setShowDelete(true);
         setIdDelete(id);
-        setNameDelete(name);
+        const film = await detailFilm(idFilm)
+        setNameDelete(film.name);
     };
 
     const handleCloseDelete = () => {
@@ -51,7 +53,7 @@ const SchedulePage = () => {
     };
 
     const handleDelete = async () => {
-        // await deleteschedule(idDelete, user?.accessToken);
+        // await de(idDelete, user?.accessToken);
         // handleCloseDelete();
     };
 
@@ -136,7 +138,7 @@ const SchedulePage = () => {
                                 <td className="text-center align-middle">
                                     <FontAwesomeIcon
                                         color="red"
-                                        onClick={() => handleShowDelete(item._id, item.username)}
+                                        onClick={() => handleShowDelete(item._id, item.film)}
                                         icon={faTrashCan}
                                         style={{ cursor: 'pointer' }}
                                     />
@@ -150,6 +152,20 @@ const SchedulePage = () => {
                 <Pagination length={sumPage} selectNumber={handleNumber} currentPage={number} />
             </Row>
             <AddSchedule show={showAdd} handleClose={handleCloseAdd} id={idAdd} />
+            {idDelete !== null && (
+                <ModalQuestion
+                    text={
+                        <span>
+                            Bạn có chắc muốn xóa lịch chiếu <strong>{nameDelete}</strong>?
+                        </span>
+                    }
+                    accept="Đồng ý"
+                    cancel="Hủy"
+                    show={showDelete}
+                    handleAction={handleDelete}
+                    handleClose={handleCloseDelete}
+                />
+            )}
         </div>
     );
 };

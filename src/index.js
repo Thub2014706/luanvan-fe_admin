@@ -4,6 +4,7 @@ import App from '~/App';
 import reportWebVitals from './reportWebVitals';
 import GlobalStyles from './components/GlobalStyles';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '@coreui/coreui-pro/dist/css/coreui.min.css'
 import { persistor, store } from './app/store'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react';
