@@ -1,42 +1,41 @@
 import { CCol, CDatePicker, CForm, CFormLabel, CFormSelect, CMultiSelect, CRow, CTimePicker } from '@coreui/react-pro';
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Modal } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import Select from 'react-select';
 import { allTranslate } from '~/constants';
 import { detailFilm } from '~/services/FilmService';
 import { listSchedule } from '~/services/ScheduleService';
-import { addShowTime } from '~/services/ShowTimeService';
+import { addShowTime, detailShowTimeByRoom } from '~/services/ShowTimeService';
 
 const AddShowTime = ({ show, handleClose, dateAdd, room, theater }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
     const [films, setFilms] = useState([]);
     const [film, setFilm] = useState([]);
-    const [date, setDate] = useState(dateAdd);
     const [translate, setTranslate] = useState('');
     const [timeStart, setTimeStart] = useState('');
     const [timeEnd, setTimeEnd] = useState('');
+    const [listTime, setListTime] = useState([])
 
     useEffect(() => {
         const fetch = async () => {
-            const data = await listSchedule();
+            const data = await listSchedule(dateAdd);
             setFilms(data);
         };
         fetch();
-    }, []);
+    }, [dateAdd]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (
             await addShowTime(
-                { theater, room, film: film[0].value, date, translate, timeStart, timeEnd },
+                { theater, room, film: film[0].value, date: dateAdd, translate, timeStart, timeEnd },
                 user?.accessToken,
             )
         ) {
             handleClose();
         }
     };
-
+    
     const handleTimeStart = async (time) => {
         setTimeStart(time);
         const data = await detailFilm(film[0].value);
@@ -47,8 +46,7 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater }) => {
         let newTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
         setTimeEnd(newTime);
     };
-    console.log(timeEnd);
-
+    
     useEffect(() => {
         const fetch = () => {
             if (show) {
@@ -57,6 +55,17 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater }) => {
         };
         fetch();
     }, [show]);
+    
+    useEffect(() => {
+        const fetch = async () => {
+            const data = await detailShowTimeByRoom(theater, room, dateAdd)
+            setListTime(data)
+        }
+        fetch()
+    }, [theater, room, dateAdd])
+    const hoursStart = []
+    
+    console.log('qq', listTime);
 
     return (
         <Modal centered show={show} onHide={handleClose}>
@@ -105,9 +114,7 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater }) => {
                             disabled
                             id="date"
                             name="date"
-                            value={date}
-                            date={date}
-                            onChange={(date) => setDate(date)}
+                            date={dateAdd}
                         />
                     </div>
 
@@ -137,6 +144,7 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater }) => {
                             <CCol>
                                 <CTimePicker
                                     seconds={false}
+                                    hours={hoursStart}
                                     minutes={[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]}
                                     placeholder="Bắt đầu"
                                     disabled={film.length === 0}

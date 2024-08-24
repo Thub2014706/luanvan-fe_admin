@@ -2,6 +2,7 @@ import axios from 'axios';
 import { showToast } from '~/constants';
 
 export const allShowTime = async (theater, room, date) => {
+    console.log(theater, room, date)
     try {
         const response = await axios.get(
             `${process.env.REACT_APP_API_URL}/api/showtime?theater=${theater}&room=${room}&date=${date}`,
@@ -23,6 +24,18 @@ export const addShowTime = async (data, token) => {
         return response.data;
     } catch (error) {
         showToast(error.response.data.message, 'error');
+        console.log('loi', error);
+    }
+};
+
+export const detailShowTimeByRoom = async (theater, room, date) => {
+    console.log(theater, room, date)
+    try {
+        const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/showtime/all-by-room?theater=${theater}&room=${room}&date=${date}`,
+        );
+        return response.data;
+    } catch (error) {
         console.log('loi', error);
     }
 };

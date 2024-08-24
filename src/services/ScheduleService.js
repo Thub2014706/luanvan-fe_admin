@@ -47,9 +47,9 @@ export const detailSchedule = async (id) => {
     }
 };
 
-export const listSchedule = async () => {
+export const listSchedule = async (endDate) => {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/schedule/list`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/schedule/list?endDate=${endDate}`);
         return response.data;
     } catch (error) {
         console.log('loi', error);

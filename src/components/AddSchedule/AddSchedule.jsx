@@ -1,15 +1,15 @@
 import { CDatePicker, CForm, CFormLabel, CMultiSelect } from '@coreui/react-pro';
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Modal } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import Select from 'react-select';
 import { listFilm } from '~/services/FilmService';
 import { addSchedule, detailSchedule } from '~/services/ScheduleService';
 
 const AddSchedule = ({ show, handleClose, id }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
     const [films, setFilms] = useState([]);
-    const [film, setFilm] = useState('');
+    const [film, setFilm] = useState([]);
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
 
@@ -36,7 +36,7 @@ const AddSchedule = ({ show, handleClose, id }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (id === null) {
-            await addSchedule({ film: film.value, startDate, endDate }, user?.accessToken);
+            await addSchedule({ film: film[0].value, startDate, endDate }, user?.accessToken);
         }
     };
 
@@ -62,7 +62,7 @@ const AddSchedule = ({ show, handleClose, id }) => {
                                 label: item.name,
                                 // selected: genre.find((mini) => mini.value === item._id),
                             }))}
-                            value={film}
+                            // value={film}
                             onChange={(value) => setFilm(value)}
                             placeholder="Phim chiếu"
                         />
@@ -77,7 +77,7 @@ const AddSchedule = ({ show, handleClose, id }) => {
                             name="startDate"
                             value={startDate}
                             date={startDate}
-                            onDateChange={(date) => setStartDate(date)}
+                            onDateChange={(date) => setStartDate(moment(date).format('YYYY-MM-DD'))}
                             placeholder="Ngày bắt đầu"
                         />
                     </div>
@@ -91,7 +91,7 @@ const AddSchedule = ({ show, handleClose, id }) => {
                             name="endDate"
                             value={endDate}
                             date={endDate}
-                            onDateChange={(date) => setEndDate(date)}
+                            onDateChange={(date) => setEndDate(moment(date).format('YYYY-MM-DD'))}
                             placeholder="Ngày kết thúc"
                         />
                     </div>
