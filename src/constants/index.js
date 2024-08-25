@@ -180,4 +180,15 @@ export const typeUserPrice = {
     3: 'Thành viên, vé trực tuyến',
 };
 
+export const typeShowTime = {
+    0: 'Theo lịch',
+    1: 'Chiếu sớm'
+}
+
+export const statusShowTime = {
+    0: 'Đã chiếu',
+    1: 'Đang chiếu',
+    2: 'Sắp chiếu'
+}
+
 export const allTranslate = ['Phụ đề', 'Lồng tiếng', 'Thuyết minh'];

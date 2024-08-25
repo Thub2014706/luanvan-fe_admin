@@ -10,6 +10,7 @@ const ShowTimePage = () => {
     const [room, setRoom] = useState('');
     const [date, setDate] = useState(moment(Date.now()).format('YYYY-MM-DD'));
     const [theaterSearch, setTheaterSerch] = useState([]);
+    const [action, setAction] = useState(false);
 
     useEffect(() => {
         const fetch = async () => {
@@ -18,7 +19,7 @@ const ShowTimePage = () => {
             // console.log('dd', data);
         };
         fetch();
-    }, [theater, room, date]);
+    }, [theater, room, date, action]);
 
     const handleSearch = async (theater, room, date) => {
         setTheater(theater);
@@ -28,6 +29,16 @@ const ShowTimePage = () => {
         setTheaterSerch(data);
     };
     // console.log('ê', theater, room, date);
+    const handleAddSuccess = async () => {
+        setAction(true);
+    };
+
+    useEffect(() => {
+        if (action) {
+            setAction(false);
+        }
+    }, [action]);
+
 
     return (
         <div className="p-4">
@@ -57,6 +68,7 @@ const ShowTimePage = () => {
                                     theater={item.theater._id}
                                     room={mini.room._id}
                                     date={date}
+                                    onAddSuccess={handleAddSuccess}
                                 />
                             </div>
                         ))}

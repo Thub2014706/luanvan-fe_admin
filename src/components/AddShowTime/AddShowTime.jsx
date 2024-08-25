@@ -1,4 +1,5 @@
 import { CCol, CDatePicker, CForm, CFormLabel, CFormSelect, CMultiSelect, CRow, CTimePicker } from '@coreui/react-pro';
+import moment from 'moment-timezone';
 import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
@@ -7,14 +8,14 @@ import { detailFilm } from '~/services/FilmService';
 import { listSchedule } from '~/services/ScheduleService';
 import { addShowTime, detailShowTimeByRoom } from '~/services/ShowTimeService';
 
-const AddShowTime = ({ show, handleClose, dateAdd, room, theater }) => {
+const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
     const [films, setFilms] = useState([]);
     const [film, setFilm] = useState([]);
     const [translate, setTranslate] = useState('');
     const [timeStart, setTimeStart] = useState('');
     const [timeEnd, setTimeEnd] = useState('');
-    const [listTime, setListTime] = useState([])
+    const [listTime, setListTime] = useState([]);
 
     useEffect(() => {
         const fetch = async () => {
@@ -33,39 +34,58 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater }) => {
             )
         ) {
             handleClose();
+            onAddSuccess(); 
         }
     };
-    
+
     const handleTimeStart = async (time) => {
-        setTimeStart(time);
-        const data = await detailFilm(film[0].value);
-        let [hours, minutes] = time.split(':', 2);
-        hours = Number(hours) + Math.floor(data.time / 60);
-        minutes = (data.time % 60) + 5 - ((data.time % 60) % 5);
-        hours = hours % 24;
-        let newTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-        setTimeEnd(newTime);
+        const initialTime = moment.tz(time, 'HH:mm', 'Asia/Ho_Chi_Minh');
+        setTimeStart(initialTime.format('HH:mm'));
     };
-    
+
+    const handleTimeEnd = async (time) => {
+        const initialTime = moment.tz(time, 'HH:mm', 'Asia/Ho_Chi_Minh');
+        setTimeEnd(initialTime.format('HH:mm'));
+    };
+
     useEffect(() => {
-        const fetch = () => {
-            if (show) {
+        const fetch = async () => {
+            if (timeStart !== '' && film.length > 0) {
+                const data = await detailFilm(film[0].value);
+                const initialTime = moment.tz(timeStart, 'HH:mm', 'Asia/Ho_Chi_Minh');
+                const modMinute = initialTime.minutes() % 5 === 0 ? 0 : 5 - (initialTime.minutes() % 5);
+                setTimeStart(initialTime.format('HH:mm'));
+                const newTime = initialTime.add(data.time + 10 + 5 - ((data.time + 10) % 5) + modMinute, 'minutes');
+                setTimeEnd(newTime.format('HH:mm'));
+            } else {
                 setTimeEnd('');
             }
         };
         fetch();
-    }, [show]);
-    
+    }, [timeStart, film]);
+
+    console.log(translate);
     useEffect(() => {
         const fetch = async () => {
-            const data = await detailShowTimeByRoom(theater, room, dateAdd)
-            setListTime(data)
-        }
-        fetch()
-    }, [theater, room, dateAdd])
-    const hoursStart = []
-    
-    console.log('qq', listTime);
+            const data = await detailShowTimeByRoom(theater, room, dateAdd);
+            setListTime(data);
+        };
+        fetch();
+    }, [theater, room, dateAdd]);
+
+    // listTime.forEach((item) => {
+    const hoursStart = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
+    const minutesStart = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 59];
+    useEffect(() => {
+        const fetch = () => {
+            if (show) {
+                setTimeStart('');
+                setTimeEnd('');
+                setTranslate('');
+            }
+        };
+        fetch();
+    }, [show]);
 
     return (
         <Modal centered show={show} onHide={handleClose}>
@@ -110,12 +130,7 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater }) => {
                         <CFormLabel className="fw-bold" htmlFor="date">
                             Ngày chiếu <span style={{ color: 'red' }}>*</span>
                         </CFormLabel>
-                        <CDatePicker
-                            disabled
-                            id="date"
-                            name="date"
-                            date={dateAdd}
-                        />
+                        <CDatePicker disabled id="date" name="date" date={dateAdd} />
                     </div>
 
                     <div className="mt-3">
@@ -145,20 +160,23 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater }) => {
                                 <CTimePicker
                                     seconds={false}
                                     hours={hoursStart}
-                                    minutes={[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]}
+                                    minutes={minutesStart}
                                     placeholder="Bắt đầu"
                                     disabled={film.length === 0}
+                                    inputReadOnly
                                     onTimeChange={(time) => handleTimeStart(time)}
                                 />
                             </CCol>
+
                             <CCol>
                                 <CTimePicker
                                     seconds={false}
-                                    minutes={[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]}
-                                    disabled={film.length === 0}
+                                    minutes={minutesStart}
+                                    // minutes={}
+                                    disabled
                                     placeholder="Kết thúc"
                                     time={timeEnd}
-                                    onTimeChange={(time) => setTimeEnd(time)}
+                                    onTimeChange={(time) => handleTimeEnd(time)}
                                 />
                             </CCol>
                         </CRow>

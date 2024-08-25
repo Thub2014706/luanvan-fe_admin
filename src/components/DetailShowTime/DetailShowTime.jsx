@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import AddShowTime from '../AddShowTime/AddShowTime';
 import { Table } from 'react-bootstrap';
 import { detailFilm } from '~/services/FilmService';
+import { statusShowTime, typeShowTime } from '~/constants';
 
-const DetailShowTime = ({ props, theater, room, date }) => {
+const DetailShowTime = ({ props, theater, room, date, onAddSuccess }) => {
     const [showAdd, setShowAdd] = useState(false);
 
     const handleShowAdd = () => {
@@ -48,12 +49,28 @@ const DetailShowTime = ({ props, theater, room, date }) => {
                                 <td>
                                     <NameFilm id={item.film} />
                                 </td>
-                                <td>{item.translate}</td>
-                                <td>
-                                    {item.timeStart.slice(0, 5)} - {item.timeEnd.slice(0, 5)}
+                                <td className="text-center align-middle">{item.translate}</td>
+                                <td className="text-center align-middle">
+                                    <p className="time-show">
+                                        {item.timeStart.slice(0, 5)} - {item.timeEnd.slice(0, 5)}
+                                    </p>
                                 </td>
-                                <td>{item.type}</td>
-                                <td>{item.status}</td>
+                                <td className="text-center align-middle">
+                                    <p className={`type-show ${item.type === typeShowTime[0] ? 'early' : 'okk'}`}>
+                                        {item.type}
+                                    </p>
+                                </td>
+                                <td className="text-center align-middle">
+                                    <p
+                                        className={`type-show 
+                                            ${item.status === statusShowTime[0] ? 'ing' : ''}
+                                            ${item.status === statusShowTime[1] ? 'early' : ''}
+                                            ${item.status === statusShowTime[2] ? 'okk' : ''}
+                                          `}
+                                    >
+                                        {item.status}
+                                    </p>
+                                </td>
                             </tr>
                         ))
                     ) : (
@@ -71,7 +88,14 @@ const DetailShowTime = ({ props, theater, room, date }) => {
                 </div>
             )}
             {date && (
-                <AddShowTime show={showAdd} handleClose={handleCloseAdd} dateAdd={date} room={room} theater={theater} />
+                <AddShowTime
+                    show={showAdd}
+                    handleClose={handleCloseAdd}
+                    dateAdd={date}
+                    room={room}
+                    theater={theater}
+                    onAddSuccess={onAddSuccess}
+                />
             )}
         </div>
     );
