@@ -173,6 +173,13 @@ export const itemMenu = [
     },
 ];
 
+export const timePrice = {
+    0: 'Thứ 2 đến thứ 5 trước 17h',
+    1: 'Thứ 2 đến thứ 5 sau 17h',
+    2: 'Thứ 6 đến chủ nhật trước 17h',
+    3: 'Thứ 6 đến chủ nhật sau 17h'
+}
+
 export const typeUserPrice = {
     0: 'Học sinh, sinh viên',
     1: 'Người lớn',

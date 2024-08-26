@@ -44,7 +44,7 @@ const ShowTimePage = () => {
         <div className="p-4">
             <h5 className="fw-bold">Suất chiếu</h5>
             <SearchShowTime handleSearch={handleSearch} />
-            <CRow className="mt-5">
+            <CRow className="mt-5 mb-3">
                 <CCol xs={4}>
                     <hr />
                 </CCol>
@@ -59,10 +59,10 @@ const ShowTimePage = () => {
             <CRow>
                 {theaterSearch.map((item) => (
                     <div className="my-3" key={item.theater._id}>
-                        <h5>Rạp: {item.theater.name}</h5>
+                        <h5 className='text-center h5-theater'>Rạp: {item.theater.name}</h5>
                         {item.rooms.map((mini) => (
-                            <div className="my-3">
-                                <h6>{mini.room.name}</h6>
+                            <div className="my-5">
+                                <h6 className='fw-bold ms-3'>{mini.room.name}</h6>
                                 <DetailShowTime
                                     props={mini.showTimes}
                                     theater={item.theater._id}

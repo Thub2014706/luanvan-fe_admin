@@ -55,7 +55,7 @@ const SearchShowTime = ({ handleSearch }) => {
                                 }))}
                                 value={theater}
                                 onChange={(value) => setTheater(value)}
-                                placeholder="Phim chiếu"
+                                placeholder="Rạp chiếu"
                             />
                         </CCol>
                     </CRow>

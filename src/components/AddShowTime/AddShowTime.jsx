@@ -6,7 +6,10 @@ import { useSelector } from 'react-redux';
 import { allTranslate } from '~/constants';
 import { detailFilm } from '~/services/FilmService';
 import { listSchedule } from '~/services/ScheduleService';
-import { addShowTime, detailShowTimeByRoom } from '~/services/ShowTimeService';
+import { addShowTime } from '~/services/ShowTimeService';
+import Name from '../Name/Name';
+import { detailTheater } from '~/services/TheaterService';
+import { detailRoom } from '~/services/RoomService';
 
 const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -15,7 +18,6 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
     const [translate, setTranslate] = useState('');
     const [timeStart, setTimeStart] = useState('');
     const [timeEnd, setTimeEnd] = useState('');
-    const [listTime, setListTime] = useState([]);
 
     useEffect(() => {
         const fetch = async () => {
@@ -34,7 +36,7 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
             )
         ) {
             handleClose();
-            onAddSuccess(); 
+            onAddSuccess();
         }
     };
 
@@ -64,18 +66,8 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
         fetch();
     }, [timeStart, film]);
 
-    console.log(translate);
-    useEffect(() => {
-        const fetch = async () => {
-            const data = await detailShowTimeByRoom(theater, room, dateAdd);
-            setListTime(data);
-        };
-        fetch();
-    }, [theater, room, dateAdd]);
+    // console.log(translate);
 
-    // listTime.forEach((item) => {
-    const hoursStart = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
-    const minutesStart = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 59];
     useEffect(() => {
         const fetch = () => {
             if (show) {
@@ -91,7 +83,12 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
         <Modal centered show={show} onHide={handleClose}>
             <CForm onSubmit={handleSubmit}>
                 <Modal.Header>
-                    <Modal.Title>Thêm suất chiếu</Modal.Title>
+                    <Modal.Title>
+                        <h4>
+                            Thêm suất chiếu (<Name id={theater} detail={detailTheater} /> -{' '}
+                            <Name id={room} detail={detailRoom} />)
+                        </h4>
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div>
@@ -104,11 +101,14 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
                             multiple={false}
                             optionsStyle="text"
                             clearSearchOnSelect
-                            options={films.map((item) => ({
-                                value: item.schedule.film,
-                                label: `${item.nameFilm} (${item.schedule.type})`,
-                                // selected: genre.find((mini) => mini.value === item._id),
-                            }))}
+                            options={
+                                films &&
+                                films.map((item) => ({
+                                    value: item.schedule.film,
+                                    label: `${item.nameFilm} (${item.schedule.type})`,
+                                    // selected: genre.find((mini) => mini.value === item._id),
+                                }))
+                            }
                             value={film}
                             onChange={(value) => setFilm(value)}
                             placeholder="Phim chiếu"
@@ -159,11 +159,12 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
                             <CCol>
                                 <CTimePicker
                                     seconds={false}
-                                    hours={hoursStart}
-                                    minutes={minutesStart}
+                                    hours={[7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]}
+                                    minutes={[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 59]}
                                     placeholder="Bắt đầu"
                                     disabled={film.length === 0}
                                     inputReadOnly
+                                    cleaner={false}
                                     onTimeChange={(time) => handleTimeStart(time)}
                                 />
                             </CCol>
@@ -171,8 +172,8 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
                             <CCol>
                                 <CTimePicker
                                     seconds={false}
-                                    minutes={minutesStart}
-                                    // minutes={}
+                                    hours={[7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]}
+                                    minutes={[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 59]}
                                     disabled
                                     placeholder="Kết thúc"
                                     time={timeEnd}

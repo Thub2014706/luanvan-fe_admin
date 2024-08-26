@@ -6,9 +6,11 @@ import { Col, Row, Table } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import AddSchedule from '~/components/AddSchedule/AddSchedule';
 import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
+import Name from '~/components/Name/Name';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
+import { statusShowTime } from '~/constants';
 import { detailFilm } from '~/services/FilmService';
 import { allSchedule } from '~/services/ScheduleService';
 
@@ -42,7 +44,7 @@ const SchedulePage = () => {
     const handleShowDelete = async (id, idFilm) => {
         setShowDelete(true);
         setIdDelete(id);
-        const film = await detailFilm(idFilm)
+        const film = await detailFilm(idFilm);
         setNameDelete(film.name);
     };
 
@@ -74,19 +76,6 @@ const SchedulePage = () => {
     const handleSearch = (value) => {
         setSearch(value);
         setNumber(1);
-    };
-
-    const NameFilm = ({ id }) => {
-        const [name, setName] = useState('');
-
-        useEffect(() => {
-            const fetch = async () => {
-                const data = await detailFilm(id);
-                setName(data.name);
-            };
-            fetch();
-        }, [id]);
-        return <span>{name}</span>;
     };
 
     return (
@@ -125,14 +114,23 @@ const SchedulePage = () => {
                             <tr key={item._id}>
                                 <td className="text-center align-middle">{index + 1}</td>
                                 <td className="text-center align-middle">
-                                    <NameFilm id={item.film} />
+                                    <Name id={item.film} detail={detailFilm} />
+                                    {/* {item.film} */}
                                 </td>
                                 <td className="text-center align-middle">
                                     {moment(item.startDate).format('DD-MM-YYYY')} -{' '}
                                     {moment(item.endDate).format('DD-MM-YYYY')}
                                 </td>
                                 <td className="text-center align-middle">
-                                    {item.type}
+                                    <p
+                                        className={`type-show 
+                                            ${item.type === statusShowTime[0] ? 'ing' : ''}
+                                            ${item.type === statusShowTime[1] ? 'early' : ''}
+                                            ${item.type === statusShowTime[2] ? 'okk' : ''}
+                                          `}
+                                    >
+                                        {item.type}
+                                    </p>
                                 </td>
 
                                 <td className="text-center align-middle">

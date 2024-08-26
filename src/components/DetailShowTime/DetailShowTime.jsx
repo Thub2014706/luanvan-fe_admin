@@ -3,6 +3,7 @@ import AddShowTime from '../AddShowTime/AddShowTime';
 import { Table } from 'react-bootstrap';
 import { detailFilm } from '~/services/FilmService';
 import { statusShowTime, typeShowTime } from '~/constants';
+import Name from '../Name/Name';
 
 const DetailShowTime = ({ props, theater, room, date, onAddSuccess }) => {
     const [showAdd, setShowAdd] = useState(false);
@@ -13,19 +14,6 @@ const DetailShowTime = ({ props, theater, room, date, onAddSuccess }) => {
 
     const handleCloseAdd = () => {
         setShowAdd(false);
-    };
-
-    const NameFilm = ({ id }) => {
-        const [name, setName] = useState('');
-
-        useEffect(() => {
-            const fetch = async () => {
-                const data = await detailFilm(id);
-                setName(data.name);
-            };
-            fetch();
-        }, [id]);
-        return <span>{name}</span>;
     };
 
     let now = Date.now();
@@ -47,7 +35,7 @@ const DetailShowTime = ({ props, theater, room, date, onAddSuccess }) => {
                         props.map((item) => (
                             <tr key={item._id}>
                                 <td>
-                                    <NameFilm id={item.film} />
+                                    <Name id={item.film} detail={detailFilm} />
                                 </td>
                                 <td className="text-center align-middle">{item.translate}</td>
                                 <td className="text-center align-middle">

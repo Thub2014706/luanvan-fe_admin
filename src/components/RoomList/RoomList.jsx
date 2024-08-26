@@ -77,7 +77,8 @@ const RoomList = ({ idTheater }) => {
 
     return (
         <div className="p-4">
-            <h5 className="mb-4 fw-bold">Danh sách phòng chiếu</h5>
+            <hr />
+            <h5 className="mt-4 mb-4 fw-bold">Danh sách phòng chiếu</h5>
             <Row className="mb-3">
                 <Col xs={6}>
                     <div className="button add" onClick={() => handleShowAdd(null)}>
@@ -99,45 +100,53 @@ const RoomList = ({ idTheater }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {room.map((item, index) => (
-                            <tr key={item._id}>
-                                <td className="text-center align-middle">{index + 1}</td>
-                                <td className="text-center align-middle">{item.name}</td>
-                                <td className="text-center align-middle">{item.type}</td>
-                                <td className="text-center align-middle">
-                                    {item.numRow} (A <FontAwesomeIcon icon={faArrowRight} />{' '}
-                                    {String.fromCharCode(64 + item.numRow)})
-                                </td>
-                                <td className="text-center align-middle">
-                                    {item.numCol} (1 <FontAwesomeIcon icon={faArrowRight} /> {item.numCol})
-                                </td>
-                                <td className="align-content-center">
-                                    <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
-                                </td>
-                                <td className="text-center align-middle">
-                                    <FontAwesomeIcon
-                                        icon={faTableCells}
-                                        className="me-4"
-                                        color="rgb(164, 156, 11)"
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={() => handleShowSeat(item._id)}
-                                    />
-                                    <FontAwesomeIcon
-                                        className="me-4"
-                                        icon={faPenToSquare}
-                                        color="green"
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={() => handleShowAdd(item._id)}
-                                    />
-                                    <FontAwesomeIcon
-                                        color="red"
-                                        onClick={() => handleShowDelete(item._id, item.name)}
-                                        icon={faTrashCan}
-                                        style={{ cursor: 'pointer' }}
-                                    />
+                        {room.length > 0 ? (
+                            room.map((item, index) => (
+                                <tr key={item._id}>
+                                    <td className="text-center align-middle">{index + 1}</td>
+                                    <td className="text-center align-middle">{item.name}</td>
+                                    <td className="text-center align-middle">{item.type}</td>
+                                    <td className="text-center align-middle">
+                                        {item.numRow} (A <FontAwesomeIcon icon={faArrowRight} />{' '}
+                                        {String.fromCharCode(64 + item.numRow)})
+                                    </td>
+                                    <td className="text-center align-middle">
+                                        {item.numCol} (1 <FontAwesomeIcon icon={faArrowRight} /> {item.numCol})
+                                    </td>
+                                    <td className="align-content-center">
+                                        <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
+                                    </td>
+                                    <td className="text-center align-middle">
+                                        <FontAwesomeIcon
+                                            icon={faTableCells}
+                                            className="me-4"
+                                            color="rgb(164, 156, 11)"
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => handleShowSeat(item._id)}
+                                        />
+                                        <FontAwesomeIcon
+                                            className="me-4"
+                                            icon={faPenToSquare}
+                                            color="green"
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => handleShowAdd(item._id)}
+                                        />
+                                        <FontAwesomeIcon
+                                            color="red"
+                                            onClick={() => handleShowDelete(item._id, item.name)}
+                                            icon={faTrashCan}
+                                            style={{ cursor: 'pointer' }}
+                                        />
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan={7} className="text-center">
+                                    Chưa có phòng chiếu nào
                                 </td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </Table>
             </Row>

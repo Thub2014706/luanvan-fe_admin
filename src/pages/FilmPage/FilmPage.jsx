@@ -6,6 +6,7 @@ import { Col, Row, Table } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import ImageBase from '~/components/ImageBase/ImageBase';
+import Name from '~/components/Name/Name';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
@@ -60,20 +61,6 @@ const FilmPage = () => {
         setNumberPage(value);
     };
 
-    const GenreName = ({ id }) => {
-        const [name, setName] = useState('');
-
-        useEffect(() => {
-            const fetch = async () => {
-                const data = await detailGenre(id);
-                setName(data.name);
-            };
-            fetch();
-        }, [id]);
-
-        return <span>{name}</span>;
-    };
-
     return (
         <div className="p-4">
             <h5 className="mb-4 fw-bold">Phim</h5>
@@ -118,7 +105,7 @@ const FilmPage = () => {
                                 <td className="text-center align-middle">
                                     {item.genre.map((name) => (
                                         <span>
-                                            <GenreName id={name} />
+                                            <Name id={name} detail={detailGenre} />
                                             <br />
                                         </span>
                                     ))}

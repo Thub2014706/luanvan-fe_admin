@@ -181,7 +181,6 @@ const AddTheaterPage = () => {
                     </CRow>
                 </CForm>
             </div>
-            <hr />
             {id && <RoomList idTheater={id} />}
             {idAdd && <RoomList idTheater={idAdd} />}
         </div>

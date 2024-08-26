@@ -36,7 +36,9 @@ const AddSchedule = ({ show, handleClose, id }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (id === null) {
-            await addSchedule({ film: film[0].value, startDate, endDate }, user?.accessToken);
+            if (await addSchedule({ film: film[0].value, startDate, endDate }, user?.accessToken)) {
+                handleClose()
+            }
         }
     };
 
