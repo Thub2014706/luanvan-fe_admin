@@ -122,9 +122,12 @@ body {
 
 .col-menu {
     background-color: white;
-    // background-color: rgb(255, 133, 133);
+    // background-color: rgb(255, 120, 210);
     border-radius: 10px;
     // height: 500px;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 15px;
     padding-top: 10px;
     padding-bottom: 10px;
 }
@@ -134,7 +137,7 @@ body {
 }
 
 .item-menu {
-    color: gray;
+    color: rgb(86, 86, 86);
     display: flex;
     height: 40px;
 
@@ -162,6 +165,7 @@ body {
 
     &.active {
         background: linear-gradient(#4e337a, #264c9a);
+        // background: linear-gradient(#febcff, #ff86f9);
     }
 
     &.inactive {
@@ -357,4 +361,67 @@ body {
     background: linear-gradient(#4e337a, #264c9a);
     border-radius: 5px;
     color: white;
+}
+
+.card-film {
+    height: 340px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+        transform: scale(1.02);
+    }
+}
+
+.card-date {
+    width: 55px !important;
+    height: 70px !important;
+    cursor: pointer;
+
+    &.yes {
+        border-color: #264c9a !important;
+    }
+
+    &.no {
+        border-color: gray !important;
+    }
+}
+
+.card-head-date {
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+
+    &.yes {
+        background: linear-gradient(#4e337a, #264c9a) !important;
+        color: white !important;
+    }
+
+    &.no {
+        background-color: rgb(187, 187, 187);
+    }
+}
+
+.card-body-date {
+    font-size: 12px;
+
+    &.yes {
+        color: #264c9a;
+    }
+}
+
+.time-mini {
+    padding: 5px 8px;
+    border-radius: 5px;
+
+    &.yes {
+        color: #16777a;
+        border: 1px solid #16777a;
+    }
+
+    &.no {
+        color: #9f9f9f;
+        border: 1px solid #9f9f9f;
+    }
 }

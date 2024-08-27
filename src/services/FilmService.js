@@ -81,3 +81,12 @@ export const listFilm = async () => {
         console.log('loi', error);
     }
 };
+
+export const listFilmNotScreened = async (search) => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/film/list-film-not-screened?search=${search}`);
+        return response.data;
+    } catch (error) {
+        console.log('loi', error);
+    }
+};

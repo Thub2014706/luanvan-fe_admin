@@ -5,6 +5,7 @@ import AddFilmPage from '~/pages/AddFilmPage/AddFilmPage';
 import AddFoodPage from '~/pages/AddFoodPage/AddFoodPage';
 import AddPerformerPage from '~/pages/AddPerformerPage/AddPerformerPage';
 import AddTheaterPage from '~/pages/AddTheaterPage/AddTheaterPage';
+import BookTicketsPage from '~/pages/BookTicketsPage/BookTicketsPage';
 import ComboPage from '~/pages/ComboPage/ComboPage';
 import DirectorPage from '~/pages/DirectorPage/DirectorPage';
 import DiscountPage from '~/pages/DiscountPage/DiscountPage';
@@ -16,6 +17,7 @@ import LoginPage from '~/pages/LoginPage/LoginPage';
 import NotFoundPage from '~/pages/NotFoundPage/NotFoundPage';
 import PerformerPage from '~/pages/PerformerPage/PerformerPage';
 import SchedulePage from '~/pages/SchedulePage/SchedulePage';
+import SelectShowTimePage from '~/pages/SelectShowTimePage/SelectShowTimePage';
 import ShowTimePage from '~/pages/ShowTimePage/ShowTimePage';
 import StaffPage from '~/pages/StaffPage/StaffPage';
 import TheaterPage from '~/pages/TheaterPage/TheaterPage';
@@ -143,6 +145,16 @@ const routes = [
     {
         path: '/showtime',
         component: ShowTimePage,
+    },
+
+    {
+        path: '/book-tickets',
+        component: BookTicketsPage,
+    },
+
+    {
+        path: '/book-tickets/:id',
+        component: SelectShowTimePage,
     },
 
     {

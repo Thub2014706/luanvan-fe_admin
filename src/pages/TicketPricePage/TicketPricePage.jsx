@@ -1,31 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import { Form, InputGroup, Table } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { timePrice, typeUserPrice } from '~/constants';
+import { showToast, timePrice, typeSurcharge, typeUserPrice } from '~/constants';
 import { addPrice, detailPrice } from '~/services/PriceService';
+import { addSurcharge, detailSurcharge } from '~/services/SurchargeService';
 
 const TicketPricePage = () => {
-    let array = [];
     const user = useSelector((state) => state.auth.login.currentUser);
+
+    let array1 = [];
     for (let i = 0; i <= 3; i++) {
         for (let j = 0; j <= 3; j++) {
-            array.push({ typeUser: typeUserPrice[j], time: timePrice[i], price: '' });
+            array1.push({ typeUser: typeUserPrice[j], time: timePrice[i], price: '' });
         }
     }
 
-    const [price, setPrice] = useState(array);
+    let array2 = [];
+    for (let i = 0; i <= 3; i++) {
+        array2.push({ type: typeSurcharge[i], price: '' });
+    }
+
+    const [price, setPrice] = useState(array1);
+    const [sur, setSur] = useState(array2);
 
     useEffect(() => {
         const fetch = async () => {
             for (let i = 0; i <= 3; i++) {
                 for (let j = 0; j <= 3; j++) {
                     const data = await detailPrice(typeUserPrice[j], timePrice[i]);
-                    setPrice((pre) =>
-                        pre.map((item) =>
-                            item.typeUser === typeUserPrice[j] && item.time === timePrice[i]
-                                ? { ...item, price: data.price }
-                                : item,
-                        ),
+                    if (data) {
+                        setPrice((pre) =>
+                            pre.map((item) =>
+                                item.typeUser === typeUserPrice[j] && item.time === timePrice[i]
+                                    ? { ...item, price: data.price }
+                                    : item,
+                            ),
+                        );
+                    }
+                }
+            }
+            for (let i = 0; i <= 3; i++) {
+                const data = await detailSurcharge(typeSurcharge[i]);
+                if (data) {
+                    setSur((pre) =>
+                        pre.map((item) => (item.type === typeSurcharge[i] ? { ...item, price: data.price } : item)),
                     );
                 }
             }
@@ -41,13 +59,22 @@ const TicketPricePage = () => {
         );
     };
 
-    const handleSubmit = async () => {
-        await addPrice(price, user?.accessToken);
+    const handleSur = (type, price) => {
+        setSur((pre) => pre.map((item) => (item.type === type ? { ...item, price: Number(price) } : item)));
     };
 
-    const getValue = (type, time) => {
-        console.log(price.find((item) => item.typeUser === type && item.time === time)?.price || '');
+    const handleSubmit = async () => {
+        if ((await addPrice(price, user?.accessToken)) && (await addSurcharge(sur, user?.accessToken))) {
+            showToast('Đã lưu', 'success');
+        }
+    };
+
+    const getValue1 = (type, time) => {
         return price.find((item) => item.typeUser === type && item.time === time)?.price || '';
+    };
+
+    const getValue2 = (type) => {
+        return sur.find((item) => item.type === type)?.price || '';
     };
 
     return (
@@ -73,7 +100,7 @@ const TicketPricePage = () => {
                             <InputGroup>
                                 <Form.Control
                                     type="number"
-                                    value={getValue(typeUserPrice[0], timePrice[0])}
+                                    value={getValue1(typeUserPrice[0], timePrice[0])}
                                     onChange={(e) => handlePrice(typeUserPrice[0], timePrice[0], e.target.value)}
                                 />
                                 <InputGroup.Text>đ</InputGroup.Text>
@@ -83,7 +110,7 @@ const TicketPricePage = () => {
                             <InputGroup>
                                 <Form.Control
                                     type="number"
-                                    value={getValue(typeUserPrice[1], timePrice[0])}
+                                    value={getValue1(typeUserPrice[1], timePrice[0])}
                                     onChange={(e) => handlePrice(typeUserPrice[1], timePrice[0], e.target.value)}
                                 />
                                 <InputGroup.Text>đ</InputGroup.Text>
@@ -93,7 +120,7 @@ const TicketPricePage = () => {
                             <InputGroup>
                                 <Form.Control
                                     type="number"
-                                    value={getValue(typeUserPrice[2], timePrice[0])}
+                                    value={getValue1(typeUserPrice[2], timePrice[0])}
                                     onChange={(e) => handlePrice(typeUserPrice[2], timePrice[0], e.target.value)}
                                 />
                                 <InputGroup.Text>đ</InputGroup.Text>
@@ -103,7 +130,7 @@ const TicketPricePage = () => {
                             <InputGroup>
                                 <Form.Control
                                     type="number"
-                                    value={getValue(typeUserPrice[3], timePrice[0])}
+                                    value={getValue1(typeUserPrice[3], timePrice[0])}
                                     onChange={(e) => handlePrice(typeUserPrice[3], timePrice[0], e.target.value)}
                                 />
                                 <InputGroup.Text>đ</InputGroup.Text>
@@ -116,7 +143,7 @@ const TicketPricePage = () => {
                             <InputGroup>
                                 <Form.Control
                                     type="number"
-                                    value={getValue(typeUserPrice[0], timePrice[1])}
+                                    value={getValue1(typeUserPrice[0], timePrice[1])}
                                     onChange={(e) => handlePrice(typeUserPrice[0], timePrice[1], e.target.value)}
                                 />
                                 <InputGroup.Text>đ</InputGroup.Text>
@@ -126,7 +153,7 @@ const TicketPricePage = () => {
                             <InputGroup>
                                 <Form.Control
                                     type="number"
-                                    value={getValue(typeUserPrice[1], timePrice[1])}
+                                    value={getValue1(typeUserPrice[1], timePrice[1])}
                                     onChange={(e) => handlePrice(typeUserPrice[1], timePrice[1], e.target.value)}
                                 />
                                 <InputGroup.Text>đ</InputGroup.Text>
@@ -136,7 +163,7 @@ const TicketPricePage = () => {
                             <InputGroup>
                                 <Form.Control
                                     type="number"
-                                    value={getValue(typeUserPrice[2], timePrice[1])}
+                                    value={getValue1(typeUserPrice[2], timePrice[1])}
                                     onChange={(e) => handlePrice(typeUserPrice[2], timePrice[1], e.target.value)}
                                 />
                                 <InputGroup.Text>đ</InputGroup.Text>
@@ -146,7 +173,7 @@ const TicketPricePage = () => {
                             <InputGroup>
                                 <Form.Control
                                     type="number"
-                                    value={getValue(typeUserPrice[3], timePrice[1])}
+                                    value={getValue1(typeUserPrice[3], timePrice[1])}
                                     onChange={(e) => handlePrice(typeUserPrice[3], timePrice[1], e.target.value)}
                                 />
                                 <InputGroup.Text>đ</InputGroup.Text>
@@ -163,7 +190,7 @@ const TicketPricePage = () => {
                             <InputGroup>
                                 <Form.Control
                                     type="number"
-                                    value={getValue(typeUserPrice[0], timePrice[2])}
+                                    value={getValue1(typeUserPrice[0], timePrice[2])}
                                     onChange={(e) => handlePrice(typeUserPrice[0], timePrice[2], e.target.value)}
                                 />
                                 <InputGroup.Text>đ</InputGroup.Text>
@@ -173,7 +200,7 @@ const TicketPricePage = () => {
                             <InputGroup>
                                 <Form.Control
                                     type="number"
-                                    value={getValue(typeUserPrice[1], timePrice[2])}
+                                    value={getValue1(typeUserPrice[1], timePrice[2])}
                                     onChange={(e) => handlePrice(typeUserPrice[1], timePrice[2], e.target.value)}
                                 />
                                 <InputGroup.Text>đ</InputGroup.Text>
@@ -183,7 +210,7 @@ const TicketPricePage = () => {
                             <InputGroup>
                                 <Form.Control
                                     type="number"
-                                    value={getValue(typeUserPrice[2], timePrice[2])}
+                                    value={getValue1(typeUserPrice[2], timePrice[2])}
                                     onChange={(e) => handlePrice(typeUserPrice[2], timePrice[2], e.target.value)}
                                 />
                                 <InputGroup.Text>đ</InputGroup.Text>
@@ -193,7 +220,7 @@ const TicketPricePage = () => {
                             <InputGroup>
                                 <Form.Control
                                     type="number"
-                                    value={getValue(typeUserPrice[3], timePrice[2])}
+                                    value={getValue1(typeUserPrice[3], timePrice[2])}
                                     onChange={(e) => handlePrice(typeUserPrice[3], timePrice[2], e.target.value)}
                                 />
                                 <InputGroup.Text>đ</InputGroup.Text>
@@ -206,7 +233,7 @@ const TicketPricePage = () => {
                             <InputGroup>
                                 <Form.Control
                                     type="number"
-                                    value={getValue(typeUserPrice[0], timePrice[3])}
+                                    value={getValue1(typeUserPrice[0], timePrice[3])}
                                     onChange={(e) => handlePrice(typeUserPrice[0], timePrice[3], e.target.value)}
                                 />
                                 <InputGroup.Text>đ</InputGroup.Text>
@@ -216,7 +243,7 @@ const TicketPricePage = () => {
                             <InputGroup>
                                 <Form.Control
                                     type="number"
-                                    value={getValue(typeUserPrice[1], timePrice[3])}
+                                    value={getValue1(typeUserPrice[1], timePrice[3])}
                                     onChange={(e) => handlePrice(typeUserPrice[1], timePrice[3], e.target.value)}
                                 />
                                 <InputGroup.Text>đ</InputGroup.Text>
@@ -226,7 +253,7 @@ const TicketPricePage = () => {
                             <InputGroup>
                                 <Form.Control
                                     type="number"
-                                    value={getValue(typeUserPrice[2], timePrice[3])}
+                                    value={getValue1(typeUserPrice[2], timePrice[3])}
                                     onChange={(e) => handlePrice(typeUserPrice[2], timePrice[3], e.target.value)}
                                 />
                                 <InputGroup.Text>đ</InputGroup.Text>
@@ -236,8 +263,67 @@ const TicketPricePage = () => {
                             <InputGroup>
                                 <Form.Control
                                     type="number"
-                                    value={getValue(typeUserPrice[3], timePrice[3])}
+                                    value={getValue1(typeUserPrice[3], timePrice[3])}
                                     onChange={(e) => handlePrice(typeUserPrice[3], timePrice[3], e.target.value)}
+                                />
+                                <InputGroup.Text>đ</InputGroup.Text>
+                            </InputGroup>
+                        </td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr className="text-center">
+                        <th colSpan={6}>PHỤ THU</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colSpan={2} className="align-middle">3D</td>
+                        <td colSpan={4}>
+                            <InputGroup>
+                                <Form.Control
+                                    type="number"
+                                    value={getValue2(typeSurcharge[0])}
+                                    onChange={(e) => handleSur(typeSurcharge[0], e.target.value)}
+                                />
+                                <InputGroup.Text>đ</InputGroup.Text>
+                            </InputGroup>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colSpan={2} className="align-middle">IMAX</td>
+                        <td colSpan={4}>
+                            <InputGroup>
+                                <Form.Control
+                                    type="number"
+                                    value={getValue2(typeSurcharge[1])}
+                                    onChange={(e) => handleSur(typeSurcharge[1], e.target.value)}
+                                />
+                                <InputGroup.Text>đ</InputGroup.Text>
+                            </InputGroup>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colSpan={2} className="align-middle">Ghế VIP</td>
+                        <td colSpan={4}>
+                            <InputGroup>
+                                <Form.Control
+                                    type="number"
+                                    value={getValue2(typeSurcharge[2])}
+                                    onChange={(e) => handleSur(typeSurcharge[2], e.target.value)}
+                                />
+                                <InputGroup.Text>đ</InputGroup.Text>
+                            </InputGroup>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colSpan={2} className="align-middle">Ghế Couple</td>
+                        <td colSpan={4}>
+                            <InputGroup>
+                                <Form.Control
+                                    type="number"
+                                    value={getValue2(typeSurcharge[3])}
+                                    onChange={(e) => handleSur(typeSurcharge[3], e.target.value)}
                                 />
                                 <InputGroup.Text>đ</InputGroup.Text>
                             </InputGroup>

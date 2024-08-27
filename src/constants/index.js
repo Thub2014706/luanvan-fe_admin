@@ -5,6 +5,7 @@ import {
     faFilm,
     faMasksTheater,
     faMoneyBill1Wave,
+    faMoneyCheckDollar,
     faStopwatch,
     faTag,
     faTv,
@@ -171,14 +172,20 @@ export const itemMenu = [
         name: 'Suất chiếu',
         link: '/showtime',
     },
+    {
+        index: 14,
+        icon: faMoneyCheckDollar,
+        name: 'Đặt vé',
+        link: '/book-tickets',
+    },
 ];
 
 export const timePrice = {
     0: 'Thứ 2 đến thứ 5 trước 17h',
     1: 'Thứ 2 đến thứ 5 sau 17h',
     2: 'Thứ 6 đến chủ nhật trước 17h',
-    3: 'Thứ 6 đến chủ nhật sau 17h'
-}
+    3: 'Thứ 6 đến chủ nhật sau 17h',
+};
 
 export const typeUserPrice = {
     0: 'Học sinh, sinh viên',
@@ -187,15 +194,32 @@ export const typeUserPrice = {
     3: 'Thành viên, vé trực tuyến',
 };
 
+export const typeSurcharge = {
+    0: '3D',
+    1: 'IMAX',
+    2: 'Ghế VIP',
+    3: 'Ghế Couple',
+};
+
 export const typeShowTime = {
     0: 'Theo lịch',
-    1: 'Chiếu sớm'
-}
+    1: 'Chiếu sớm',
+};
 
 export const statusShowTime = {
     0: 'Đã chiếu',
     1: 'Đang chiếu',
-    2: 'Sắp chiếu'
-}
+    2: 'Sắp chiếu',
+};
+
+export const nameDay = {
+    0: 'Chủ nhật',
+    1: 'Thứ 2',
+    2: 'Thứ 3',
+    3: 'Thứ 4',
+    4: 'Thứ 5',
+    5: 'Thứ 6',
+    6: 'Thứ 7',
+};
 
 export const allTranslate = ['Phụ đề', 'Lồng tiếng', 'Thuyết minh'];
