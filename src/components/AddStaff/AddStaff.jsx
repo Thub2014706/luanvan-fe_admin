@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import { Button, Form, Modal } from 'react-bootstrap';
 import { createStaff } from '~/services/StaffService';
 import ImageBase from '../ImageBase/ImageBase';
@@ -9,13 +9,14 @@ import {
     CForm,
     CFormInput,
     CFormLabel,
-    div,
     CModal,
     CModalBody,
     CModalFooter,
     CModalHeader,
     CModalTitle,
+    CFormSelect,
 } from '@coreui/react-pro';
+import { listTheater } from '~/services/TheaterService';
 
 const AddStaff = ({ show, handleClose }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -24,6 +25,8 @@ const AddStaff = ({ show, handleClose }) => {
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [theaters, setTheaters] = useState([]);
+    const [theater, setTheater] = useState('');
     const [avatar, setAvatar] = useState();
     const [avatarCode, setAvatarCode] = useState();
 
@@ -32,6 +35,15 @@ const AddStaff = ({ show, handleClose }) => {
         setAvatar(avar);
         setAvatarCode(URL.createObjectURL(avar));
     };
+
+    useEffect(() => {
+        const fetch = async () => {
+            const data = await listTheater();
+            setTheaters(data);
+        };
+        fetch();
+    }, []);
+    console.log(theaters);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -42,6 +54,7 @@ const AddStaff = ({ show, handleClose }) => {
         formData.append('password', password);
         formData.append('confirmPassword', confirmPassword);
         formData.append('avatar', avatar);
+        formData.append('theater', theater);
         if (await createStaff(formData, user?.accessToken)) {
             handleClose();
         }
@@ -119,11 +132,30 @@ const AddStaff = ({ show, handleClose }) => {
                         />
                     </div>
 
+                    <div className="mt-3">
+                        <CFormLabel className="fw-bold col-sm-4 mt-1" htmlFor="theater">
+                            Rạp <span style={{ color: 'red' }}>*</span>
+                        </CFormLabel>
+                        <CFormSelect
+                            id="theater"
+                            value={theater}
+                            onChange={(e) => setTheater(e.target.value)}
+                            // placeholder="Rạp chiếu"
+                        >
+                            <option>Chọn rạp</option>
+                            {theaters.map((item) => (
+                                <option key={item._id} value={item._id}>
+                                    {item.name}
+                                </option>
+                            ))}
+                        </CFormSelect>
+                    </div>
+
                     <div className="my-3">
                         <CFormLabel className="fw-bold">Avatar</CFormLabel>
-                        <CFormInput multiple accept=".jpg, .png" type="file" onChange={handleAvatar} />
+                        <CFormInput accept=".jpg, .png" type="file" onChange={handleAvatar} />
                     </div>
-                    <Avatar src={avatarCode} round={true} color="gray" alt="" />
+                    {avatarCode && <Avatar src={avatarCode} round={true} color="gray" alt="" />}
                 </CModalBody>
                 <CModalFooter>
                     <CButton color="secondary" onClick={handleClose}>

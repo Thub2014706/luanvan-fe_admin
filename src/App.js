@@ -4,14 +4,13 @@ import { Fragment } from 'react';
 import MainLayout from './layouts/MainLayout/MainLayout';
 import { ToastContainer } from 'react-toastify';
 import { useSelector } from 'react-redux';
-import useUser from './hooks/useUser';
 import { itemMenu } from './constants';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
 function App() {
     // const isAuthenticated = false;
     const user = useSelector((state) => state.auth.login.currentUser);
-    // console.log('aaa', itemMenu.some((item) => user.data.access.includes(item.name)));
+    console.log('aaa', user);
     return (
         <Router>
             <div className="App">
@@ -60,7 +59,8 @@ function App() {
                                     user.data.role === 0 ||
                                     route.path === '/' ||
                                     itemMenu.some(
-                                        (item) => item.link === route.path && user.data.access.includes(item.name),
+                                        (item) =>
+                                            route.path.startsWith(item.link) && user.data.access.includes(item.name),
                                     ) ? (
                                         <MainLayout>
                                             <route.component />

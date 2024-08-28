@@ -414,14 +414,71 @@ body {
 .time-mini {
     padding: 5px 8px;
     border-radius: 5px;
+    position: relative;
 
     &.yes {
         color: #16777a;
         border: 1px solid #16777a;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #d5feff;
+        }
+
+        &.select {
+            background: linear-gradient(#6ef2f6, #16777a);
+            color: white;
+        }
     }
 
     &.no {
         color: #9f9f9f;
         border: 1px solid #9f9f9f;
+        cursor: no-drop;
     }
+
+
+}
+
+.step {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    margin: 0 2px;
+    
+    &:hover {
+        background-color: #d2ddf6;
+    }
+    
+    &.select {
+        background-color: #0f172a;
+        color: white;
+        border: 1px solid #0f172a;
+    }
+
+    &.not {
+        border: 1px solid grey;
+    }
+}
+
+.line {
+    width: 100px;
+
+    &.select {
+        border-top: 1px solid #0f172a;
+    }
+
+    &.not {
+        border-top: 1px solid gray;
+    }
+}
+
+.card-book {
+    // border: 1px solid black;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #dedede;
 }

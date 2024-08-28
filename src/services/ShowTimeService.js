@@ -27,11 +27,22 @@ export const addShowTime = async (data, token) => {
     }
 };
 
-export const detailShowTimeByRoom = async (theater, room, date) => {
-    console.log(theater, room, date);
+// export const detailShowTimeByRoom = async (theater, room, date) => {
+//     console.log(theater, room, date);
+//     try {
+//         const response = await axios.get(
+//             `${process.env.REACT_APP_API_URL}/api/showtime/all-by-room?theater=${theater}&room=${room}&date=${date}`,
+//         );
+//         return response.data;
+//     } catch (error) {
+//         console.log('loi', error);
+//     }
+// };
+
+export const listShowTimeByDay = async (theater, date, film) => {
     try {
         const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/api/showtime/all-by-room?theater=${theater}&room=${room}&date=${date}`,
+            `${process.env.REACT_APP_API_URL}/api/showtime/list-by-day?theater=${theater}&date=${date}&film=${film}`,
         );
         return response.data;
     } catch (error) {
@@ -39,10 +50,11 @@ export const detailShowTimeByRoom = async (theater, room, date) => {
     }
 };
 
-export const listShowTimeByDay = async (theater, date, film) => {
+export const detailShowTimeByTime = async (theater, timeStart, timeEnd, date) => {
+    console.log(theater, timeStart, timeEnd, date);
     try {
         const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/api/showtime/list-by-day?theater=${theater}&date=${date}&film=${film}`,
+            `${process.env.REACT_APP_API_URL}/api/showtime/detail-by-time?theater=${theater}&timeStart=${timeStart}&timeEnd=${timeEnd}&date=${date}`,
         );
         return response.data;
     } catch (error) {

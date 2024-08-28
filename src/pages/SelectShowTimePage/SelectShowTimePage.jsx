@@ -1,21 +1,30 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { Card, Col, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import ImageBase from '~/components/ImageBase/ImageBase';
 import Name from '~/components/Name/Name';
-import ScheduleMini from '~/components/ScheduleMini/ScheduleMini';
-import { nameDay, statusShowTime } from '~/constants';
+import SelectSeat from '~/components/SelectSeat/SelectSeat';
+import SelectShowTime from '~/components/SelectShowTime/SelectShowTime';
+import Step from '~/components/Step/Step';
+import { roomValue, stepNext } from '~/features/showTime/showTimeSlice';
 import { detailFilm } from '~/services/FilmService';
-import { listShowTimeByDay } from '~/services/ShowTimeService';
+import { detailRoom } from '~/services/RoomService';
+import { detailShowTimeByTime } from '~/services/ShowTimeService';
+import { detailTheater } from '~/services/TheaterService';
 
 const SelectShowTimePage = () => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const { id } = useParams();
-    const [film, setFilm] = useState();
-    const [selectDay, setSelectDay] = useState(0);
-    const [theater, setTheater] = useState('66c46009f7cb8105efc508f2');
-    const [date, setDate] = useState(moment(Date()).format('YYYY-MM-DD'));
-    const [showTimes, setShowTimes] = useState([]);
+    const dispatch = useDispatch();
+    const theater = user?.data.theater;
+    const [film, setFilm] = useState(null);
+    // const [step, setStep] = useState(1);
+    const step = useSelector((state) => state.showTime.step);
+    // const [idRoom, setIdRoom] = useState(useSelector((state) => state.showTime.room));
+    const idRoom = useSelector((state) => state.showTime.room);
+    const [time, setTime] = useState();
 
     useEffect(() => {
         const fetch = async () => {
@@ -25,59 +34,91 @@ const SelectShowTimePage = () => {
         fetch();
     }, [id]);
 
-    const now = new Date();
-    const array = [0, 1, 2, 3, 4, 5, 6];
-    const week = [];
-
-    array.forEach((item) => {
-        const date = new Date(now);
-        date.setDate(date.getDate() + item);
-        week.push({ date: date.getDate(), day: date.getDay(), full: moment(date).format('YYYY-MM-DD') });
-    });
-
-    useEffect(() => {
-        const fetch = async () => {
-            const data = await listShowTimeByDay(theater, date, id);
-            setShowTimes(data);
-        };
-        fetch();
-    }, [theater, date, id]);
-
-    const handleSelect = async (index, date) => {
-        setSelectDay(index);
-        setDate(date);
+    const handleNext1 = async (date, timeStart, timeEnd) => {
+        setTime({ date, timeStart, timeEnd });
+        const data = await detailShowTimeByTime(theater, timeStart, timeEnd, date);
+        // console.log('wedw', data, date, timeStart, timeEnd);
+        // setIdRoom(data.room);
+        dispatch(roomValue(data.room));
+        dispatch(stepNext(2));
     };
-    console.log(showTimes);
+
+    console.log(idRoom, step);
+
+    const renderStep = (step) => {
+        switch (step) {
+            case 1:
+                return <SelectShowTime id={id} theater={theater} handleNext={handleNext1} />;
+            case 2:
+                return <SelectSeat idRoom={idRoom} />;
+            //   case 2:
+            //     return <Review />;
+            default:
+                return null;
+        }
+    };
 
     return (
         <div className="p-4">
             <h5 className="mb-4 fw-bold">Chọn suất chiếu</h5>
-            <h6 className="fw-bold" style={{ textTransform: 'uppercase' }}>
-                Phim: <Name detail={detailFilm} id={id} />
-            </h6>
-            <Row className="mt-4">
+            <Row>
                 <Col xs={3}>
-                    <ImageBase pathImg={film?.image} style={{ height: '200px', width: 'auto', borderRadius: '5px' }} />
+                    <h6 className="fw-bold" style={{ textTransform: 'uppercase' }}>
+                        Phim: <Name detail={detailFilm} id={id} />
+                    </h6>
                 </Col>
                 <Col xs={9}>
-                    <div className="d-flex">
-                        {week.map((item, index) => (
-                            <ScheduleMini
-                                date={item.date}
-                                day={now.getDay() === item.day ? 'Hôm nay' : nameDay[item.day]}
-                                handleSelectDay={() => handleSelect(index, item.full)}
-                                selectDay={selectDay === index ? true : false}
-                            />
-                        ))}
-                    </div>
-                    <div className="mt-5">
-                        {showTimes.map((item) => (
-                            <span className={`time-mini mx-3 ${item.status !== statusShowTime[0] ? 'yes' : 'no'}`}>
-                                {item.timeStart} - {item.timeEnd}
-                            </span>
-                        ))}
+                    <Step length={3} step={step} name={['Chọn suất chiếu', 'Chọn ghế', 'Thanh toán']} />
+                </Col>
+            </Row>
+            <Row className="mt-4">
+                <Col xs={3}>
+                    <div className="card-book">
+                        {film !== null && (
+                            <>
+                                <ImageBase
+                                    pathImg={film.image}
+                                    style={{
+                                        height: '200px',
+                                        width: '100%',
+                                        borderRadius: '5px',
+                                        marginLeft: 'auto',
+                                        marginRight: 'auto',
+                                        display: 'flex',
+                                        objectFit: 'cover',
+                                    }}
+                                />
+                                <p className="fw-bold mt-3 mx-2">{film.name.toUpperCase()}</p>
+                                <p className="mt-3 mx-2">
+                                    Giới hạn độ tuổi: <span className="fw-bold">{film.age}</span>
+                                </p>
+                                <p className="mt-3 mx-2">
+                                    Rạp:{' '}
+                                    <span className="fw-bold">
+                                        <Name detail={detailTheater} id={theater} />
+                                    </span>
+                                </p>
+                                {idRoom !== '' && (
+                                    <p className="mt-3 mx-2">
+                                        Phòng:{' '}
+                                        <span className="fw-bold">
+                                            <Name detail={detailRoom} id={idRoom} />
+                                        </span>
+                                    </p>
+                                )}
+                                {time && (
+                                    <p className="mt-3 mx-2">
+                                        Suất chiếu:{' '}
+                                        <span className="fw-bold">
+                                            {time.timeStart} {moment(time.date).format('DD-MM-YYYY')}
+                                        </span>
+                                    </p>
+                                )}
+                            </>
+                        )}
                     </div>
                 </Col>
+                <Col xs={9}>{renderStep(step)}</Col>
             </Row>
         </div>
     );
