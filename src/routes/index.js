@@ -17,7 +17,6 @@ import LoginPage from '~/pages/LoginPage/LoginPage';
 import NotFoundPage from '~/pages/NotFoundPage/NotFoundPage';
 import PerformerPage from '~/pages/PerformerPage/PerformerPage';
 import SchedulePage from '~/pages/SchedulePage/SchedulePage';
-import SelectShowTimePage from '~/pages/SelectShowTimePage/SelectShowTimePage';
 import ShowTimePage from '~/pages/ShowTimePage/ShowTimePage';
 import StaffPage from '~/pages/StaffPage/StaffPage';
 import TheaterPage from '~/pages/TheaterPage/TheaterPage';
@@ -153,14 +152,9 @@ const routes = [
     },
 
     {
-        path: '/book-tickets/:id',
-        component: SelectShowTimePage,
-    },
-
-    {
         path: '/*',
         component: NotFoundPage,
-        layout: null
+        layout: null,
     },
 ];
 

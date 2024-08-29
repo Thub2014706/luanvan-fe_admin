@@ -50,11 +50,10 @@ export const listShowTimeByDay = async (theater, date, film) => {
     }
 };
 
-export const detailShowTimeByTime = async (theater, timeStart, timeEnd, date) => {
-    console.log(theater, timeStart, timeEnd, date);
+export const detailShowTimeById = async (id) => {
     try {
         const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/api/showtime/detail-by-time?theater=${theater}&timeStart=${timeStart}&timeEnd=${timeEnd}&date=${date}`,
+            `${process.env.REACT_APP_API_URL}/api/showtime/detail-by-id/${id}`,
         );
         return response.data;
     } catch (error) {

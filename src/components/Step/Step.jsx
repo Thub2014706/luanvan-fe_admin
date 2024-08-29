@@ -12,10 +12,10 @@ const Step = ({ step, length, name }) => {
             {array.map((item) => (
                 <>
                     <p className={`step ${step >= item ? 'select' : 'not'}`}>
-                        {item !== step - 1 ? item : <FontAwesomeIcon icon={faCheck} />}
+                        {item > step - 1 ? item : <FontAwesomeIcon icon={faCheck} />}
                     </p>
                     <p className="my-auto ms-1">{name[item - 1]}</p>
-                    {item !== length && <span className={`mx-2 line ${step === item + 1 ? 'select' : 'not'}`}></span>}
+                    {item !== length && <span className={`mx-2 line ${step >= item + 1 ? 'select' : 'not'}`}></span>}
                 </>
             ))}
         </div>

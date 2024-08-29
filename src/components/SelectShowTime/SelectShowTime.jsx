@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import ScheduleMini from '../ScheduleMini/ScheduleMini';
-import { listShowTimeByDay } from '~/services/ShowTimeService';
+import { detailShowTimeById, listShowTimeByDay } from '~/services/ShowTimeService';
 import moment from 'moment';
 import { nameDay, statusShowTime } from '~/constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { preStep1, roomValue, stepNext, timeValue } from '~/features/showTime/showTimeSlice';
+import { Col, Row } from 'react-bootstrap';
+import CardBookTicket from '../CardBookTicket/CardBookTicket';
 
-const SelectShowTime = ({ id, theater, handleNext }) => {
+const SelectShowTime = () => {
     const [selectDay, setSelectDay] = useState(0);
     const [date, setDate] = useState(moment(Date()).format('YYYY-MM-DD'));
     const [showTimes, setShowTimes] = useState([]);
-    const [timeStart, setTimeStart] = useState(null);
-    const [timeEnd, setTimeEnd] = useState(null);
+    const [idShowTime, setIdShowTime] = useState(null);
     const [war, setWar] = useState('');
+    const dispatch = useDispatch();
+    const film = useSelector((state) => state.showTime.film);
+    const theater = useSelector((state) => state.showTime.theater);
 
     const now = new Date();
     const array = [0, 1, 2, 3, 4, 5, 6];
@@ -24,11 +30,11 @@ const SelectShowTime = ({ id, theater, handleNext }) => {
 
     useEffect(() => {
         const fetch = async () => {
-            const data = await listShowTimeByDay(theater, date, id);
+            const data = await listShowTimeByDay(theater, date, film);
             setShowTimes(data);
         };
         fetch();
-    }, [theater, date, id]);
+    }, [theater, date, film]);
 
     const handleSelect = async (index, date) => {
         setSelectDay(index);
@@ -36,65 +42,80 @@ const SelectShowTime = ({ id, theater, handleNext }) => {
     };
     // console.log(showTimes);
 
-    const handleSubmit = () => {
-        if (timeStart !== null) {
-            handleNext(date, timeStart, timeEnd);
+    const handleSubmit = async () => {
+        if (idShowTime !== null) {
+            const data = await detailShowTimeById(idShowTime);
+            dispatch(roomValue(data.room));
+            dispatch(timeValue({ timeStart: data.timeStart, date: data.date }));
+            dispatch(stepNext(3));
         } else {
             setWar('Vui lòng chọn suất chiếu!');
         }
     };
 
-    const handleTime = (start, end) => {
-        if (timeStart !== start) {
-            setTimeStart(start);
-            setTimeEnd(end);
-            setWar('')
+    const handleShowTime = (id) => {
+        if (idShowTime !== id) {
+            setIdShowTime(id);
+            setWar('');
         } else {
-            setTimeStart(null);
-            setTimeEnd(null);
+            setIdShowTime(null);
         }
     };
 
+    const handlePre = () => {
+        dispatch(preStep1());
+    };
+
     return (
-        <>
-            <div className="d-flex">
-                {week.map((item, index) => (
-                    <ScheduleMini
-                        date={item.date}
-                        day={now.getDay() === item.day ? 'Hôm nay' : nameDay[item.day]}
-                        handleSelectDay={() => handleSelect(index, item.full)}
-                        selectDay={selectDay === index ? true : false}
-                    />
-                ))}
-            </div>
-            <div className="mt-5">
-                {showTimes.length > 0 ? (
-                    <>
-                        {showTimes.map((item) => (
-                            <span
-                                style={{ display: 'inline-block' }}
-                                onClick={() =>
-                                    item.status === statusShowTime[2] && handleTime(item.timeStart, item.timeEnd)
-                                }
-                                className={`time-mini me-3 mb-3 ${
-                                    item.status === statusShowTime[2]
-                                        ? `yes ${item.timeStart === timeStart ? 'select' : ''}`
-                                        : 'no'
-                                }`}
-                            >
-                                {item.timeStart} - {item.timeEnd}
-                            </span>
-                        ))}
-                        <p style={{ color: 'red', position: 'absolute' }}>{war}</p>
-                    </>
-                ) : (
-                    <p>Chưa có suất chiếu nào!</p>
-                )}
-                <div className="mt-5 button add float-end" onClick={handleSubmit}>
-                    Tiếp theo
+        <Row className="mt-4">
+            <Col xs={3}>
+                <CardBookTicket />
+            </Col>
+            <Col xs={9}>
+                <div className="d-flex">
+                    {week.map((item, index) => (
+                        <ScheduleMini
+                            date={item.date}
+                            day={now.getDay() === item.day ? 'Hôm nay' : nameDay[item.day]}
+                            handleSelectDay={() => handleSelect(index, item.full)}
+                            selectDay={selectDay === index ? true : false}
+                        />
+                    ))}
                 </div>
-            </div>
-        </>
+                <div className="mt-5">
+                    {showTimes.length > 0 ? (
+                        <>
+                            {showTimes.map((item, index) => (
+                                <span
+                                    style={{ display: 'inline-block' }}
+                                    onClick={() => item.status === statusShowTime[2] && handleShowTime(item._id)}
+                                    className={`time-mini me-3 mb-3 ${
+                                        item.status === statusShowTime[2]
+                                            ? `yes ${item._id === idShowTime ? 'select' : ''}`
+                                            : 'no'
+                                    }`}
+                                >
+                                    {item.timeStart}
+                                </span>
+                            ))}
+                            <p style={{ color: 'red', position: 'absolute' }}>{war}</p>
+                        </>
+                    ) : (
+                        <p>Chưa có suất chiếu nào!</p>
+                    )}
+                    <div className="float-end d-flex">
+                        <div className="mt-5 button add me-3" onClick={handlePre}>
+                            Quay lại
+                        </div>
+                        {showTimes.length !== 0 && (
+                            <div className="mt-5 button add float-end" onClick={handleSubmit}>
+                                Tiếp theo
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </Col>
+        </Row>
     );
 };
 

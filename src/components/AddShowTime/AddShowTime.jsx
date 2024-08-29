@@ -106,7 +106,6 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
                                 films.map((item) => ({
                                     value: item.schedule.film,
                                     label: `${item.nameFilm} (${item.schedule.type})`,
-                                    // selected: genre.find((mini) => mini.value === item._id),
                                 }))
                             }
                             value={film}
@@ -130,7 +129,7 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
                         <CFormLabel className="fw-bold" htmlFor="date">
                             Ngày chiếu <span style={{ color: 'red' }}>*</span>
                         </CFormLabel>
-                        <CDatePicker disabled id="date" name="date" date={dateAdd} />
+                        <CDatePicker disabled cleaner={false} id="date" name="date" date={dateAdd} />
                     </div>
 
                     <div className="mt-3">

@@ -1,67 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import { Col, Form, Row } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import FilmTitle from '~/components/FilmTitle/FilmTitle';
-import SearchBar from '~/components/SearchBar/SearchBar';
-import { listFilmNotScreened } from '~/services/FilmService';
-import { listShowTimeByDay } from '~/services/ShowTimeService';
-import { listTheater } from '~/services/TheaterService';
+import React  from 'react';
+import { Col, Row } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import SelectFilm from '~/components/SelectFilm/SelectFilm';
+import SelectSeat from '~/components/SelectSeat/SelectSeat';
+import SelectShowTime from '~/components/SelectShowTime/SelectShowTime';
+import Step from '~/components/Step/Step';
+import { theaterValue } from '~/features/showTime/showTimeSlice';
 
 const BookTicketsPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
-    const [films, setFilms] = useState([]);
-    const [search, setSearch] = useState('');
-    const [theater, setTheater] = useState(user?.data.theater);
-    const [theaters, setTheaters] = useState([]);
+    const dispatch = useDispatch()
+    dispatch(theaterValue(user?.data.theater))
+    const step = useSelector((state) => state.showTime.step);
+    // console.log('qqq', step);
 
-    useEffect(() => {
-        const fetch = async () => {
-            const data = await listFilmNotScreened(search);
-            setFilms(data);
-        };
-        fetch();
-    }, [search]);
-
-    useEffect(() => {
-        const fetch = async () => {
-            const data = await listTheater();
-            setTheaters(data);
-        };
-        fetch();
-    }, []);
-
-    const handleSearch = (value) => {
-        setSearch(value);
+    const renderStep = (step) => {
+        switch (step) {
+            case 1:
+                return <SelectFilm />;
+            case 2:
+                return <SelectShowTime />;
+            case 3:
+                return <SelectSeat />;
+            default:
+                return null;
+        }
     };
-
-    console.log(films);
 
     return (
         <div className="p-4">
-            <h5 className="mb-4 fw-bold">Đặt vé</h5>
-            <Row className="mb-3">
-                <Col>
-                    <Form.Select className="w-50" value={theater} disabled>
-                        <option>Chọn rạp</option>
-                        {theaters.map((item) => (
-                            <option value={item._id}>{item.name}</option>
-                        ))}
-                    </Form.Select>
+            <Row className="mb-5">
+                <Col xs={2}>
+                    <h5 className="fw-bold">Đặt vé</h5>
                 </Col>
-                <Col>
-                    <SearchBar handleSubmit={handleSearch} />
+                <Col xs={10}>
+                    <div className="float-end">
+                        <Step
+                            length={4}
+                            step={step}
+                            name={['Chọn phim', 'Chọn suất chiếu', 'Chọn ghế', 'Thanh toán']}
+                        />
+                    </div>
                 </Col>
             </Row>
-            <Row>
-                {films.map((item) => (
-                    <Col key={item._id} xs={3}>
-                        <Link to={`/book-tickets/${item._id}`}>
-                            <FilmTitle image={item.image} name={item.name} />
-                        </Link>
-                    </Col>
-                ))}
-            </Row>
+            <div>{renderStep(step)}</div>
         </div>
     );
 };
