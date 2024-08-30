@@ -8,6 +8,7 @@ export const showTimeSlice = createSlice({
         film: '',
         room: '',
         time: {},
+        seat: [],
     },
     reducers: {
         stepNext: (state, action) => {
@@ -25,6 +26,9 @@ export const showTimeSlice = createSlice({
         timeValue: (state, action) => {
             state.time = action.payload;
         },
+        seatValue: (state, action) => {
+            state.seat = action.payload;
+        },
         preStep1: (state) => {
             state.step = 1;
             state.film = '';
@@ -34,9 +38,14 @@ export const showTimeSlice = createSlice({
             state.room = '';
             state.time = {};
         },
+        preStep3: (state) => {
+            state.step = 3;
+            state.seat = [];
+        },
     },
 });
 
-export const { stepNext, theaterValue, roomValue, filmValue, timeValue, preStep1, preStep2 } = showTimeSlice.actions;
+export const { stepNext, theaterValue, roomValue, filmValue, timeValue, seatValue, preStep1, preStep2, preStep3 } =
+    showTimeSlice.actions;
 
 export default showTimeSlice.reducer;

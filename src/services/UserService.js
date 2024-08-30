@@ -80,3 +80,14 @@ export const statusUser = async (id, token) => {
         console.log('loi', error);
     }
 };
+
+export const detailUserByPhone = async (phone) => {
+    try {
+        const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/user/detail-by-phone?phone=${phone}`,
+        );
+        return response.data;
+    } catch (error) {
+        console.log('loi', error);
+    }
+};

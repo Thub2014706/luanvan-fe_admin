@@ -13,6 +13,7 @@ const CardBookTicket = () => {
     const idRoom = useSelector((state) => state.showTime.room);
     const time = useSelector((state) => state.showTime.time);
     const theater = useSelector((state) => state.showTime.theater);
+    const seat = useSelector((state) => state.showTime.seat);
 
     useEffect(() => {
         const fetch = async () => {
@@ -58,6 +59,14 @@ const CardBookTicket = () => {
                         {Object.keys(time).length !== 0 && (
                             <span className="fw-bold">
                                 {time.timeStart} {moment(time.date).format('DD-MM-YYYY')}
+                            </span>
+                        )}
+                    </p>
+                    <p className="mt-3 mx-2">
+                        Ghế:{' '}
+                        {seat.length !== 0 && (
+                            <span className="fw-bold">
+                                {seat.map((item) => `${String.fromCharCode(64 + item.row)}${item.col}`).join(', ')}
                             </span>
                         )}
                     </p>

@@ -3,13 +3,15 @@ import { Col, Row, Table } from 'react-bootstrap';
 import { showToast, typeSeatEnum } from '~/constants';
 import { allSeatRoom } from '~/services/SeatService';
 import { useDispatch, useSelector } from 'react-redux';
-import { preStep2 } from '~/features/showTime/showTimeSlice';
+import { preStep2, seatValue, stepNext } from '~/features/showTime/showTimeSlice';
 import CardBookTicket from '../CardBookTicket/CardBookTicket';
 
 const SelectSeat = () => {
     const [seats, setSeats] = useState([]);
     const dispatch = useDispatch();
     const idRoom = useSelector((state) => state.showTime.room);
+    const [selectSeat, setSelectSeat] = useState([]);
+    const [war, setWar] = useState('');
 
     useEffect(() => {
         const fetch = async () => {
@@ -26,15 +28,34 @@ const SelectSeat = () => {
     };
 
     const handleSelectSeat = (seat) => {
-        const seatIndex = seats.indexOf(seat);
-        const leftSeat = seats[seatIndex - 1];
-        const rightSeat = seats[seatIndex + 1];
-        console.log(leftSeat);
-        if (leftSeat.col === 1 || rightSeat.col === seats[seats.length - 1].col) {
-            showToast(
-                'Vui lòng không được để trống 1 ghế ở bên trái, giữa hoặc bên phải trên cùng một hàng ghế mà bạn vừa chọn!',
-                'warning',
-            );
+        setWar('');
+        const arrayRow = seats.filter((item) => item.row === seat.row);
+        const seatIndex = arrayRow.indexOf(seat);
+        const left1Seat = arrayRow[seatIndex - 1];
+        const right1Seat = arrayRow[seatIndex + 1];
+        const left2Seat = arrayRow[seatIndex - 2];
+        const right2Seat = arrayRow[seatIndex + 2];
+        if (!selectSeat.find((item) => item === seat)) {
+            if (!left2Seat || !right2Seat || (left1Seat && left1Seat.left > 1)) {
+                showToast(
+                    'Vui lòng không được để trống 1 ghế ở bên trái, giữa hoặc bên phải trên cùng một hàng ghế mà bạn vừa chọn!',
+                    'warning',
+                );
+            } else {
+                setSelectSeat([...selectSeat, seat]);
+            }
+        } else {
+            setSelectSeat(selectSeat.filter((item) => item !== seat));
+        }
+    };
+    // console.log(selectSeat);
+
+    const handleSubmit = () => {
+        if (selectSeat.length === 0) {
+            setWar('Vui lòng chọn ghế!');
+        } else {
+            dispatch(seatValue(selectSeat));
+            dispatch(stepNext(4));
         }
     };
 
@@ -59,7 +80,8 @@ const SelectSeat = () => {
                                                     seat.type === typeSeatEnum[1] && 'vip'
                                                 } ${seat.type === typeSeatEnum[2] && 'couple'} ${
                                                     !seat.status && 'inaction'
-                                                } `}
+                                                } ${selectSeat.find((item) => item === seat) && 'select'}
+                                                `}
                                                 style={{
                                                     marginBottom: `${seat.bottom * 17.5}px`,
                                                     marginLeft: `${seat.left * 17.5 + seat.left * 2 + 2}px`,
@@ -78,7 +100,7 @@ const SelectSeat = () => {
                         </tr>
                     </Table>
                 ))}
-                <div className="d-flex mt-5" style={{ display: 'inline-block' }}>
+                <div className="d-flex mt-5 mb-4" style={{ display: 'inline-block', position: 'relative' }}>
                     <div className="standard seat"></div>
                     <p className="my-auto ms-2">Ghế thường</p>
                     <div className="vip seat ms-4"></div>
@@ -88,11 +110,14 @@ const SelectSeat = () => {
                     <div className="inaction seat ms-4"></div>
                     <p className="my-auto ms-2">Ghế đang bảo trì</p>
                 </div>
+                <p style={{ color: 'red', position: 'absolute' }}>{war}</p>
                 <div className="float-end d-flex">
                     <div className="mt-5 button add me-3" onClick={handlePre}>
                         Quay lại
                     </div>
-                    <div className="mt-5 button add">Tiếp theo</div>
+                    <div className="mt-5 button add" onClick={handleSubmit}>
+                        Tiếp theo
+                    </div>
                 </div>
             </Col>
         </Row>

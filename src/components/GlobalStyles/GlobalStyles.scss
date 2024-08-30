@@ -320,6 +320,10 @@ body {
     &.inaction {
         background-color: #0f1b07;
     }
+
+    &.select {
+        background-color: #ff9452;
+    }
 }
 
 .time-show {
@@ -436,8 +440,6 @@ body {
         border: 1px solid #9f9f9f;
         cursor: no-drop;
     }
-
-
 }
 
 .step {
@@ -448,11 +450,11 @@ body {
     place-items: center;
     cursor: pointer;
     margin: 0 2px;
-    
+
     &:hover {
         background-color: #d2ddf6;
     }
-    
+
     &.select {
         background-color: #0f172a;
         color: white;
@@ -481,4 +483,25 @@ body {
     padding: 10px;
     border-radius: 10px;
     background-color: #dedede;
+}
+
+.card-pay {
+    background-color: #e7e7e7;
+    padding: 30px;
+}
+
+.momo {
+    cursor: pointer;
+    border: 1px solid #9ea2ac;
+    border-radius: 5px;
+    padding: 5px 20px;
+}
+
+.money {
+    cursor: pointer;
+    // border: 1px solid #9ea2ac;
+    border-radius: 5px;
+    padding: 10px 20px;
+    color: white;
+    background-color: #0f172a;
 }

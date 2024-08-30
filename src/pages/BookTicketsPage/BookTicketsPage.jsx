@@ -1,6 +1,7 @@
-import React  from 'react';
+import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import PaymentStaff from '~/components/PaymentStaff/PaymentStaff';
 import SelectFilm from '~/components/SelectFilm/SelectFilm';
 import SelectSeat from '~/components/SelectSeat/SelectSeat';
 import SelectShowTime from '~/components/SelectShowTime/SelectShowTime';
@@ -9,8 +10,8 @@ import { theaterValue } from '~/features/showTime/showTimeSlice';
 
 const BookTicketsPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
-    const dispatch = useDispatch()
-    dispatch(theaterValue(user?.data.theater))
+    const dispatch = useDispatch();
+    dispatch(theaterValue(user?.data.theater));
     const step = useSelector((state) => state.showTime.step);
     // console.log('qqq', step);
 
@@ -22,6 +23,8 @@ const BookTicketsPage = () => {
                 return <SelectShowTime />;
             case 3:
                 return <SelectSeat />;
+            case 4:
+                return <PaymentStaff />;
             default:
                 return null;
         }
