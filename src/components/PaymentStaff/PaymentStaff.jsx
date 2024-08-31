@@ -1,24 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Row } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
-import { preStep3 } from '~/features/showTime/showTimeSlice';
+import { Button } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { preStep3, priceValue } from '~/features/showTime/showTimeSlice';
 import CardBookTicket from '../CardBookTicket/CardBookTicket';
-import { CCol, CForm, CFormCheck, CFormInput, CFormLabel, CFormSelect, CRow } from '@coreui/react-pro';
+import { CCol, CFormCheck, CFormInput, CFormLabel, CRow } from '@coreui/react-pro';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { detailUserByPhone } from '~/services/UserService';
 import momo from '~/assets/images/Logo-MoMo-Circle.webp';
+import { typeUserPrice } from '~/constants';
+import { detailPriceByUser } from '~/services/PriceService';
 
 const PaymentStaff = () => {
     const dispatch = useDispatch();
-    const [user, setUser] = useState('');
     const [phone, setPhone] = useState('');
+    const time = useSelector((state) => state.showTime.time);
     const [userInfo, setUserInfo] = useState({
         username: '',
         point: 0,
         email: '',
     });
-    const [typeUser, setTypeUser] = useState('flexRadioDefault2');
+    const [selectUser, setSelectUser] = useState(typeUserPrice[1]);
+    const [numUser, setNumUser] = useState([0, 0, 0]);
     const [showReader, setShowReader] = useState(false);
+    const room = useSelector((state) => state.showTime.room);
+    const seat = useSelector((state) => state.showTime.seat);
 
     useEffect(() => {
         if (showReader) {
@@ -43,7 +48,6 @@ const PaymentStaff = () => {
             scanner.render(success, error);
         }
     }, [showReader]);
-    // console.log(userInfo);
 
     useEffect(() => {
         const fetch = async () => {
@@ -63,14 +67,42 @@ const PaymentStaff = () => {
         fetch();
     }, [phone]);
 
-    console.log(typeUser);
-    // if (scanResult !== null) {
-    //     const info = JSON.parse(scanResult);
-    //     setUserInfo(info);
-    // }
+    useEffect(() => {
+        const fetch = async () => {
+            if (selectUser !== 'different') {
+                let data = await Promise.all(
+                    seat.map(
+                        async (item) => await detailPriceByUser(selectUser, time.date, time.timeStart, room, item._id),
+                    ),
+                );
+                const sum = data.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                dispatch(priceValue(sum));
+            } else {
+                let data = await Promise.all(
+                    [typeUserPrice[0], typeUserPrice[1], typeUserPrice[2]].map(
+                        async (item) => await detailPriceByUser(item, time.date, time.timeStart, room, seat[0]._id),
+                    ),
+                );
+                const sum = data.reduce(
+                    (accumulator, currentValue, currentIndex) => accumulator + currentValue * numUser[currentIndex],
+                    0,
+                );
+                dispatch(priceValue(sum));
+            }
+        };
+        fetch();
+    }, [numUser, seat, room, selectUser, dispatch]);
+
+    // console.log(price);
 
     const handlePre = () => {
         dispatch(preStep3());
+    };
+
+    const handleInputChange = (index, value) => {
+        const newNumUser = [...numUser];
+        newNumUser[index] = parseInt(value, 10);
+        setNumUser(newNumUser);
     };
 
     return (
@@ -82,55 +114,55 @@ const PaymentStaff = () => {
                 <div className="d-flex mb-5">
                     <CFormCheck
                         type="radio"
-                        name="typeUser"
-                        value="flexRadioDefault1"
+                        name="selectUser"
+                        value={typeUserPrice[0]}
                         id="flexRadioDefault1"
-                        onChange={(e) => setTypeUser(e.target.value)}
+                        onChange={(e) => setSelectUser(e.target.value)}
                         label="Học sinh, sinh viên"
-                        checked={typeUser === 'flexRadioDefault1'}
+                        checked={selectUser === typeUserPrice[0]}
                     />
                     <CFormCheck
                         className="ms-4"
                         type="radio"
-                        name="typeUser"
-                        value="flexRadioDefault2"
+                        name="selectUser"
+                        value={typeUserPrice[1]}
                         id="flexRadioDefault2"
-                        onChange={(e) => setTypeUser(e.target.value)}
+                        onChange={(e) => setSelectUser(e.target.value)}
                         label="Người lớn"
-                        checked={typeUser === 'flexRadioDefault2'}
+                        checked={selectUser === typeUserPrice[1]}
                     />
                     <CFormCheck
                         className="ms-4"
                         type="radio"
-                        name="typeUser"
-                        value="flexRadioDefault3"
+                        name="selectUser"
+                        value={typeUserPrice[2]}
                         id="flexRadioDefault3"
-                        onChange={(e) => setTypeUser(e.target.value)}
+                        onChange={(e) => setSelectUser(e.target.value)}
                         label="Người già, trẻ em"
-                        checked={typeUser === 'flexRadioDefault3'}
+                        checked={selectUser === typeUserPrice[2]}
                     />
                     <CFormCheck
                         className="ms-4"
                         type="radio"
-                        name="typeUser"
-                        value="flexRadioDefault4"
+                        name="selectUser"
+                        value={typeUserPrice[3]}
                         id="flexRadioDefault4"
-                        onChange={(e) => setTypeUser(e.target.value)}
+                        onChange={(e) => setSelectUser(e.target.value)}
                         label="Thành viên"
-                        checked={typeUser === 'flexRadioDefault4'}
+                        checked={selectUser === typeUserPrice[3]}
                     />
                     <CFormCheck
                         className="ms-4"
                         type="radio"
-                        name="typeUser"
-                        value="flexRadioDefault5"
+                        name="selectUser"
+                        value="different"
                         id="flexRadioDefault5"
-                        onChange={(e) => setTypeUser(e.target.value)}
+                        onChange={(e) => setSelectUser(e.target.value)}
                         label="Khác"
-                        checked={typeUser === 'flexRadioDefault5'}
+                        checked={selectUser === 'different'}
                     />
                 </div>
-                {typeUser === 'flexRadioDefault4' && (
+                {selectUser === typeUserPrice[3] && (
                     <div className="mb-5">
                         <Button className="mb-2" onClick={() => setShowReader(!showReader)}>
                             {showReader ? 'Ẩn máy quét' : 'Hiển thị máy quét'}
@@ -163,11 +195,26 @@ const PaymentStaff = () => {
                         </div>
                     </div>
                 )}
-                {typeUser === 'flexRadioDefault5' && (
+                {selectUser === 'different' && (
                     <div className="mb-5">
                         <CRow className="mb-3">
                             <CCol sm={1}>
-                                <CFormInput type="number" id="inputPassword" />
+                                <CFormInput
+                                    type="number"
+                                    value={numUser[0]}
+                                    onChange={(e) =>
+                                        handleInputChange(
+                                            0,
+                                            Math.min(
+                                                Math.min(
+                                                    Math.max(e.target.value, 0),
+                                                    seat.length - numUser[1] - numUser[2],
+                                                ),
+                                                seat.length - 1,
+                                            ),
+                                        )
+                                    }
+                                />
                             </CCol>
                             <CFormLabel htmlFor="inputPassword" className="col-sm-11 col-form-label">
                                 Học sinh, sinh viên
@@ -175,7 +222,22 @@ const PaymentStaff = () => {
                         </CRow>
                         <CRow className="mb-3">
                             <CCol sm={1}>
-                                <CFormInput type="number" id="inputPassword" />
+                                <CFormInput
+                                    type="number"
+                                    value={numUser[1]}
+                                    onChange={(e) =>
+                                        handleInputChange(
+                                            1,
+                                            Math.min(
+                                                Math.min(
+                                                    Math.max(e.target.value, 0),
+                                                    seat.length - numUser[0] - numUser[2],
+                                                ),
+                                                seat.length - 1,
+                                            ),
+                                        )
+                                    }
+                                />
                             </CCol>
                             <CFormLabel htmlFor="inputPassword" className="col-sm-11 col-form-label">
                                 Người lớn
@@ -183,7 +245,22 @@ const PaymentStaff = () => {
                         </CRow>
                         <CRow className="mb-3">
                             <CCol sm={1}>
-                                <CFormInput type="number" id="inputPassword" />
+                                <CFormInput
+                                    type="number"
+                                    value={numUser[2]}
+                                    onChange={(e) =>
+                                        handleInputChange(
+                                            2,
+                                            Math.min(
+                                                Math.min(
+                                                    Math.max(e.target.value, 0),
+                                                    seat.length - numUser[1] - numUser[0],
+                                                ),
+                                                seat.length - 1,
+                                            ),
+                                        )
+                                    }
+                                />
                             </CCol>
                             <CFormLabel htmlFor="inputPassword" className="col-sm-11 col-form-label">
                                 Người già, trẻ em

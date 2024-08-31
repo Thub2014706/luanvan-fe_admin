@@ -14,6 +14,7 @@ const CardBookTicket = () => {
     const time = useSelector((state) => state.showTime.time);
     const theater = useSelector((state) => state.showTime.theater);
     const seat = useSelector((state) => state.showTime.seat);
+    const price = useSelector((state) => state.showTime.price);
 
     useEffect(() => {
         const fetch = async () => {
@@ -22,7 +23,7 @@ const CardBookTicket = () => {
         };
         fetch();
     }, [idFilm]);
-    console.log(time);
+    // console.log(time);
 
     return (
         <div className="card-book">
@@ -69,6 +70,12 @@ const CardBookTicket = () => {
                                 {seat.map((item) => `${String.fromCharCode(64 + item.row)}${item.col}`).join(', ')}
                             </span>
                         )}
+                    </p>
+                    <p className="mt-3 mx-2">
+                        Tổng tiền:{' '}
+                        <span className="fw-bold h5" style={{ color: 'red' }}>
+                            {price.toLocaleString('it-IT')}đ
+                        </span>
                     </p>
                 </>
             )}
