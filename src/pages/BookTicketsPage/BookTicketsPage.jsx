@@ -1,6 +1,7 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import OrderSuccess from '~/components/OrderSuccess/OrderSuccess';
 import PaymentStaff from '~/components/PaymentStaff/PaymentStaff';
 import SelectFilm from '~/components/SelectFilm/SelectFilm';
 import SelectSeat from '~/components/SelectSeat/SelectSeat';
@@ -25,6 +26,8 @@ const BookTicketsPage = () => {
                 return <SelectSeat />;
             case 4:
                 return <PaymentStaff />;
+            case 5:
+                return <OrderSuccess />;
             default:
                 return null;
         }

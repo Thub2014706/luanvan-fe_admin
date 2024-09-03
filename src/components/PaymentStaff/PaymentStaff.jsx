@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { preStep3, priceValue } from '~/features/showTime/showTimeSlice';
+import { preStep3, priceValue, stepNext } from '~/features/showTime/showTimeSlice';
 import CardBookTicket from '../CardBookTicket/CardBookTicket';
 import { CCol, CFormCheck, CFormInput, CFormLabel, CRow } from '@coreui/react-pro';
 import { Html5QrcodeScanner } from 'html5-qrcode';
@@ -9,11 +9,15 @@ import { detailUserByPhone } from '~/services/UserService';
 import momo from '~/assets/images/Logo-MoMo-Circle.webp';
 import { typeUserPrice } from '~/constants';
 import { detailPriceByUser } from '~/services/PriceService';
+import { checkStatus, momoPayment } from '~/services/MomoService';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const PaymentStaff = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [phone, setPhone] = useState('');
     const time = useSelector((state) => state.showTime.time);
+    const price = useSelector((state) => state.showTime.price);
     const [userInfo, setUserInfo] = useState({
         username: '',
         point: 0,
@@ -104,6 +108,27 @@ const PaymentStaff = () => {
         newNumUser[index] = parseInt(value, 10);
         setNumUser(newNumUser);
     };
+
+    const handleMomo = async () => {
+        const data = await momoPayment({ amount: price });
+        window.location.href = data.payUrl;
+    };
+    const query = new URLSearchParams(useLocation().search);
+
+    // useEffect(() => {
+    //     const fetch = async () => {
+    //         if (query.get('resultCode') === 0) {
+    //             console.log('iii', query.get('resultCode'));
+    //             dispatch(stepNext(5));
+    //         }
+    //     };
+    //     fetch();
+    // }, [dispatch]);
+
+    console.log('iii', query.get('resultCode'));
+    if (query.get('resultCode') === '0') {
+        dispatch(stepNext(5));
+    }
 
     return (
         <CRow className="mt-4">
@@ -270,7 +295,7 @@ const PaymentStaff = () => {
                 )}
                 <div className="card-pay">
                     <h6 className="fw-bold">CHỌN PHƯƠNG THỨC THANH TOÁN</h6>
-                    <div className="momo mt-3">
+                    <div className="momo mt-3" onClick={handleMomo}>
                         Ví MoMo <img src={momo} height={30} width={30} alt="" />
                     </div>
                     <div className="money mt-3">Thanh toán bằng tiền mặt</div>
