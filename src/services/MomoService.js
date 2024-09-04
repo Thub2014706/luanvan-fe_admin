@@ -9,6 +9,15 @@ export const momoPayment = async (amount) => {
     }
 };
 
+export const momoCallBack = async () => {
+    try {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/momo/callback`);
+        return response.data;
+    } catch (error) {
+        console.log('loi', error);
+    }
+};
+
 export const checkStatus = async (orderId) => {
     try {
         const response = await axios.post(

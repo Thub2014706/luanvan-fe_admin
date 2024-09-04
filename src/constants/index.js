@@ -14,6 +14,8 @@ import {
     faUserTie,
     faUtensils,
 } from '@fortawesome/free-solid-svg-icons';
+import { useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 export const modules = {
@@ -223,3 +225,8 @@ export const nameDay = {
 };
 
 export const allTranslate = ['Phụ đề', 'Lồng tiếng', 'Thuyết minh'];
+
+export const useQueryParams = () => {
+    const location = useLocation();
+    return useMemo(() => new URLSearchParams(location.search), [location.search]);
+};

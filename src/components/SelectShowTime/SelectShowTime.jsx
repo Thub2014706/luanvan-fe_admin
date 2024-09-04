@@ -4,7 +4,7 @@ import { detailShowTimeById, listShowTimeByDay } from '~/services/ShowTimeServic
 import moment from 'moment';
 import { nameDay, statusShowTime } from '~/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { preStep1, roomValue, stepNext, timeValue } from '~/features/showTime/showTimeSlice';
+import { idShowTimeValue, preStep1, roomValue, stepNext, timeValue } from '~/features/showTime/showTimeSlice';
 import { Col, Row } from 'react-bootstrap';
 import CardBookTicket from '../CardBookTicket/CardBookTicket';
 
@@ -47,6 +47,7 @@ const SelectShowTime = () => {
             const data = await detailShowTimeById(idShowTime);
             dispatch(roomValue(data.room));
             dispatch(timeValue({ timeStart: data.timeStart, date: data.date }));
+            dispatch(idShowTimeValue(idShowTime));
             dispatch(stepNext(3));
         } else {
             setWar('Vui lòng chọn suất chiếu!');

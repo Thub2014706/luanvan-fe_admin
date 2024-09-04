@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { preStep3, priceValue, stepNext } from '~/features/showTime/showTimeSlice';
@@ -7,13 +7,14 @@ import { CCol, CFormCheck, CFormInput, CFormLabel, CRow } from '@coreui/react-pr
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { detailUserByPhone } from '~/services/UserService';
 import momo from '~/assets/images/Logo-MoMo-Circle.webp';
-import { typeUserPrice } from '~/constants';
+import { typeUserPrice, useQueryParams } from '~/constants';
 import { detailPriceByUser } from '~/services/PriceService';
 import { checkStatus, momoPayment } from '~/services/MomoService';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { addOrderTicket } from '~/services/OrderTicketService';
 
 const PaymentStaff = () => {
-    const navigate = useNavigate();
+    const user = useSelector((state) => state.auth.login.currentUser);
     const dispatch = useDispatch();
     const [phone, setPhone] = useState('');
     const time = useSelector((state) => state.showTime.time);
@@ -28,6 +29,7 @@ const PaymentStaff = () => {
     const [showReader, setShowReader] = useState(false);
     const room = useSelector((state) => state.showTime.room);
     const seat = useSelector((state) => state.showTime.seat);
+    const idShowTime = useSelector((state) => state.showTime.idShowTime);
 
     useEffect(() => {
         if (showReader) {
@@ -95,7 +97,7 @@ const PaymentStaff = () => {
             }
         };
         fetch();
-    }, [numUser, seat, room, selectUser, dispatch]);
+    }, [numUser, seat, room, selectUser, dispatch, time]);
 
     // console.log(price);
 
@@ -108,27 +110,35 @@ const PaymentStaff = () => {
         newNumUser[index] = parseInt(value, 10);
         setNumUser(newNumUser);
     };
+    const query = useQueryParams();
 
     const handleMomo = async () => {
         const data = await momoPayment({ amount: price });
         window.location.href = data.payUrl;
+        console.log(data)
     };
-    const query = new URLSearchParams(useLocation().search);
 
     // useEffect(() => {
     //     const fetch = async () => {
-    //         if (query.get('resultCode') === 0) {
+    //         if (query.get('resultCode') === '0') {
+    //             await addOrderTicket(
+    //                 {
+    //                     idOrder: query.get('orderId'),
+    //                     showTime: idShowTime,
+    //                     staff: user?.data.id,
+    //                     seat: seat.map((item) => item._id),
+    //                     price,
+    //                 },
+    //                 user?.accessToken,
+    //             );
     //             console.log('iii', query.get('resultCode'));
-    //             dispatch(stepNext(5));
+    //             // dispatch(stepNext(5));
     //         }
     //     };
     //     fetch();
-    // }, [dispatch]);
+    // }, [dispatch, query, idShowTime, user?.data.id, seat, price, user?.accessToken]);
 
-    console.log('iii', query.get('resultCode'));
-    if (query.get('resultCode') === '0') {
-        dispatch(stepNext(5));
-    }
+    // console.log('iii', query.get('resultCode'));
 
     return (
         <CRow className="mt-4">

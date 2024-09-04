@@ -61,6 +61,7 @@ const LoginPage = () => {
                                     onChange={handleChange}
                                 />
                                 <FontAwesomeIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => setEye(!eye)}
                                     className="icon-login"
                                     icon={eye ? faEyeSlash : faEye}
@@ -82,9 +83,9 @@ const LoginPage = () => {
                         </Form>
                     </div>
                 </Col>
-                <Col xs={6} className='col-login'>
-                    <img src={img1} className='img' alt="" />
-                    <p className='text'>"You may delay, but time will not"</p>
+                <Col xs={6} className="col-login">
+                    <img src={img1} className="img" alt="" />
+                    <p className="text">"You may delay, but time will not"</p>
                 </Col>
             </Row>
         </Container>

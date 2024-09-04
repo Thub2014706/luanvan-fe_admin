@@ -6,6 +6,7 @@ export const showTimeSlice = createSlice({
         step: 1,
         theater: '',
         film: '',
+        idShowTime: null,
         room: '',
         time: {},
         seat: [],
@@ -23,6 +24,9 @@ export const showTimeSlice = createSlice({
         },
         filmValue: (state, action) => {
             state.film = action.payload;
+        },
+        idShowTimeValue: (state, action) => {
+            state.idShowTime = action.payload;
         },
         timeValue: (state, action) => {
             state.time = action.payload;
@@ -58,6 +62,7 @@ export const {
     timeValue,
     seatValue,
     priceValue,
+    idShowTimeValue,
     preStep1,
     preStep2,
     preStep3,
