@@ -1,3 +1,4 @@
+import OrderSuccess from '~/components/OrderSuccess/OrderSuccess';
 import AddComboPage from '~/pages/AddComboPage/AddComboPage';
 import AddDirectorPage from '~/pages/AddDirectorPage/AddDirectorPage';
 import AddDiscountPage from '~/pages/AddDiscountPage/AddDiscountPage';
@@ -149,6 +150,11 @@ const routes = [
     {
         path: '/book-tickets',
         component: BookTicketsPage,
+    },
+
+    {
+        path: '/book-tickets/success',
+        component: OrderSuccess,
     },
 
     {

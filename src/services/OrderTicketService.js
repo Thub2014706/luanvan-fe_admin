@@ -12,3 +12,13 @@ export const addOrderTicket = async (data, token) => {
         console.log('loi', error);
     }
 };
+
+export const detailOrderTicket = async (idOrder) => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/order-ticket/detail?idOrder=${idOrder}`);
+        return response.data;
+    } catch (error) {
+        showToast(error.response.data.message, 'error');
+        console.log('loi', error);
+    }
+};

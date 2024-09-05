@@ -1,19 +1,20 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { preStep3, priceValue, stepNext } from '~/features/showTime/showTimeSlice';
+import { idOrderValue, preStep3, priceValue, stepNext } from '~/features/showTime/showTimeSlice';
 import CardBookTicket from '../CardBookTicket/CardBookTicket';
 import { CCol, CFormCheck, CFormInput, CFormLabel, CRow } from '@coreui/react-pro';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { detailUserByPhone } from '~/services/UserService';
 import momo from '~/assets/images/Logo-MoMo-Circle.webp';
-import { typeUserPrice, useQueryParams } from '~/constants';
+import { showToast, typeUserPrice, useQueryParams } from '~/constants';
 import { detailPriceByUser } from '~/services/PriceService';
 import { checkStatus, momoPayment } from '~/services/MomoService';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { addOrderTicket } from '~/services/OrderTicketService';
 
 const PaymentStaff = () => {
+    const navigate = useNavigate();
     const user = useSelector((state) => state.auth.login.currentUser);
     const dispatch = useDispatch();
     const [phone, setPhone] = useState('');
@@ -30,6 +31,7 @@ const PaymentStaff = () => {
     const room = useSelector((state) => state.showTime.room);
     const seat = useSelector((state) => state.showTime.seat);
     const idShowTime = useSelector((state) => state.showTime.idShowTime);
+    const [war, setWar] = useState('');
 
     useEffect(() => {
         if (showReader) {
@@ -106,39 +108,72 @@ const PaymentStaff = () => {
     };
 
     const handleInputChange = (index, value) => {
+        setWar('');
         const newNumUser = [...numUser];
         newNumUser[index] = parseInt(value, 10);
         setNumUser(newNumUser);
     };
-    const query = useQueryParams();
 
     const handleMomo = async () => {
-        const data = await momoPayment({ amount: price });
-        window.location.href = data.payUrl;
-        console.log(data)
+        if (
+            selectUser === 'different' &&
+            numUser.reduce((accumulator, currentValue) => accumulator + currentValue, 0) !== seat.length
+        ) {
+            setWar('Số khách hàng chưa đủ với số ghế đã đặt');
+        } else {
+            const data = await momoPayment({ amount: price });
+            await addOrderTicket(
+                {
+                    idOrder: data.orderId,
+                    showTime: idShowTime,
+                    staff: user?.data.id,
+                    seat: seat.map((item) => item._id),
+                    price,
+                    paymentMethod: 'momo',
+                },
+                user?.accessToken,
+            );
+            dispatch(idOrderValue(data.orderId));
+            window.location.href = data.payUrl;
+            // console.log(data);
+        }
     };
 
     // useEffect(() => {
     //     const fetch = async () => {
-    //         if (query.get('resultCode') === '0') {
-    //             await addOrderTicket(
-    //                 {
-    //                     idOrder: query.get('orderId'),
-    //                     showTime: idShowTime,
-    //                     staff: user?.data.id,
-    //                     seat: seat.map((item) => item._id),
-    //                     price,
-    //                 },
-    //                 user?.accessToken,
-    //             );
-    //             console.log('iii', query.get('resultCode'));
-    //             // dispatch(stepNext(5));
+    //         if (query.get('orderId')) {
+    //             const data = await checkStatus({ orderId: query.get('orderId') });
+    //             dispatch(idOrderValue(data.orderId));
     //         }
     //     };
     //     fetch();
-    // }, [dispatch, query, idShowTime, user?.data.id, seat, price, user?.accessToken]);
+    // }, [dispatch, idOrder]);
+    // console.log('iii', idOrder);
 
-    // console.log('iii', query.get('resultCode'));
+    const handleMoney = async () => {
+        if (
+            selectUser === 'different' &&
+            numUser.reduce((accumulator, currentValue) => accumulator + currentValue, 0) !== seat.length
+        ) {
+            setWar('Số khách hàng chưa đủ với số ghế đã đặt');
+        } else {
+            const data = await addOrderTicket(
+                {
+                    showTime: idShowTime,
+                    staff: user?.data.id,
+                    seat: seat.map((item) => item._id),
+                    price,
+                    paymentMethod: 'cash',
+                },
+                user?.accessToken,
+            );
+            if (data) {
+                dispatch(idOrderValue(data.idOrder));
+                console.log(data._id)
+                navigate('/book-tickets/success');
+            }
+        }
+    };
 
     return (
         <CRow className="mt-4">
@@ -301,14 +336,17 @@ const PaymentStaff = () => {
                                 Người già, trẻ em
                             </CFormLabel>
                         </CRow>
+                        {war !== '' && <p style={{ color: 'red', position: 'absolute' }}>{war}</p>}
                     </div>
                 )}
-                <div className="card-pay">
+                <div className="card-pay mt-2">
                     <h6 className="fw-bold">CHỌN PHƯƠNG THỨC THANH TOÁN</h6>
-                    <div className="momo mt-3" onClick={handleMomo}>
+                    <div className="momo mt-3" onClick={() => handleMomo()}>
                         Ví MoMo <img src={momo} height={30} width={30} alt="" />
                     </div>
-                    <div className="money mt-3">Thanh toán bằng tiền mặt</div>
+                    <div className="money mt-3" onClick={() => handleMoney()}>
+                        Thanh toán bằng tiền mặt
+                    </div>
                 </div>
                 <div className="float-end d-flex">
                     <div className="mt-5 button add me-3" onClick={handlePre}>

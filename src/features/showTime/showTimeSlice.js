@@ -11,6 +11,7 @@ export const showTimeSlice = createSlice({
         time: {},
         seat: [],
         price: 0,
+        idOrder: null,
     },
     reducers: {
         stepNext: (state, action) => {
@@ -36,6 +37,20 @@ export const showTimeSlice = createSlice({
         },
         priceValue: (state, action) => {
             state.price = action.payload;
+        },
+        idOrderValue: (state, action) => {
+            state.idOrder = action.payload;
+        },
+        removeAll: (state) => {
+            state.step = 1;
+            state.theater = '';
+            state.film = '';
+            state.idShowTime = null;
+            state.room = '';
+            state.time = {};
+            state.seat = [];
+            state.price = 0;
+            state.idOrder = null;
         },
         preStep1: (state) => {
             state.step = 1;
@@ -63,6 +78,8 @@ export const {
     seatValue,
     priceValue,
     idShowTimeValue,
+    idOrderValue,
+    removeAll,
     preStep1,
     preStep2,
     preStep3,

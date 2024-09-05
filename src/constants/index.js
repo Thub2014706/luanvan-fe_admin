@@ -61,6 +61,15 @@ export const standardAge = [
     'C - Phim không được phép phổ biến',
 ];
 
+export const signAge = [
+    'P',
+    'K',
+    'T13',
+    'T16',
+    'T18',
+    'C',
+];
+
 export const typeRoom = [
     '2D',
     '3D',

@@ -6,7 +6,7 @@ const Name = ({ id, detail }) => {
     useEffect(() => {
         const fetch = async () => {
             const data = await detail(id);
-            setName(data.name);
+            setName(data.name || data.username);
         };
         fetch();
     }, [id, detail]);
