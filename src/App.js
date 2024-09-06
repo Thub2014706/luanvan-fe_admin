@@ -10,7 +10,8 @@ import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 function App() {
     // const isAuthenticated = false;
     const user = useSelector((state) => state.auth.login.currentUser);
-    console.log('aaa', user);
+    const idOrder = useSelector((state) => state.showTime.idOrder);
+    console.log('aaa', idOrder);
     return (
         <Router>
             <div className="App">
@@ -56,11 +57,15 @@ function App() {
                                         <route.component />
                                     </Fragment>
                                 ) : user ? (
+                                    // (route.path === '/book-tickets/success' && idOrder !== null) ||
                                     user.data.role === 0 ||
                                     route.path === '/' ||
                                     itemMenu.some(
                                         (item) =>
-                                            route.path.startsWith(item.link) && user.data.access.includes(item.name),
+                                            (route.path.startsWith(item.link) &&
+                                                user.data.access.includes(item.name) &&
+                                                route.path !== '/book-tickets/success') ||
+                                            (route.path === '/book-tickets/success' && idOrder !== null),
                                     ) ? (
                                         <MainLayout>
                                             <route.component />

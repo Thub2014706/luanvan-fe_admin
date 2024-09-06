@@ -22,3 +22,13 @@ export const detailOrderTicket = async (idOrder) => {
         console.log('loi', error);
     }
 };
+
+export const allOrderTicketSelled = async (showTime) => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/order-ticket/all-selled?showTime=${showTime}`);
+        return response.data;
+    } catch (error) {
+        showToast(error.response.data.message, 'error');
+        console.log('loi', error);
+    }
+};

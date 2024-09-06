@@ -5,6 +5,7 @@ import { allSeatRoom } from '~/services/SeatService';
 import { useDispatch, useSelector } from 'react-redux';
 import { preStep2, seatValue, stepNext } from '~/features/showTime/showTimeSlice';
 import CardBookTicket from '../CardBookTicket/CardBookTicket';
+import { allOrderTicketSelled, OrderTicketSelectSeat } from '~/services/OrderTicketService';
 
 const SelectSeat = () => {
     const [seats, setSeats] = useState([]);
@@ -12,6 +13,8 @@ const SelectSeat = () => {
     const idRoom = useSelector((state) => state.showTime.room);
     const [selectSeat, setSelectSeat] = useState([]);
     const [war, setWar] = useState('');
+    const idShowTime = useSelector((state) => state.showTime.idShowTime);
+    const [selled, setSelled] = useState([]);
 
     useEffect(() => {
         const fetch = async () => {
@@ -20,35 +23,58 @@ const SelectSeat = () => {
         };
         fetch();
     }, [idRoom]);
-    // console.log('qq', idRoom);
+
+    useEffect(() => {
+        const fetch = async () => {
+            const data = await allOrderTicketSelled(idShowTime);
+            setSelled(data);
+        };
+        fetch();
+    }, [idShowTime]);
+    // console.log('qq', selled);
     const rows = [...new Set(seats.map((item) => item.row))];
 
     const handlePre = () => {
         dispatch(preStep2());
     };
 
-    const handleSelectSeat = (seat) => {
+    const handleSelectSeat = async (seat) => {
         setWar('');
-        const arrayRow = seats.filter((item) => item.row === seat.row);
-        const seatIndex = arrayRow.indexOf(seat);
-        const left1Seat = arrayRow[seatIndex - 1];
-        const right1Seat = arrayRow[seatIndex + 1];
-        const left2Seat = arrayRow[seatIndex - 2];
-        const right2Seat = arrayRow[seatIndex + 2];
-        if (!selectSeat.find((item) => item === seat)) {
-            if (!left2Seat || !right2Seat || (left1Seat && left1Seat.left > 1)) {
-                showToast(
-                    'Vui lòng không được để trống 1 ghế ở bên trái, giữa hoặc bên phải trên cùng một hàng ghế mà bạn vừa chọn!',
-                    'warning',
-                );
+        // const arrayRow = seats.filter((item) => item.row === seat.row);
+        // const seatIndex = arrayRow.indexOf(seat);
+        // const left1Seat = arrayRow[seatIndex - 1];
+        // const right1Seat = arrayRow[seatIndex + 1];
+        // const left2Seat = arrayRow[seatIndex - 2];
+        // const right2Seat = arrayRow[seatIndex + 2];
+        // if (!selectSeat.find((item) => item === seat)) {
+        //     if (!left2Seat || !right2Seat || (left1Seat && left1Seat.left > 1)) {
+        //         showToast(
+        //             'Vui lòng không được để trống 1 ghế ở bên trái, giữa hoặc bên phải trên cùng một hàng ghế mà bạn vừa chọn!',
+        //             'warning',
+        //         );
+        //     } else {
+        //         setSelectSeat([...selectSeat, seat]);
+        //     }
+        // } else {
+        //     setSelectSeat(selectSeat.filter((item) => item !== seat));
+        // }
+        if (!selectSeat.includes(seat)) {
+            const seatArray = [...selectSeat, seat];
+            const allSameType = seatArray.every((item) => item.type === seatArray[0].type);
+            const allSameRow = seatArray.every((item) => item.row === seatArray[0].row);
+
+            if (!allSameRow) {
+                showToast('Hãy chọn ghế cùng hàng', 'warning');
+            } else if (!allSameType) {
+                showToast('Hãy chọn ghế cùng loại', 'warning');
             } else {
-                setSelectSeat([...selectSeat, seat]);
+                setSelectSeat(seatArray); // Cập nhật state với mảng ghế mới
             }
         } else {
             setSelectSeat(selectSeat.filter((item) => item !== seat));
         }
     };
-    // console.log(selectSeat);
+    console.log(selectSeat);
 
     const handleSubmit = () => {
         if (selectSeat.length === 0) {
@@ -81,13 +107,14 @@ const SelectSeat = () => {
                                                 } ${seat.type === typeSeatEnum[2] && 'couple'} ${
                                                     !seat.status && 'inaction'
                                                 } ${selectSeat.find((item) => item === seat) && 'select'}
+                                                ${selled.includes(seat._id) && 'selled'}
                                                 `}
                                                 style={{
                                                     marginBottom: `${seat.bottom * 17.5}px`,
                                                     marginLeft: `${seat.left * 17.5 + seat.left * 2 + 2}px`,
                                                     marginRight: `${seat.right * 17.5 + seat.right * 2 + 2}px`,
                                                 }}
-                                                onClick={() => handleSelectSeat(seat)}
+                                                onClick={() => !selled.includes(seat._id) && handleSelectSeat(seat)}
                                             >
                                                 <p className="text-white">
                                                     {String.fromCharCode(64 + row)}
@@ -109,6 +136,8 @@ const SelectSeat = () => {
                     <p className="my-auto ms-2">Ghế Couple</p>
                     <div className="inaction seat ms-4"></div>
                     <p className="my-auto ms-2">Ghế đang bảo trì</p>
+                    <div className="selled seat ms-4"></div>
+                    <p className="my-auto ms-2">Ghế đã mua</p>
                 </div>
                 <p style={{ color: 'red', position: 'absolute' }}>{war}</p>
                 <div className="float-end d-flex">

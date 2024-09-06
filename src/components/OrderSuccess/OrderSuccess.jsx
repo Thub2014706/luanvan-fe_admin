@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import ReactToPrint, { useReactToPrint } from 'react-to-print';
-import { removeAll, stepNext } from '~/features/showTime/showTimeSlice';
+import { removeAll, removeIdOrder, stepNext } from '~/features/showTime/showTimeSlice';
 import ImageBase from '../ImageBase/ImageBase';
 import { detailOrderTicket } from '~/services/OrderTicketService';
 import Barcode from 'react-barcode';
@@ -14,12 +14,16 @@ import { detailStaff } from '~/services/StaffService';
 import moment from 'moment';
 import { detailRoom } from '~/services/RoomService';
 import { detailSeat } from '~/services/SeatService';
-import { signAge, standardAge } from '~/constants';
-import { useNavigate } from 'react-router-dom';
+import { signAge, standardAge, typePay } from '~/constants';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { checkStatus } from '~/services/MomoService';
+import success from '~/assets/images/success.png';
+import warning from '~/assets/images/warning.png';
+import NotFoundPage from '~/pages/NotFoundPage/NotFoundPage';
 
 const OrderSuccess = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     // dispatch(stepNext(4))
     const componentRef = useRef();
     const handlePrint = useReactToPrint({
@@ -32,35 +36,70 @@ const OrderSuccess = () => {
     const [room, setRoom] = useState(null);
     const [seats, setSeats] = useState([]);
     const [film, setFilm] = useState(null);
-    
+    const [isSuccess, setIsSuccess] = useState();
+
+    // useEffect(() => {
+    //     const checkPayment = async () => {
+    //         if (idOrder !== null) {
+    //             const data = await checkStatus({ orderId: idOrder });
+    //             if (data.resultCode === 0) {
+    //                 setIsSuccess('success');
+    //                 dispatch(removeAll());
+    //             } else {
+    //                 setIsSuccess('error');
+    //             }
+    //             console.log(data);
+    //         }
+    //     };
+
+    //     checkPayment();
+    // }, [idOrder, navigate, dispatch]);
+
     useEffect(() => {
         const fetch = async () => {
-            const data1 = await detailOrderTicket(idOrder);
-            setOrder(data1);
-            console.log(data1)
-            const data2 = await detailShowTimeById(data1.showTime);
-            setShowTime(data2);
-            const data3 = await detailTheater(data2.theater);
-            setTheater(data3);
-            const data4 = await detailRoom(data2.room);
-            setRoom(data4);
-            const data5 = await Promise.all(data1.seat.map(async (item) => await detailSeat(item)));
-            setSeats(data5);
-            const data6 = await detailFilm(data2.film);
-            setFilm(data6);
-            // console.log(data5);
+            if (idOrder !== null) {
+                const data1 = await detailOrderTicket(idOrder);
+                setOrder(data1);
+                if (data1.status === typePay[1]) {
+                    setIsSuccess('success');
+                    dispatch(removeAll());
+                } else {
+                    setIsSuccess('error');
+                }
+                console.log(data1);
+                const data2 = await detailShowTimeById(data1.showTime);
+                setShowTime(data2);
+                const data3 = await detailTheater(data2.theater);
+                setTheater(data3);
+                const data4 = await detailRoom(data2.room);
+                setRoom(data4);
+                const data5 = await Promise.all(data1.seat.map(async (item) => await detailSeat(item)));
+                setSeats(data5);
+                const data6 = await detailFilm(data2.film);
+                setFilm(data6);
+            }
         };
         fetch();
-    }, [idOrder]);
+    }, [idOrder, dispatch]);
 
     const handleBook = () => {
-        dispatch(removeAll());
-        navigate('/book-tickets')
+        dispatch(removeIdOrder());
+        navigate('/book-tickets');
     };
 
-    return (
-        <div className="d-flex flex-column align-items-center justify-content-center p-4">
-            <h4 className="text-center">Đặt vé thành công!</h4>
+    const handleBookDif = () => {
+        dispatch(removeAll());
+        dispatch(removeIdOrder());
+        navigate('/book-tickets');
+    };
+
+    const handlePay = () => {
+        navigate('/book-tickets');
+    };
+    return isSuccess === 'success' ? (
+        <div className="d-flex flex-column align-items-center justify-content-center p-5">
+            <img src={success} height={100} alt="" />
+            <h4 className="text-center mt-3">Đặt vé thành công!</h4>
             <div>
                 <Button onClick={handleBook}>Tiếp tục đặt vé</Button>
                 <Button className="ms-2" onClick={handlePrint}>
@@ -151,6 +190,17 @@ const OrderSuccess = () => {
                             </div>
                         )}
                 </div>
+            </div>
+        </div>
+    ) : (
+        <div className="d-flex flex-column align-items-center justify-content-center p-5">
+            <img src={warning} className="mx-auto" height={100} alt="" />
+            <h4 className="text-center mt-3">Đặt vé không thành công!</h4>
+            <div>
+                <Button onClick={handleBookDif}>Đặt vé khác</Button>
+                <Button className="ms-2" onClick={handlePay}>
+                    Thanh toán lại
+                </Button>
             </div>
         </div>
     );

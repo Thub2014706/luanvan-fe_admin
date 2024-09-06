@@ -1,16 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { idOrderValue, preStep3, priceValue, stepNext } from '~/features/showTime/showTimeSlice';
+import { idOrderValue, preStep3, priceValue, removeAll } from '~/features/showTime/showTimeSlice';
 import CardBookTicket from '../CardBookTicket/CardBookTicket';
 import { CCol, CFormCheck, CFormInput, CFormLabel, CRow } from '@coreui/react-pro';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { detailUserByPhone } from '~/services/UserService';
 import momo from '~/assets/images/Logo-MoMo-Circle.webp';
-import { showToast, typeUserPrice, useQueryParams } from '~/constants';
+import { typeUserPrice } from '~/constants';
 import { detailPriceByUser } from '~/services/PriceService';
-import { checkStatus, momoPayment } from '~/services/MomoService';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { momoPayment } from '~/services/MomoService';
+import { useNavigate } from 'react-router-dom';
 import { addOrderTicket } from '~/services/OrderTicketService';
 
 const PaymentStaff = () => {
@@ -63,6 +63,12 @@ const PaymentStaff = () => {
                 const data = await detailUserByPhone(phone);
                 if (data) {
                     setUserInfo(data);
+                } else {
+                    setUserInfo({
+                        username: '',
+                        point: 0,
+                        email: '',
+                    });
                 }
             } else {
                 setUserInfo({
@@ -114,12 +120,27 @@ const PaymentStaff = () => {
         setNumUser(newNumUser);
     };
 
+    const handleSelectUser = (value) => {
+        setWar('');
+        setSelectUser(value);
+        if (value !== typeUserPrice[3]) {
+            setPhone('');
+        }
+        if (value !== 'different') {
+            setNumUser([0, 0, 0]);
+        }
+    };
+
     const handleMomo = async () => {
         if (
             selectUser === 'different' &&
             numUser.reduce((accumulator, currentValue) => accumulator + currentValue, 0) !== seat.length
         ) {
             setWar('Số khách hàng chưa đủ với số ghế đã đặt');
+        } else if (selectUser === typeUserPrice[3] && phone === '') {
+            setWar('Nhập số điện thoại thành viên');
+        } else if (selectUser === typeUserPrice[3] && phone !== '' && userInfo.username === '') {
+            setWar('Thành viên không tồn tại');
         } else {
             const data = await momoPayment({ amount: price });
             await addOrderTicket(
@@ -135,20 +156,9 @@ const PaymentStaff = () => {
             );
             dispatch(idOrderValue(data.orderId));
             window.location.href = data.payUrl;
-            // console.log(data);
+            console.log(data);
         }
     };
-
-    // useEffect(() => {
-    //     const fetch = async () => {
-    //         if (query.get('orderId')) {
-    //             const data = await checkStatus({ orderId: query.get('orderId') });
-    //             dispatch(idOrderValue(data.orderId));
-    //         }
-    //     };
-    //     fetch();
-    // }, [dispatch, idOrder]);
-    // console.log('iii', idOrder);
 
     const handleMoney = async () => {
         if (
@@ -156,6 +166,10 @@ const PaymentStaff = () => {
             numUser.reduce((accumulator, currentValue) => accumulator + currentValue, 0) !== seat.length
         ) {
             setWar('Số khách hàng chưa đủ với số ghế đã đặt');
+        } else if (selectUser === typeUserPrice[3] && phone === '') {
+            setWar('Nhập số điện thoại thành viên');
+        } else if (selectUser === typeUserPrice[3] && phone !== '' && userInfo.username === '') {
+            setWar('Thành viên không tồn tại');
         } else {
             const data = await addOrderTicket(
                 {
@@ -169,7 +183,8 @@ const PaymentStaff = () => {
             );
             if (data) {
                 dispatch(idOrderValue(data.idOrder));
-                console.log(data._id)
+                dispatch(removeAll());
+                console.log(data._id);
                 navigate('/book-tickets/success');
             }
         }
@@ -187,7 +202,7 @@ const PaymentStaff = () => {
                         name="selectUser"
                         value={typeUserPrice[0]}
                         id="flexRadioDefault1"
-                        onChange={(e) => setSelectUser(e.target.value)}
+                        onChange={(e) => handleSelectUser(e.target.value)}
                         label="Học sinh, sinh viên"
                         checked={selectUser === typeUserPrice[0]}
                     />
@@ -197,7 +212,7 @@ const PaymentStaff = () => {
                         name="selectUser"
                         value={typeUserPrice[1]}
                         id="flexRadioDefault2"
-                        onChange={(e) => setSelectUser(e.target.value)}
+                        onChange={(e) => handleSelectUser(e.target.value)}
                         label="Người lớn"
                         checked={selectUser === typeUserPrice[1]}
                     />
@@ -207,7 +222,7 @@ const PaymentStaff = () => {
                         name="selectUser"
                         value={typeUserPrice[2]}
                         id="flexRadioDefault3"
-                        onChange={(e) => setSelectUser(e.target.value)}
+                        onChange={(e) => handleSelectUser(e.target.value)}
                         label="Người già, trẻ em"
                         checked={selectUser === typeUserPrice[2]}
                     />
@@ -217,7 +232,7 @@ const PaymentStaff = () => {
                         name="selectUser"
                         value={typeUserPrice[3]}
                         id="flexRadioDefault4"
-                        onChange={(e) => setSelectUser(e.target.value)}
+                        onChange={(e) => handleSelectUser(e.target.value)}
                         label="Thành viên"
                         checked={selectUser === typeUserPrice[3]}
                     />
@@ -227,14 +242,20 @@ const PaymentStaff = () => {
                         name="selectUser"
                         value="different"
                         id="flexRadioDefault5"
-                        onChange={(e) => setSelectUser(e.target.value)}
+                        onChange={(e) => handleSelectUser(e.target.value)}
                         label="Khác"
                         checked={selectUser === 'different'}
                     />
                 </div>
                 {selectUser === typeUserPrice[3] && (
                     <div className="mb-5">
-                        <Button className="mb-2" onClick={() => setShowReader(!showReader)}>
+                        <Button
+                            className="mb-2"
+                            onClick={() => {
+                                setWar('');
+                                setShowReader(!showReader);
+                            }}
+                        >
                             {showReader ? 'Ẩn máy quét' : 'Hiển thị máy quét'}
                         </Button>
                         {showReader && <div id="reader"></div>}
@@ -246,7 +267,10 @@ const PaymentStaff = () => {
                                         value={phone}
                                         name="phone"
                                         placeholder="Số điện thoại"
-                                        onChange={(e) => setPhone(e.target.value)}
+                                        onChange={(e) => {
+                                            setWar('');
+                                            setPhone(e.target.value);
+                                        }}
                                     />
                                 </CCol>
                             </CRow>
@@ -263,6 +287,7 @@ const PaymentStaff = () => {
                                 </CCol>
                             </CRow>
                         </div>
+                        {war !== '' && <p style={{ color: 'red', position: 'absolute' }}>{war}</p>}
                     </div>
                 )}
                 {selectUser === 'different' && (
@@ -280,7 +305,7 @@ const PaymentStaff = () => {
                                                     Math.max(e.target.value, 0),
                                                     seat.length - numUser[1] - numUser[2],
                                                 ),
-                                                seat.length - 1,
+                                                seat.length > 1 ? seat.length - 1 : seat.length,
                                             ),
                                         )
                                     }
@@ -303,7 +328,7 @@ const PaymentStaff = () => {
                                                     Math.max(e.target.value, 0),
                                                     seat.length - numUser[0] - numUser[2],
                                                 ),
-                                                seat.length - 1,
+                                                seat.length > 1 ? seat.length - 1 : seat.length,
                                             ),
                                         )
                                     }
@@ -326,7 +351,7 @@ const PaymentStaff = () => {
                                                     Math.max(e.target.value, 0),
                                                     seat.length - numUser[1] - numUser[0],
                                                 ),
-                                                seat.length - 1,
+                                                seat.length > 1 ? seat.length - 1 : seat.length,
                                             ),
                                         )
                                     }

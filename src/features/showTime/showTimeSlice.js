@@ -50,6 +50,9 @@ export const showTimeSlice = createSlice({
             state.time = {};
             state.seat = [];
             state.price = 0;
+            // state.idOrder = null;
+        },
+        removeIdOrder: (state) => {
             state.idOrder = null;
         },
         preStep1: (state) => {
@@ -80,6 +83,7 @@ export const {
     idShowTimeValue,
     idOrderValue,
     removeAll,
+    removeIdOrder,
     preStep1,
     preStep2,
     preStep3,

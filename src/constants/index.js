@@ -239,3 +239,9 @@ export const useQueryParams = () => {
     const location = useLocation();
     return useMemo(() => new URLSearchParams(location.search), [location.search]);
 };
+
+export const typePay = {
+    0: 'Chờ thanh toán',
+    1: 'Thanh toán thành công',
+    2: 'Thanh toán không thành công',
+}

@@ -324,6 +324,10 @@ body {
     &.select {
         background-color: #ff9452;
     }
+
+    &.selled {
+        background-color: #a4a4a4;
+    }
 }
 
 .time-show {
@@ -470,7 +474,7 @@ body {
     width: 100px;
 
     &.select {
-        border-top: 1px solid #0f172a;
+        border-top: 2px solid #0f172a;
     }
 
     &.not {
