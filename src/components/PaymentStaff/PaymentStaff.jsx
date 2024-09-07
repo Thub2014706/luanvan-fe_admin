@@ -21,9 +21,11 @@ const PaymentStaff = () => {
     const time = useSelector((state) => state.showTime.time);
     const price = useSelector((state) => state.showTime.price);
     const [userInfo, setUserInfo] = useState({
+        _id: '',
         username: '',
         point: 0,
         email: '',
+        point: 0,
     });
     const [selectUser, setSelectUser] = useState(typeUserPrice[1]);
     const [numUser, setNumUser] = useState([0, 0, 0]);
@@ -32,6 +34,8 @@ const PaymentStaff = () => {
     const seat = useSelector((state) => state.showTime.seat);
     const idShowTime = useSelector((state) => state.showTime.idShowTime);
     const [war, setWar] = useState('');
+    const combo = useSelector((state) => state.showTime.combo);
+    const [point, setPoint] = useState(0);
 
     useEffect(() => {
         if (showReader) {
@@ -65,16 +69,20 @@ const PaymentStaff = () => {
                     setUserInfo(data);
                 } else {
                     setUserInfo({
+                        _id: '',
                         username: '',
                         point: 0,
                         email: '',
+                        point: 0,
                     });
                 }
             } else {
                 setUserInfo({
+                    _id: '',
                     username: '',
                     point: 0,
                     email: '',
+                    point: 0,
                 });
             }
         };
@@ -151,6 +159,8 @@ const PaymentStaff = () => {
                     seat: seat.map((item) => item._id),
                     price,
                     paymentMethod: 'momo',
+                    member: userInfo._id,
+                    combo,
                 },
                 user?.accessToken,
             );
@@ -170,6 +180,10 @@ const PaymentStaff = () => {
             setWar('Nhập số điện thoại thành viên');
         } else if (selectUser === typeUserPrice[3] && phone !== '' && userInfo.username === '') {
             setWar('Thành viên không tồn tại');
+        } else if (selectUser === typeUserPrice[3] && point > userInfo.point) {
+            setWar('Điểm thanh toán đã vượt quá số điểm của bạn.');
+        } else if (selectUser === typeUserPrice[3] && point < 20000 && point > 0) {
+            setWar('Điểm thanh toán phải tối thiểu 20000đ.');
         } else {
             const data = await addOrderTicket(
                 {
@@ -178,6 +192,8 @@ const PaymentStaff = () => {
                     seat: seat.map((item) => item._id),
                     price,
                     paymentMethod: 'cash',
+                    member: userInfo._id,
+                    combo,
                 },
                 user?.accessToken,
             );
@@ -188,6 +204,14 @@ const PaymentStaff = () => {
                 navigate('/book-tickets/success');
             }
         }
+    };
+
+    const [copyPrice, setCopyPrice] = useState(price);
+    const handlePoint = (e) => {
+        setWar('');
+        setPoint(Number(e.target.value));
+        dispatch(priceValue(copyPrice - Number(e.target.value)));
+        console.log(Number(e.target.value))
     };
 
     return (
@@ -275,15 +299,37 @@ const PaymentStaff = () => {
                                 </CCol>
                             </CRow>
                             <CRow className="mt-3">
-                                <CFormLabel className="fw-bold my-auto col-sm-2">Tên khách hàng</CFormLabel>
-                                <CCol sm={10}>
-                                    <CFormInput value={userInfo.username} disabled placeholder="Tên" />
+                                <CCol>
+                                    <CRow>
+                                        <CFormLabel className="fw-bold my-auto col-sm-4">Tên khách hàng</CFormLabel>
+                                        <CCol sm={8}>
+                                            <CFormInput value={userInfo.username} disabled placeholder="Tên" />
+                                        </CCol>
+                                    </CRow>
+                                </CCol>
+                                <CCol>
+                                    <CRow>
+                                        <CFormLabel className="fw-bold my-auto col-sm-2">Điểm</CFormLabel>
+                                        <CCol sm={10}>
+                                            <CFormInput value={userInfo.point} disabled placeholder="Điểm" />
+                                        </CCol>
+                                    </CRow>
                                 </CCol>
                             </CRow>
                             <CRow className="mt-3">
-                                <CFormLabel className="fw-bold my-auto col-sm-2">Điểm</CFormLabel>
+                                <CFormLabel className="fw-bold my-auto col-sm-2">
+                                    Sử dụng điểm thanh toán (tối thiểu 20000đ)
+                                </CFormLabel>
                                 <CCol sm={10}>
-                                    <CFormInput value={userInfo.point} disabled placeholder="Điểm" />
+                                    <CFormInput
+                                        type="number"
+                                        value={point}
+                                        disabled={
+                                            phone === '' || (phone !== '' && userInfo.point < 20000) ? true : false
+                                        }
+                                        onChange={handlePoint}
+                                        placeholder="Sử dụng điểm thanh toán (tối thiểu 20000đ)"
+                                    />
                                 </CCol>
                             </CRow>
                         </div>

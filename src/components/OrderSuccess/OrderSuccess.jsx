@@ -20,6 +20,7 @@ import { checkStatus } from '~/services/MomoService';
 import success from '~/assets/images/success.png';
 import warning from '~/assets/images/warning.png';
 import NotFoundPage from '~/pages/NotFoundPage/NotFoundPage';
+import { detailCombo } from '~/services/ComboService';
 
 const OrderSuccess = () => {
     const dispatch = useDispatch();
@@ -36,24 +37,8 @@ const OrderSuccess = () => {
     const [room, setRoom] = useState(null);
     const [seats, setSeats] = useState([]);
     const [film, setFilm] = useState(null);
+    const [combo, setCombo] = useState([]);
     const [isSuccess, setIsSuccess] = useState();
-
-    // useEffect(() => {
-    //     const checkPayment = async () => {
-    //         if (idOrder !== null) {
-    //             const data = await checkStatus({ orderId: idOrder });
-    //             if (data.resultCode === 0) {
-    //                 setIsSuccess('success');
-    //                 dispatch(removeAll());
-    //             } else {
-    //                 setIsSuccess('error');
-    //             }
-    //             console.log(data);
-    //         }
-    //     };
-
-    //     checkPayment();
-    // }, [idOrder, navigate, dispatch]);
 
     useEffect(() => {
         const fetch = async () => {
@@ -77,6 +62,16 @@ const OrderSuccess = () => {
                 setSeats(data5);
                 const data6 = await detailFilm(data2.film);
                 setFilm(data6);
+                const data7 = await Promise.all(
+                    data1.combo.map(async (item) => {
+                        const data = await detailCombo(item.id);
+                        return {
+                            data,
+                            quantity: item.quantity,
+                        };
+                    }),
+                );
+                setCombo(data7);
             }
         };
         fetch();
@@ -171,6 +166,16 @@ const OrderSuccess = () => {
                                     <span className="ms-5">
                                         {seats[0].type.normalize('NFD').replace(/[\u0300-\u036f]/g, '')}
                                     </span>
+                                </p>
+                                <p>------------------------------------------</p>
+                                <p>
+                                    Combo:
+                                    {combo.map((item) => (
+                                        <p className='text-end fw-bold'>
+                                            <span className='ms-5'>{item.data.name}</span>
+                                            <span className="ms-5">x {item.quantity}</span>
+                                        </p>
+                                    ))}
                                 </p>
                                 <p>==========================================</p>
                                 <p className="text-end fw-bold fs-5">

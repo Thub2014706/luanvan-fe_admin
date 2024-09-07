@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { preStep2, seatValue, stepNext } from '~/features/showTime/showTimeSlice';
 import CardBookTicket from '../CardBookTicket/CardBookTicket';
 import { allOrderTicketSelled, OrderTicketSelectSeat } from '~/services/OrderTicketService';
+import OffcanvasCombo from '../OffcanvasCombo/OffcanvasCombo';
 
 const SelectSeat = () => {
     const [seats, setSeats] = useState([]);
@@ -15,6 +16,7 @@ const SelectSeat = () => {
     const [war, setWar] = useState('');
     const idShowTime = useSelector((state) => state.showTime.idShowTime);
     const [selled, setSelled] = useState([]);
+    const [show, setShow] = useState(false);
 
     useEffect(() => {
         const fetch = async () => {
@@ -40,32 +42,11 @@ const SelectSeat = () => {
 
     const handleSelectSeat = async (seat) => {
         setWar('');
-        // const arrayRow = seats.filter((item) => item.row === seat.row);
-        // const seatIndex = arrayRow.indexOf(seat);
-        // const left1Seat = arrayRow[seatIndex - 1];
-        // const right1Seat = arrayRow[seatIndex + 1];
-        // const left2Seat = arrayRow[seatIndex - 2];
-        // const right2Seat = arrayRow[seatIndex + 2];
-        // if (!selectSeat.find((item) => item === seat)) {
-        //     if (!left2Seat || !right2Seat || (left1Seat && left1Seat.left > 1)) {
-        //         showToast(
-        //             'Vui lòng không được để trống 1 ghế ở bên trái, giữa hoặc bên phải trên cùng một hàng ghế mà bạn vừa chọn!',
-        //             'warning',
-        //         );
-        //     } else {
-        //         setSelectSeat([...selectSeat, seat]);
-        //     }
-        // } else {
-        //     setSelectSeat(selectSeat.filter((item) => item !== seat));
-        // }
         if (!selectSeat.includes(seat)) {
             const seatArray = [...selectSeat, seat];
             const allSameType = seatArray.every((item) => item.type === seatArray[0].type);
-            const allSameRow = seatArray.every((item) => item.row === seatArray[0].row);
 
-            if (!allSameRow) {
-                showToast('Hãy chọn ghế cùng hàng', 'warning');
-            } else if (!allSameType) {
+            if (!allSameType) {
                 showToast('Hãy chọn ghế cùng loại', 'warning');
             } else {
                 setSelectSeat(seatArray); // Cập nhật state với mảng ghế mới
@@ -74,17 +55,121 @@ const SelectSeat = () => {
             setSelectSeat(selectSeat.filter((item) => item !== seat));
         }
     };
+
+    const handleSelectSeatCouple = (seat) => {
+        setWar('');
+        const arrayRow = seats.filter((item) => item.row === seat.row);
+        const seatIndex = arrayRow.indexOf(seat);
+        const nextChair = arrayRow[seatIndex].col % 2 === 0 ? arrayRow[seatIndex - 1] : arrayRow[seatIndex + 1];
+
+        if (!selectSeat.includes(seat && nextChair)) {
+            const seatArray = [...selectSeat, seat, nextChair];
+            const allSameType = seatArray.every((item) => item.type === seatArray[0].type);
+
+            if (!allSameType) {
+                showToast('Hãy chọn ghế cùng loại', 'warning');
+            } else {
+                setSelectSeat(seatArray);
+            }
+        } else {
+            setSelectSeat(selectSeat.filter((item) => item !== seat && item !== nextChair));
+        }
+    };
     console.log(selectSeat);
 
     const handleSubmit = () => {
+        // if ()
         if (selectSeat.length === 0) {
             setWar('Vui lòng chọn ghế!');
         } else {
-            dispatch(seatValue(selectSeat));
-            dispatch(stepNext(4));
+            let hasGap = false;
+
+            selectSeat.forEach((item) => {
+                const arrayRow = seats.filter((mini) => mini.row === item.row);
+                const seatIndex = arrayRow.indexOf(item);
+
+                // Kiểm tra ghế trống bên trái
+                if (
+                    arrayRow[seatIndex - 2] &&
+                    arrayRow[seatIndex - 1] &&
+                    (selled.includes(arrayRow[seatIndex - 2]._id) ||
+                        selectSeat.includes(arrayRow[seatIndex - 2]) ||
+                        arrayRow[seatIndex - 2].status === false) &&
+                    !selectSeat.includes(arrayRow[seatIndex - 1]) &&
+                    !selled.includes(arrayRow[seatIndex - 1]._id) &&
+                    arrayRow[seatIndex - 1].status === true
+                ) {
+                    hasGap = true;
+                }
+
+                // Kiểm tra ghế trống bên phải
+                if (
+                    arrayRow[seatIndex + 2] &&
+                    arrayRow[seatIndex + 1] &&
+                    (selled.includes(arrayRow[seatIndex + 2]._id) ||
+                        selectSeat.includes(arrayRow[seatIndex + 2]) ||
+                        arrayRow[seatIndex + 2].status === false) &&
+                    !selectSeat.includes(arrayRow[seatIndex + 1]) &&
+                    !selled.includes(arrayRow[seatIndex + 1]._id) &&
+                    arrayRow[seatIndex + 1].status === true
+                ) {
+                    hasGap = true;
+                }
+
+                // Kiểm tra ghế trống bên trái
+                if (
+                    !arrayRow[seatIndex - 2] &&
+                    arrayRow[seatIndex - 1] &&
+                    !selectSeat.includes(arrayRow[seatIndex - 1]) &&
+                    !selled.includes(arrayRow[seatIndex - 1]._id) &&
+                    arrayRow[seatIndex - 1].status === true
+                ) {
+                    hasGap = true;
+                }
+
+                // Kiểm tra ghế trống bên phải
+                if (
+                    !arrayRow[seatIndex + 2] &&
+                    arrayRow[seatIndex + 1] &&
+                    !selectSeat.includes(arrayRow[seatIndex + 1]) &&
+                    !selled.includes(arrayRow[seatIndex + 1]._id) &&
+                    arrayRow[seatIndex + 1].status === true
+                ) {
+                    hasGap = true;
+                }
+
+                if (
+                    arrayRow[seatIndex - 1] &&
+                    arrayRow[seatIndex - 1].left > 0 &&
+                    arrayRow[seatIndex - 1].status === true &&
+                    !selectSeat.includes(arrayRow[seatIndex - 1]) &&
+                    !selled.includes(arrayRow[seatIndex - 1]._id)
+                ) {
+                    hasGap = true;
+                }
+
+                if (
+                    arrayRow[seatIndex + 2] &&
+                    arrayRow[seatIndex + 2].left > 0 &&
+                    arrayRow[seatIndex + 2].status === true &&
+                    !selectSeat.includes(arrayRow[seatIndex + 2]) &&
+                    !selled.includes(arrayRow[seatIndex + 2]._id)
+                ) {
+                    hasGap = true;
+                }
+            });
+
+            if (hasGap) {
+                showToast('Vui lòng không bỏ trống ghế bên trái hoặc bên phải của các ghế bạn đã chọn', 'warning');
+            } else {
+                dispatch(seatValue(selectSeat));
+                dispatch(stepNext(4));
+            }
         }
     };
 
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
     return (
         <Row className="mt-4">
             <Col xs={3}>
@@ -114,7 +199,13 @@ const SelectSeat = () => {
                                                     marginLeft: `${seat.left * 17.5 + seat.left * 2 + 2}px`,
                                                     marginRight: `${seat.right * 17.5 + seat.right * 2 + 2}px`,
                                                 }}
-                                                onClick={() => !selled.includes(seat._id) && handleSelectSeat(seat)}
+                                                onClick={() =>
+                                                    !selled.includes(seat._id) &&
+                                                    seat.status === true &&
+                                                    (seat.type !== typeSeatEnum[2]
+                                                        ? handleSelectSeat(seat)
+                                                        : handleSelectSeatCouple(seat))
+                                                }
                                             >
                                                 <p className="text-white">
                                                     {String.fromCharCode(64 + row)}
@@ -144,11 +235,15 @@ const SelectSeat = () => {
                     <div className="mt-5 button add me-3" onClick={handlePre}>
                         Quay lại
                     </div>
+                    <div className="mt-5 button add me-3" style={{ width: '120px' }} onClick={handleShow}>
+                        Thêm combo
+                    </div>
                     <div className="mt-5 button add" onClick={handleSubmit}>
                         Tiếp theo
                     </div>
                 </div>
             </Col>
+            <OffcanvasCombo show={show} handleClose={handleClose} />
         </Row>
     );
 };

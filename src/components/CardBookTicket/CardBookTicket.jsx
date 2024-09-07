@@ -6,6 +6,7 @@ import { detailTheater } from '~/services/TheaterService';
 import { detailRoom } from '~/services/RoomService';
 import moment from 'moment';
 import { detailFilm } from '~/services/FilmService';
+import { detailCombo } from '~/services/ComboService';
 
 const CardBookTicket = () => {
     const idFilm = useSelector((state) => state.showTime.film);
@@ -15,6 +16,8 @@ const CardBookTicket = () => {
     const theater = useSelector((state) => state.showTime.theater);
     const seat = useSelector((state) => state.showTime.seat);
     const price = useSelector((state) => state.showTime.price);
+    const combo = useSelector((state) => state.showTime.combo);
+    const [sumCombo, setSumCombo] = useState(0);
 
     useEffect(() => {
         const fetch = async () => {
@@ -23,7 +26,23 @@ const CardBookTicket = () => {
         };
         fetch();
     }, [idFilm]);
-    // console.log(time);
+
+    useEffect(() => {
+        const fetch = async () => {
+            if (combo.length !== 0) {
+                let sum = 0;
+                await Promise.all(
+                    combo.map(async (item) => {
+                        const data = await detailCombo(item.id);
+                        sum += data.price * item.quantity;
+                    }),
+                );
+                setSumCombo(sum);
+                // console.log(combo);
+            } else setSumCombo(0);
+        };
+        fetch();
+    }, [combo]);
 
     return (
         <div className="card-book">
@@ -63,6 +82,7 @@ const CardBookTicket = () => {
                             </span>
                         )}
                     </p>
+                    <hr />
                     <p className="mt-3 mx-2">
                         Ghế:{' '}
                         {seat.length !== 0 && (
@@ -72,9 +92,20 @@ const CardBookTicket = () => {
                         )}
                     </p>
                     <p className="mt-3 mx-2">
+                        Combo:{' '}
+                        {combo.length !== 0 &&
+                            combo.map((item, index) => (
+                                <span key={index} className="fw-bold text-end">
+                                    <Name id={item.id} detail={detailCombo} /> x {item.quantity}
+                                    {index < combo.length - 1 && ', '}
+                                </span>
+                            ))}
+                    </p>
+                    <hr />
+                    <p className="mt-3 mx-2">
                         Tổng tiền:{' '}
                         <span className="fw-bold h5" style={{ color: 'red' }}>
-                            {price.toLocaleString('it-IT')}đ
+                            {(price + sumCombo).toLocaleString('it-IT')}đ
                         </span>
                     </p>
                 </>

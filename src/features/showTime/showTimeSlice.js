@@ -12,6 +12,7 @@ export const showTimeSlice = createSlice({
         seat: [],
         price: 0,
         idOrder: null,
+        combo: [],
     },
     reducers: {
         stepNext: (state, action) => {
@@ -41,6 +42,9 @@ export const showTimeSlice = createSlice({
         idOrderValue: (state, action) => {
             state.idOrder = action.payload;
         },
+        addCombo: (state, action) => {
+            state.combo = action.payload;
+        },
         removeAll: (state) => {
             state.step = 1;
             state.theater = '';
@@ -50,7 +54,7 @@ export const showTimeSlice = createSlice({
             state.time = {};
             state.seat = [];
             state.price = 0;
-            // state.idOrder = null;
+            state.combo = [];
         },
         removeIdOrder: (state) => {
             state.idOrder = null;
@@ -63,11 +67,13 @@ export const showTimeSlice = createSlice({
             state.step = 2;
             state.room = '';
             state.time = {};
+            state.combo = [];
         },
         preStep3: (state) => {
             state.step = 3;
             state.seat = [];
             state.price = 0;
+            state.combo = [];
         },
     },
 });
@@ -82,6 +88,7 @@ export const {
     priceValue,
     idShowTimeValue,
     idOrderValue,
+    addCombo,
     removeAll,
     removeIdOrder,
     preStep1,
