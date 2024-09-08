@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import OrderSuccess from '~/components/OrderSuccess/OrderSuccess';
+import OrderSuccess from '~/components/OrderTicketSuccess/OrderTicketSuccess';
 import PaymentStaff from '~/components/PaymentStaff/PaymentStaff';
 import SelectFilm from '~/components/SelectFilm/SelectFilm';
 import SelectSeat from '~/components/SelectSeat/SelectSeat';

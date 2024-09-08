@@ -1,4 +1,5 @@
-import OrderSuccess from '~/components/OrderSuccess/OrderSuccess';
+import OrderComboSuccess from '~/components/OrderComboSuccess/OrderComboSuccess';
+import OrderTicketSuccess from '~/components/OrderTicketSuccess/OrderTicketSuccess';
 import AddComboPage from '~/pages/AddComboPage/AddComboPage';
 import AddDirectorPage from '~/pages/AddDirectorPage/AddDirectorPage';
 import AddDiscountPage from '~/pages/AddDiscountPage/AddDiscountPage';
@@ -16,6 +17,7 @@ import GenrePage from '~/pages/GenrePage/GenrePage';
 import HomePage from '~/pages/HomePage/HomePage';
 import LoginPage from '~/pages/LoginPage/LoginPage';
 import NotFoundPage from '~/pages/NotFoundPage/NotFoundPage';
+import OrderFoodPage from '~/pages/OrderFoodPage/OrderFoodPage';
 import PerformerPage from '~/pages/PerformerPage/PerformerPage';
 import SchedulePage from '~/pages/SchedulePage/SchedulePage';
 import ShowTimePage from '~/pages/ShowTimePage/ShowTimePage';
@@ -154,7 +156,16 @@ const routes = [
 
     {
         path: '/book-tickets/success',
-        component: OrderSuccess,
+        component: OrderTicketSuccess,
+    },
+    {
+        path: '/order-food/success',
+        component: OrderComboSuccess,
+    },
+
+    {
+        path: '/order-food',
+        component: OrderFoodPage,
     },
 
     {

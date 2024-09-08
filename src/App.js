@@ -64,8 +64,11 @@ function App() {
                                         (item) =>
                                             (route.path.startsWith(item.link) &&
                                                 user.data.access.includes(item.name) &&
-                                                route.path !== '/book-tickets/success') ||
-                                            (route.path === '/book-tickets/success' && idOrder !== null),
+                                                route.path !== '/book-tickets/success' &&
+                                                route.path !== '/order-combo/success') ||
+                                            ((route.path === '/book-tickets/success' ||
+                                                route.path === '/order-combo/success') &&
+                                                idOrder !== null),
                                     ) ? (
                                         <MainLayout>
                                             <route.component />

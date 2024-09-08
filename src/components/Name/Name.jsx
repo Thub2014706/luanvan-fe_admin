@@ -10,6 +10,7 @@ const Name = ({ id, detail }) => {
         };
         fetch();
     }, [id, detail]);
+
     return <span>{name}</span>;
 };
 

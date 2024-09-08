@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { idOrderValue, preStep3, priceValue, removeAll } from '~/features/showTime/showTimeSlice';
 import CardBookTicket from '../CardBookTicket/CardBookTicket';
 import { CCol, CFormCheck, CFormInput, CFormLabel, CRow } from '@coreui/react-pro';
-import { Html5QrcodeScanner } from 'html5-qrcode';
 import { detailUserByPhone } from '~/services/UserService';
 import momo from '~/assets/images/Logo-MoMo-Circle.webp';
 import { typeUserPrice } from '~/constants';
 import { detailPriceByUser } from '~/services/PriceService';
-import { momoPayment } from '~/services/MomoService';
+import { momoPaymentTicket } from '~/services/MomoService';
 import { useNavigate } from 'react-router-dom';
 import { addOrderTicket } from '~/services/OrderTicketService';
+import ScannerQr from '../ScannerQr/ScannerQr';
 
 const PaymentStaff = () => {
     const navigate = useNavigate();
     const user = useSelector((state) => state.auth.login.currentUser);
     const dispatch = useDispatch();
+    const [showReader, setShowReader] = useState(false);
     const [phone, setPhone] = useState('');
     const time = useSelector((state) => state.showTime.time);
     const price = useSelector((state) => state.showTime.price);
@@ -25,41 +25,18 @@ const PaymentStaff = () => {
         username: '',
         point: 0,
         email: '',
-        point: 0,
     });
     const [selectUser, setSelectUser] = useState(typeUserPrice[1]);
     const [numUser, setNumUser] = useState([0, 0, 0]);
-    const [showReader, setShowReader] = useState(false);
     const room = useSelector((state) => state.showTime.room);
     const seat = useSelector((state) => state.showTime.seat);
     const idShowTime = useSelector((state) => state.showTime.idShowTime);
     const [war, setWar] = useState('');
     const combo = useSelector((state) => state.showTime.combo);
     const [point, setPoint] = useState(0);
-
-    useEffect(() => {
-        if (showReader) {
-            const scanner = new Html5QrcodeScanner('reader', {
-                qrbox: {
-                    width: 250,
-                    height: 250,
-                },
-                fps: 10,
-            });
-
-            const success = (result) => {
-                const info = JSON.parse(result);
-                setPhone(info.phone);
-                // scanner.clear();
-            };
-
-            const error = (err) => {
-                console.log(err);
-            };
-
-            scanner.render(success, error);
-        }
-    }, [showReader]);
+    const timeoutRef = useRef(null);
+    const [copyPrice, setCopyPrice] = useState(price);
+    const [selectPay, setSelectPay] = useState('cash');
 
     useEffect(() => {
         const fetch = async () => {
@@ -73,7 +50,6 @@ const PaymentStaff = () => {
                         username: '',
                         point: 0,
                         email: '',
-                        point: 0,
                     });
                 }
             } else {
@@ -82,7 +58,6 @@ const PaymentStaff = () => {
                     username: '',
                     point: 0,
                     email: '',
-                    point: 0,
                 });
             }
         };
@@ -98,6 +73,7 @@ const PaymentStaff = () => {
                     ),
                 );
                 const sum = data.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+                setCopyPrice(sum);
                 dispatch(priceValue(sum));
             } else {
                 let data = await Promise.all(
@@ -109,6 +85,7 @@ const PaymentStaff = () => {
                     (accumulator, currentValue, currentIndex) => accumulator + currentValue * numUser[currentIndex],
                     0,
                 );
+                setCopyPrice(sum);
                 dispatch(priceValue(sum));
             }
         };
@@ -139,79 +116,78 @@ const PaymentStaff = () => {
         }
     };
 
-    const handleMomo = async () => {
-        if (
-            selectUser === 'different' &&
-            numUser.reduce((accumulator, currentValue) => accumulator + currentValue, 0) !== seat.length
-        ) {
-            setWar('Số khách hàng chưa đủ với số ghế đã đặt');
-        } else if (selectUser === typeUserPrice[3] && phone === '') {
-            setWar('Nhập số điện thoại thành viên');
-        } else if (selectUser === typeUserPrice[3] && phone !== '' && userInfo.username === '') {
-            setWar('Thành viên không tồn tại');
-        } else {
-            const data = await momoPayment({ amount: price });
-            await addOrderTicket(
-                {
-                    idOrder: data.orderId,
-                    showTime: idShowTime,
-                    staff: user?.data.id,
-                    seat: seat.map((item) => item._id),
-                    price,
-                    paymentMethod: 'momo',
-                    member: userInfo._id,
-                    combo,
-                },
-                user?.accessToken,
-            );
-            dispatch(idOrderValue(data.orderId));
-            window.location.href = data.payUrl;
-            console.log(data);
-        }
-    };
-
-    const handleMoney = async () => {
-        if (
-            selectUser === 'different' &&
-            numUser.reduce((accumulator, currentValue) => accumulator + currentValue, 0) !== seat.length
-        ) {
-            setWar('Số khách hàng chưa đủ với số ghế đã đặt');
-        } else if (selectUser === typeUserPrice[3] && phone === '') {
-            setWar('Nhập số điện thoại thành viên');
-        } else if (selectUser === typeUserPrice[3] && phone !== '' && userInfo.username === '') {
-            setWar('Thành viên không tồn tại');
-        } else if (selectUser === typeUserPrice[3] && point > userInfo.point) {
-            setWar('Điểm thanh toán đã vượt quá số điểm của bạn.');
-        } else if (selectUser === typeUserPrice[3] && point < 20000 && point > 0) {
-            setWar('Điểm thanh toán phải tối thiểu 20000đ.');
-        } else {
-            const data = await addOrderTicket(
-                {
-                    showTime: idShowTime,
-                    staff: user?.data.id,
-                    seat: seat.map((item) => item._id),
-                    price,
-                    paymentMethod: 'cash',
-                    member: userInfo._id,
-                    combo,
-                },
-                user?.accessToken,
-            );
-            if (data) {
-                dispatch(idOrderValue(data.idOrder));
-                dispatch(removeAll());
-                console.log(data._id);
-                navigate('/book-tickets/success');
-            }
-        }
-    };
-
-    const [copyPrice, setCopyPrice] = useState(price);
     const handlePoint = (e) => {
         setWar('');
-        setPoint(Number(e.target.value));
-        dispatch(priceValue(copyPrice - Number(e.target.value)));
-        console.log(Number(e.target.value))
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+        const value = Number(e.target.value);
+
+        setPoint(value);
+        timeoutRef.current = setTimeout(() => {
+            if (value < 20000 && value > 0) {
+                setWar('Điểm thanh toán phải tối thiểu 20000đ.');
+            } else if (value > userInfo.point) {
+                setWar('Điểm thanh toán đã vượt quá số điểm của bạn.');
+            } else if (value > price) {
+                setWar('Điểm thanh toán đã vượt quá số tiền thanh toán.');
+            } else dispatch(priceValue(copyPrice - value));
+        }, 500);
+    };
+    // console.log();
+
+    const handleSubmit = async () => {
+        if (
+            selectUser === 'different' &&
+            numUser.reduce((accumulator, currentValue) => accumulator + currentValue, 0) !== seat.length
+        ) {
+            setWar('Số khách hàng chưa đủ với số ghế đã đặt');
+        } else if (selectUser === typeUserPrice[3] && phone === '') {
+            setWar('Nhập số điện thoại thành viên');
+        } else if (selectUser === typeUserPrice[3] && phone !== '' && userInfo.username === '') {
+            setWar('Thành viên không tồn tại');
+        } else if (war === '') {
+            if (selectPay === 'momo') {
+                const data = await momoPaymentTicket({ amount: price });
+                await addOrderTicket(
+                    {
+                        idOrder: data.orderId,
+                        showTime: idShowTime,
+                        staff: user?.data.id,
+                        seat: seat.map((item) => item._id),
+                        price,
+                        paymentMethod: 'momo',
+                        member: userInfo._id,
+                        combo,
+                        usePoint: point,
+                    },
+                    user?.accessToken,
+                );
+                dispatch(idOrderValue(data.orderId));
+                window.location.href = data.payUrl;
+                console.log(data);
+            } else {
+                const data = await addOrderTicket(
+                    {
+                        showTime: idShowTime,
+                        staff: user?.data.id,
+                        seat: seat.map((item) => item._id),
+                        price,
+                        paymentMethod: 'cash',
+                        member: userInfo._id,
+                        combo,
+                        usePoint: point,
+                    },
+                    user?.accessToken,
+                );
+                if (data) {
+                    dispatch(idOrderValue(data.idOrder));
+                    dispatch(removeAll());
+                    console.log(data._id);
+                    navigate('/book-tickets/success');
+                }
+            }
+        }
     };
 
     return (
@@ -273,16 +249,14 @@ const PaymentStaff = () => {
                 </div>
                 {selectUser === typeUserPrice[3] && (
                     <div className="mb-5">
-                        <Button
-                            className="mb-2"
-                            onClick={() => {
+                        <ScannerQr
+                            handleClick={() => {
                                 setWar('');
                                 setShowReader(!showReader);
                             }}
-                        >
-                            {showReader ? 'Ẩn máy quét' : 'Hiển thị máy quét'}
-                        </Button>
-                        {showReader && <div id="reader"></div>}
+                            showReader={showReader}
+                            setValue={(value) => setPhone(value.phone)}
+                        />
                         <div>
                             <CRow className="mt-3">
                                 <CFormLabel className="fw-bold my-auto col-sm-2">Số điện thoại</CFormLabel>
@@ -325,7 +299,11 @@ const PaymentStaff = () => {
                                         type="number"
                                         value={point}
                                         disabled={
-                                            phone === '' || (phone !== '' && userInfo.point < 20000) ? true : false
+                                            phone === '' ||
+                                            (phone !== '' && userInfo.point < 20000) ||
+                                            (phone !== '' && price < 20000)
+                                                ? true
+                                                : false
                                         }
                                         onChange={handlePoint}
                                         placeholder="Sử dụng điểm thanh toán (tối thiểu 20000đ)"
@@ -412,10 +390,18 @@ const PaymentStaff = () => {
                 )}
                 <div className="card-pay mt-2">
                     <h6 className="fw-bold">CHỌN PHƯƠNG THỨC THANH TOÁN</h6>
-                    <div className="momo mt-3" onClick={() => handleMomo()}>
+                    <div
+                        className={`select-pay mt-3 ${selectPay === 'momo' ? 'select' : 'none'}`}
+                        onClick={() => setSelectPay('momo')}
+                        style={{ padding: '5px 20px' }}
+                    >
                         Ví MoMo <img src={momo} height={30} width={30} alt="" />
                     </div>
-                    <div className="money mt-3" onClick={() => handleMoney()}>
+                    <div
+                        style={{ padding: '10px 20px' }}
+                        className={`select-pay mt-3 ${selectPay === 'cash' ? 'select' : 'none'}`}
+                        onClick={() => setSelectPay('cash')}
+                    >
                         Thanh toán bằng tiền mặt
                     </div>
                 </div>
@@ -423,7 +409,9 @@ const PaymentStaff = () => {
                     <div className="mt-5 button add me-3" onClick={handlePre}>
                         Quay lại
                     </div>
-                    {/* <div className="mt-5 button add">Thanh toán</div> */}
+                    <div className="mt-5 button add" onClick={handleSubmit}>
+                        Thanh toán
+                    </div>
                 </div>
             </CCol>
         </CRow>

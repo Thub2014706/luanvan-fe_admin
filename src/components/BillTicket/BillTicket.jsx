@@ -1,35 +1,20 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ReactToPrint, { useReactToPrint } from 'react-to-print';
-import { removeAll, removeIdOrder, stepNext } from '~/features/showTime/showTimeSlice';
-import ImageBase from '../ImageBase/ImageBase';
-import { detailOrderTicket } from '~/services/OrderTicketService';
-import Barcode from 'react-barcode';
-import Name from '../Name/Name';
-import { detailTheater } from '~/services/TheaterService';
-import { detailShowTimeById } from '~/services/ShowTimeService';
+import { signAge, standardAge } from '~/constants';
+import { detailCombo } from '~/services/ComboService';
 import { detailFilm } from '~/services/FilmService';
-import { detailStaff } from '~/services/StaffService';
-import moment from 'moment';
+import { detailOrderTicket } from '~/services/OrderTicketService';
 import { detailRoom } from '~/services/RoomService';
 import { detailSeat } from '~/services/SeatService';
-import { signAge, standardAge, typePay } from '~/constants';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { checkStatus } from '~/services/MomoService';
-import success from '~/assets/images/success.png';
-import warning from '~/assets/images/warning.png';
-import NotFoundPage from '~/pages/NotFoundPage/NotFoundPage';
-import { detailCombo } from '~/services/ComboService';
+import { detailShowTimeById } from '~/services/ShowTimeService';
+import { detailTheater } from '~/services/TheaterService';
+import Name from '../Name/Name';
+import { detailStaff } from '~/services/StaffService';
+import moment from 'moment';
+import Barcode from 'react-barcode';
 
-const OrderSuccess = () => {
+const BillTicket = ({ componentRef }) => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    // dispatch(stepNext(4))
-    const componentRef = useRef();
-    const handlePrint = useReactToPrint({
-        content: () => componentRef.current,
-    });
     const idOrder = useSelector((state) => state.showTime.idOrder);
     const [order, setOrder] = useState(null);
     const [showTime, setShowTime] = useState(null);
@@ -38,20 +23,13 @@ const OrderSuccess = () => {
     const [seats, setSeats] = useState([]);
     const [film, setFilm] = useState(null);
     const [combo, setCombo] = useState([]);
-    const [isSuccess, setIsSuccess] = useState();
 
     useEffect(() => {
         const fetch = async () => {
             if (idOrder !== null) {
                 const data1 = await detailOrderTicket(idOrder);
                 setOrder(data1);
-                if (data1.status === typePay[1]) {
-                    setIsSuccess('success');
-                    dispatch(removeAll());
-                } else {
-                    setIsSuccess('error');
-                }
-                console.log(data1);
+                // console.log(data1);
                 const data2 = await detailShowTimeById(data1.showTime);
                 setShowTime(data2);
                 const data3 = await detailTheater(data2.theater);
@@ -77,30 +55,8 @@ const OrderSuccess = () => {
         fetch();
     }, [idOrder, dispatch]);
 
-    const handleBook = () => {
-        dispatch(removeIdOrder());
-        navigate('/book-tickets');
-    };
-
-    const handleBookDif = () => {
-        dispatch(removeAll());
-        dispatch(removeIdOrder());
-        navigate('/book-tickets');
-    };
-
-    const handlePay = () => {
-        navigate('/book-tickets');
-    };
-    return isSuccess === 'success' ? (
-        <div className="d-flex flex-column align-items-center justify-content-center p-5">
-            <img src={success} height={100} alt="" />
-            <h4 className="text-center mt-3">Đặt vé thành công!</h4>
-            <div>
-                <Button onClick={handleBook}>Tiếp tục đặt vé</Button>
-                <Button className="ms-2" onClick={handlePrint}>
-                    In vé
-                </Button>
-            </div>
+    return (
+        <div>
             <div style={{ display: 'none' }}>
                 <div
                     ref={componentRef}
@@ -171,8 +127,8 @@ const OrderSuccess = () => {
                                 <p>
                                     Combo:
                                     {combo.map((item) => (
-                                        <p className='text-end fw-bold'>
-                                            <span className='ms-5'>{item.data.name}</span>
+                                        <p className="text-end fw-bold">
+                                            <span className="ms-5">{item.data.name}</span>
                                             <span className="ms-5">x {item.quantity}</span>
                                         </p>
                                     ))}
@@ -197,18 +153,7 @@ const OrderSuccess = () => {
                 </div>
             </div>
         </div>
-    ) : (
-        <div className="d-flex flex-column align-items-center justify-content-center p-5">
-            <img src={warning} className="mx-auto" height={100} alt="" />
-            <h4 className="text-center mt-3">Đặt vé không thành công!</h4>
-            <div>
-                <Button onClick={handleBookDif}>Đặt vé khác</Button>
-                <Button className="ms-2" onClick={handlePay}>
-                    Thanh toán lại
-                </Button>
-            </div>
-        </div>
     );
 };
 
-export default OrderSuccess;
+export default BillTicket;

@@ -45,7 +45,7 @@ const CardBookTicket = () => {
     }, [combo]);
 
     return (
-        <div className="card-book">
+        <div className="card-book" style={{ position: 'sticky', top: '20px' }}>
             {film != null && (
                 <>
                     <ImageBase
@@ -91,20 +91,24 @@ const CardBookTicket = () => {
                             </span>
                         )}
                     </p>
-                    <p className="mt-3 mx-2">
-                        Combo:{' '}
-                        {combo.length !== 0 &&
-                            combo.map((item, index) => (
-                                <span key={index} className="fw-bold text-end">
-                                    <Name id={item.id} detail={detailCombo} /> x {item.quantity}
-                                    {index < combo.length - 1 && ', '}
-                                </span>
-                            ))}
+                    <p
+                        className="mt-3 mx-2"
+                        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}
+                    >
+                        <span>Combo:</span>
+                        <div style={{ textAlign: 'right' }}>
+                            {combo.length !== 0 &&
+                                combo.map((item, index) => (
+                                    <span key={index} className="fw-bold text-end" style={{ display: 'block' }}>
+                                        <Name id={item.id} detail={detailCombo} /> x {item.quantity}
+                                    </span>
+                                ))}
+                        </div>
                     </p>
                     <hr />
-                    <p className="mt-3 mx-2">
+                    <p className="mt-3 mx-2" style={{ display: 'flex' }}>
                         Tổng tiền:{' '}
-                        <span className="fw-bold h5" style={{ color: 'red' }}>
+                        <span className="fw-bold h5" style={{ color: 'red', marginLeft: 'auto' }}>
                             {(price + sumCombo).toLocaleString('it-IT')}đ
                         </span>
                     </p>

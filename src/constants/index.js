@@ -7,6 +7,7 @@ import {
     faMoneyBill1Wave,
     faMoneyCheckDollar,
     faStopwatch,
+    faStore,
     faTag,
     faTv,
     faUser,
@@ -188,6 +189,12 @@ export const itemMenu = [
         icon: faMoneyCheckDollar,
         name: 'Đặt vé',
         link: '/book-tickets',
+    },
+    {
+        index: 15,
+        icon: faStore,
+        name: 'Đặt combo, bắp nước',
+        link: '/order-food',
     },
 ];
 

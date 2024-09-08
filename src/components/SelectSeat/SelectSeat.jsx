@@ -5,7 +5,7 @@ import { allSeatRoom } from '~/services/SeatService';
 import { useDispatch, useSelector } from 'react-redux';
 import { preStep2, seatValue, stepNext } from '~/features/showTime/showTimeSlice';
 import CardBookTicket from '../CardBookTicket/CardBookTicket';
-import { allOrderTicketSelled, OrderTicketSelectSeat } from '~/services/OrderTicketService';
+import { allOrderTicketSelled } from '~/services/OrderTicketService';
 import OffcanvasCombo from '../OffcanvasCombo/OffcanvasCombo';
 
 const SelectSeat = () => {

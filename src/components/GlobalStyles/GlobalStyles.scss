@@ -493,19 +493,16 @@ body {
     padding: 30px;
 }
 
-.momo {
+.select-pay {
     cursor: pointer;
-    border: 1px solid #9ea2ac;
     border-radius: 5px;
-    padding: 5px 20px;
-}
 
-.money {
-    cursor: pointer;
-    // border: 1px solid #9ea2ac;
-    border-radius: 5px;
-    padding: 10px 20px;
-    color: white;
-    background-color: #0f172a;
-}
+    &.select {
+        color: white;
+        background-color: #0f172a;
+    }
 
+    &.none {
+        border: 1px solid #9ea2ac;
+    }
+}

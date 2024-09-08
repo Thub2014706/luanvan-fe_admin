@@ -1,17 +1,17 @@
 import axios from 'axios';
 
-export const momoPayment = async (amount) => {
+export const momoPaymentTicket = async (amount) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/momo/payment`, amount);
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/momo/payment-ticket`, amount);
         return response.data;
     } catch (error) {
         console.log('loi', error);
     }
 };
 
-export const momoCallBack = async () => {
+export const momoPaymentCombo = async (amount) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/momo/callback`);
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/momo/payment-combo`, amount);
         return response.data;
     } catch (error) {
         console.log('loi', error);

@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button, ButtonGroup, Col, Form, InputGroup, Offcanvas, Row } from 'react-bootstrap';
-import { allCombo } from '~/services/ComboService';
-import ImageBase from '../ImageBase/ImageBase';
-import Name from '../Name/Name';
-import { detailFood } from '~/services/FoodService';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Offcanvas } from 'react-bootstrap';
+import { listCombo } from '~/services/ComboService';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCombo } from '~/features/showTime/showTimeSlice';
+import ComboItem from '../ComboItem/ComboItem';
 
 const OffcanvasCombo = ({ show, handleClose }) => {
     const dispatch = useDispatch();
@@ -17,9 +13,9 @@ const OffcanvasCombo = ({ show, handleClose }) => {
 
     useEffect(() => {
         const fetch = async () => {
-            const data = await allCombo('', 1, 10);
-            setCombo(data.data);
-            const array = data.data.map((item) => {
+            const data = await listCombo();
+            setCombo(data);
+            const array = data.map((item) => {
                 const com = comboSlice.find((com) => com.id === item._id);
                 return {
                     id: item._id,
@@ -81,43 +77,13 @@ const OffcanvasCombo = ({ show, handleClose }) => {
                 {/* <Button onClick={handleSave}>Lưu</Button> */}
                 {combo.map((item, index) => (
                     <div className="my-4">
-                        <Row>
-                            <Col xs="auto">
-                                <ImageBase
-                                    pathImg={item.image}
-                                    style={{ height: '130px', width: '130px', display: 'flex', objectFit: 'cover' }}
-                                />
-                            </Col>
-                            <Col>
-                                <p>
-                                    <span className="fw-bold">{item.name}</span>
-                                    <br />
-                                    {item.variants.map((food) => (
-                                        <span>
-                                            <Name id={food.food} detail={detailFood} /> x {food.quantity}
-                                            <br />
-                                        </span>
-                                    ))}
-                                    <p className="mt-2">
-                                        Giá: <span style={{ color: 'red' }}>{item.price.toLocaleString('it-IT')}đ</span>
-                                    </p>
-                                </p>
-                                <InputGroup size="sm">
-                                    <Button variant="outline-secondary" onClick={() => handleMinus(index)}>
-                                        <FontAwesomeIcon icon={faMinus} />
-                                    </Button>
-                                    <Form.Control
-                                        type="text"
-                                        style={{ maxWidth: '40px', textAlign: 'center', border: '1px solid gray' }}
-                                        value={selectCombo[index].quantity}
-                                        onChange={(e) => handleValue(e, index)}
-                                    />
-                                    <Button variant="outline-secondary" onClick={() => handleAdd(index)}>
-                                        <FontAwesomeIcon icon={faPlus} />
-                                    </Button>
-                                </InputGroup>
-                            </Col>
-                        </Row>
+                        <ComboItem
+                            item={item}
+                            value={selectCombo[index].quantity}
+                            handleValue={(e) => handleValue(e, index)}
+                            handleMinus={() => handleMinus(index)}
+                            handleAdd={() => handleAdd(index)}
+                        />
                     </div>
                 ))}
             </Offcanvas.Body>
