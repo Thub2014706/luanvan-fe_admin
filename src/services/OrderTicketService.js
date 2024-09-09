@@ -1,5 +1,5 @@
-import axios from "axios";
-import { showToast } from "~/constants";
+import axios from 'axios';
+import { showToast } from '~/constants';
 
 export const addOrderTicket = async (data, token) => {
     try {
@@ -25,7 +25,19 @@ export const detailOrderTicket = async (idOrder) => {
 
 export const allOrderTicketSelled = async (showTime) => {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/order-ticket/all-selled?showTime=${showTime}`);
+        const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/order-ticket/all-selled?showTime=${showTime}`,
+        );
+        return response.data;
+    } catch (error) {
+        showToast(error.response.data.message, 'error');
+        console.log('loi', error);
+    }
+};
+
+export const allOrderTicket = async (theater, number, show) => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/order-ticket?theater=${theater}&number=${number}&show=${show}`);
         return response.data;
     } catch (error) {
         showToast(error.response.data.message, 'error');

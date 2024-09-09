@@ -10,7 +10,8 @@ import { detailPriceByUser } from '~/services/PriceService';
 import { momoPaymentTicket } from '~/services/MomoService';
 import { useNavigate } from 'react-router-dom';
 import { addOrderTicket } from '~/services/OrderTicketService';
-import ScannerQr from '../ScannerQr/ScannerQr';
+import { Html5QrcodeScanner } from 'html5-qrcode';
+import { Button } from 'react-bootstrap';
 
 const PaymentStaff = () => {
     const navigate = useNavigate();
@@ -190,6 +191,30 @@ const PaymentStaff = () => {
         }
     };
 
+    useEffect(() => {
+        if (showReader) {
+            const scanner = new Html5QrcodeScanner('reader', {
+                qrbox: {
+                    width: 250,
+                    height: 250,
+                },
+                fps: 10,
+            });
+
+            const success = (result) => {
+                const info = JSON.parse(result);
+                setPhone(info.phone);
+                // scanner.clear();
+            };
+
+            const error = (err) => {
+                console.log(err);
+            };
+
+            scanner.render(success, error);
+        }
+    }, [showReader]);
+
     return (
         <CRow className="mt-4">
             <CCol xs={3}>
@@ -249,14 +274,16 @@ const PaymentStaff = () => {
                 </div>
                 {selectUser === typeUserPrice[3] && (
                     <div className="mb-5">
-                        <ScannerQr
-                            handleClick={() => {
+                        <Button
+                            className="mb-2"
+                            onClick={() => {
                                 setWar('');
                                 setShowReader(!showReader);
                             }}
-                            showReader={showReader}
-                            setValue={(value) => setPhone(value.phone)}
-                        />
+                        >
+                            {showReader ? 'Ẩn máy quét' : 'Hiển thị máy quét'}
+                        </Button>
+                        {showReader && <div id="reader"></div>}
                         <div>
                             <CRow className="mt-3">
                                 <CFormLabel className="fw-bold my-auto col-sm-2">Số điện thoại</CFormLabel>

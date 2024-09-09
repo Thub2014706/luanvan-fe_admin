@@ -7,7 +7,7 @@ const CardCombo = () => {
     console.log(data, price)
 
     return (
-        <div className="card-book" style={{ position: 'sticky', top: '20px' }}>
+        <div className="card-book" style={{ position: 'sticky', top: '15px' }}>
             <p
                 className="mt-3 mx-2"
                 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}

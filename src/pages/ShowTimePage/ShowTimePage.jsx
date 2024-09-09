@@ -9,13 +9,13 @@ const ShowTimePage = () => {
     const [theater, setTheater] = useState([]);
     const [room, setRoom] = useState('');
     const [date, setDate] = useState(moment(Date.now()).format('YYYY-MM-DD'));
-    const [theaterSearch, setTheaterSerch] = useState([]);
+    const [theaterSearch, setTheaterSearch] = useState([]);
     const [action, setAction] = useState(false);
 
     useEffect(() => {
         const fetch = async () => {
             const data = await allShowTime(theater, room, date);
-            setTheaterSerch(data);
+            setTheaterSearch(data);
             // console.log('dd', data);
         };
         fetch();
@@ -26,7 +26,7 @@ const ShowTimePage = () => {
         setRoom(room);
         setDate(date);
         const data = await allShowTime(theater, room, date);
-        setTheaterSerch(data);
+        setTheaterSearch(data);
     };
     // console.log('ê', theater, room, date);
     const handleAddSuccess = async () => {

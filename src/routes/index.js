@@ -15,6 +15,7 @@ import FilmPage from '~/pages/FilmPage/FilmPage';
 import FoodPage from '~/pages/FoodPage/FoodPage';
 import GenrePage from '~/pages/GenrePage/GenrePage';
 import HomePage from '~/pages/HomePage/HomePage';
+import ListOrderPage from '~/pages/ListOrder/ListOrderPage';
 import LoginPage from '~/pages/LoginPage/LoginPage';
 import NotFoundPage from '~/pages/NotFoundPage/NotFoundPage';
 import OrderFoodPage from '~/pages/OrderFoodPage/OrderFoodPage';
@@ -166,6 +167,11 @@ const routes = [
     {
         path: '/order-food',
         component: OrderFoodPage,
+    },
+
+    {
+        path: '/list-order',
+        component: ListOrderPage,
     },
 
     {

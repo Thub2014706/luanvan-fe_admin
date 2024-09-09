@@ -196,6 +196,12 @@ export const itemMenu = [
         name: 'Đặt combo, bắp nước',
         link: '/order-food',
     },
+    {
+        index: 16,
+        icon: faStore,
+        name: 'Danh sách vé',
+        link: '/list-order',
+    },
 ];
 
 export const timePrice = {

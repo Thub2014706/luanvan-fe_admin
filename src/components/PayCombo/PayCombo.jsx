@@ -2,13 +2,14 @@ import { CCol, CFormCheck, CFormInput, CFormLabel, CRow } from '@coreui/react-pr
 import React, { useEffect, useRef, useState } from 'react';
 import { typeUserPrice } from '~/constants';
 import momo from '~/assets/images/Logo-MoMo-Circle.webp';
-import ScannerQr from '../ScannerQr/ScannerQr';
 import { useDispatch, useSelector } from 'react-redux';
 import { idOrderValue, preStep1, priceValue, removeAll } from '~/features/comboCart/comboCart';
 import { momoPaymentCombo } from '~/services/MomoService';
 import { addOrderCombo } from '~/services/OrderComboService';
 import { useNavigate } from 'react-router-dom';
 import { detailUserByPhone } from '~/services/UserService';
+import { Button } from 'react-bootstrap';
+import { Html5QrcodeScanner } from 'html5-qrcode';
 
 const PayCombo = () => {
     const navigate = useNavigate();
@@ -133,6 +134,30 @@ const PayCombo = () => {
         }
     };
 
+    useEffect(() => {
+        if (showReader) {
+            const scanner = new Html5QrcodeScanner('reader', {
+                qrbox: {
+                    width: 250,
+                    height: 250,
+                },
+                fps: 10,
+            });
+
+            const success = (result) => {
+                const info = JSON.parse(result);
+                setPhone(info.phone);
+                // scanner.clear();
+            };
+
+            const error = (err) => {
+                console.log(err);
+            };
+
+            scanner.render(success, error);
+        }
+    }, [showReader]);
+
     return (
         <div>
             <div className="d-flex mb-5">
@@ -159,14 +184,16 @@ const PayCombo = () => {
             </div>
             {selectUser === typeUserPrice[3] && (
                 <div className="mb-5">
-                    <ScannerQr
-                        handleClick={() => {
+                    <Button
+                        className="mb-2"
+                        onClick={() => {
                             setWar('');
                             setShowReader(!showReader);
                         }}
-                        showReader={showReader}
-                        setValue={(value) => setPhone(value.phone)}
-                    />
+                    >
+                        {showReader ? 'Ẩn máy quét' : 'Hiển thị máy quét'}
+                    </Button>
+                    {showReader && <div id="reader"></div>}
                     <div>
                         <CRow className="mt-3">
                             <CFormLabel className="fw-bold my-auto col-sm-2">Số điện thoại</CFormLabel>

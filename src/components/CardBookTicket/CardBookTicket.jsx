@@ -45,7 +45,7 @@ const CardBookTicket = () => {
     }, [combo]);
 
     return (
-        <div className="card-book" style={{ position: 'sticky', top: '20px' }}>
+        <div className="card-book" style={{ position: 'sticky', top: '15px' }}>
             {film != null && (
                 <>
                     <ImageBase

@@ -91,3 +91,14 @@ export const detailUserByPhone = async (phone) => {
         console.log('loi', error);
     }
 };
+
+export const detailUserById = async (id) => {
+    try {
+        const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/user/detail-by-id/${id}`,
+        );
+        return response.data;
+    } catch (error) {
+        console.log('loi', error);
+    }
+};
