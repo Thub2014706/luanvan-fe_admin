@@ -106,6 +106,7 @@ const PayCombo = () => {
                         member: userInfo._id,
                         combo,
                         usePoint: point,
+                        theater: user?.data.theater
                     },
                     user?.accessToken,
                 );
@@ -121,6 +122,7 @@ const PayCombo = () => {
                         member: userInfo._id,
                         combo,
                         usePoint: point,
+                        theater: user?.data.theater
                     },
                     user?.accessToken,
                 );

@@ -1,4 +1,4 @@
-import { CMultiSelect } from '@coreui/react-pro';
+import { CFormLabel, CMultiSelect } from '@coreui/react-pro';
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
@@ -32,6 +32,9 @@ const SearchOrder = ({ handleSearchAll }) => {
 
     return (
         <Row>
+            <CFormLabel className="fw-bold col-sm-auto mt-1" htmlFor="theater">
+                    Rạp chiếu
+                </CFormLabel>
             <Col sm="auto">
                 <CMultiSelect
                     id="theater"
