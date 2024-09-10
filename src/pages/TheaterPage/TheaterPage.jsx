@@ -1,9 +1,10 @@
-import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faDoorOpen, faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import AddTheater from '~/components/AddTheater/AddTheater';
 import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
@@ -13,7 +14,6 @@ import { allTheater, deleteTheater, statusTheater } from '~/services/TheaterServ
 
 const TheaterPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
-    const navigate = useNavigate();
     const [theater, setTheater] = useState([]);
     const [showDelete, setShowDelete] = useState(false);
     const [idDelete, setIdDelete] = useState(null);
@@ -23,6 +23,8 @@ const TheaterPage = () => {
     const [search, setSearch] = useState('');
     const [numberPage, setNumberPage] = useState(5);
     const [action, setAction] = useState(false);
+    const [showAdd, setShowAdd] = useState(false);
+    const [idUpdate, setIdUpdate] = useState(null);
 
     const handleNumber = (num) => {
         setNumber(num);
@@ -44,7 +46,7 @@ const TheaterPage = () => {
             setSumPage(data.sumPage);
         };
         fetch();
-    }, [number, action, idDelete, numberPage, search]);
+    }, [number, action, idDelete, numberPage, search, showAdd]);
 
     const handleShowDelete = (id, name) => {
         setShowDelete(true);
@@ -59,17 +61,23 @@ const TheaterPage = () => {
     };
 
     const handleDelete = async () => {
+        console.log(idDelete, user?.accessToken);
         await deleteTheater(idDelete, user?.accessToken);
         handleCloseDelete();
     };
 
-    const handleShowAdd = () => {
-        navigate('/theater/add');
+    const handleShowAdd = (id) => {
+        setIdUpdate(id);
+        setShowAdd(true);
     };
 
+    const handleCloseAdd = () => {
+        setShowAdd(false);
+        setIdUpdate(null);
+    };
     const handleNumberPage = (value) => {
         setNumberPage(value);
-        setNumber(1)
+        setNumber(1);
     };
 
     const handleSearch = (value) => {
@@ -79,17 +87,21 @@ const TheaterPage = () => {
 
     return (
         <div className="p-4">
-            <h5 className="mb-4 fw-bold">Rạp phim</h5>
-            <Row className="mb-3">
-                <Col xs={6}>
-                    <div className="button add" onClick={handleShowAdd}>
+            <Row className="mb-4">
+                <Col>
+                    <h5 className="fw-bold">Rạp phim</h5>
+                </Col>
+                <Col>
+                    <div className="button add float-end" onClick={() => handleShowAdd(null)}>
                         Thêm mới
                     </div>
                 </Col>
-                <Col xs={3}>
+            </Row>
+            <Row className="mb-3">
+                <Col>
                     <ShowPage numberPage={numberPage} handleNumberPage={handleNumberPage} />
                 </Col>
-                <Col xs={3}>
+                <Col>
                     <SearchBar handleSubmit={handleSearch} />
                 </Col>
             </Row>
@@ -116,14 +128,21 @@ const TheaterPage = () => {
                                     <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
                                 </td>
                                 <td className="text-center align-middle">
-                                    <Link to={`/theater/update/${item._id}`}>
+                                    <Link to={`/theater/room/${item._id}`}>
                                         <FontAwesomeIcon
                                             className="me-4"
-                                            icon={faPenToSquare}
-                                            color="green"
+                                            icon={faDoorOpen}
+                                            color="rgb(164, 156, 11)"
                                             style={{ cursor: 'pointer' }}
-                                        />
+                                            />
                                     </Link>
+                                    <FontAwesomeIcon
+                                        className="me-4"
+                                        icon={faPenToSquare}
+                                        color="green"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => handleShowAdd(item._id)}
+                                    />
                                     <FontAwesomeIcon
                                         color="red"
                                         onClick={() => handleShowDelete(item._id, item.name)}
@@ -140,6 +159,7 @@ const TheaterPage = () => {
                 <Pagination length={sumPage} selectNumber={handleNumber} currentPage={number} />
             </Row>
 
+            <AddTheater show={showAdd} handleClose={handleCloseAdd} id={idUpdate} />
             {idDelete !== null && (
                 <ModalQuestion
                     text={

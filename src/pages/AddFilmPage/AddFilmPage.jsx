@@ -82,7 +82,7 @@ const AddFilmPage = () => {
                 setImageId(data.image);
                 setTrailer(data.trailer);
                 setDescription(data.description);
-                // console.log('aaa', data);
+                // console.log('aaa', genreData.map((item) => ({ value: item._id, label: item.name })));
             }
         };
         fetch();
@@ -124,7 +124,7 @@ const AddFilmPage = () => {
             }
         }
     };
-    console.log('aaa', genre);
+    // console.log('aaa', listGenres);
 
     return (
         <div className="p-4">
@@ -238,26 +238,9 @@ const AddFilmPage = () => {
                             options={listGenres.map((item) => ({
                                 value: item._id,
                                 label: item.name,
-                                selected: genre.find((mini) => mini.value === item._id),
+                                selected: genre.some((mini) => mini.value === item._id),
                             }))}
                         />
-                        {/* <Select
-                            id="genre"
-                            isMulti
-                            options={listGenres.map((item) => ({ value: item._id, label: item.name }))}
-                            value={genre}
-                            onChange={(value) => setGenre(value)}
-                            classNamePrefix="react-select"
-                            placeholder="Thể loại"
-                        /> */}
-                        {/* <div onClick={() => handleShowGenre()} className="button select">
-                            Chọn
-                        </div>
-                        {genre.map((item, index) => (
-                            <li key={index} className={`ms-3 ${index === 0 && 'mt-3'}`}>
-                                {genreNames[item]}
-                            </li>
-                        ))} */}
                     </CCol>
                     <CCol>
                         <CFormLabel className="fw-bold" htmlFor="director">
@@ -272,7 +255,7 @@ const AddFilmPage = () => {
                             options={listDirectors.map((item) => ({
                                 value: item._id,
                                 label: item.name,
-                                selected: director.find((mini) => mini.value === item._id),
+                                selected: director.some((mini) => mini.value === item._id),
                             }))}
                         />
                     </CCol>
@@ -289,7 +272,7 @@ const AddFilmPage = () => {
                             options={listPerformers.map((item) => ({
                                 value: item._id,
                                 label: item.name,
-                                selected: performer.find((mini) => mini.value === item._id),
+                                selected: performer.some((mini) => mini.value === item._id),
                             }))}
                         />
                     </CCol>

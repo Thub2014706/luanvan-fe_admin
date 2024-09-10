@@ -1,15 +1,21 @@
-import { CCol, CForm, CFormInput, CFormLabel, CRow } from '@coreui/react-pro';
+import {
+    CButton,
+    CForm,
+    CFormInput,
+    CFormLabel,
+    CModal,
+    CModalBody,
+    CModalFooter,
+    CModalHeader,
+    CModalTitle,
+} from '@coreui/react-pro';
 import React, { useEffect, useState } from 'react';
-// import { CCol, Form, CRow } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
 import ImageBase from '~/components/ImageBase/ImageBase';
 import { addFood, detailFood, updateFood } from '~/services/FoodService';
 
-const AddFoodPage = () => {
+const AddFood = ({ id, show, handleClose }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
-    const { id } = useParams();
-    const navigate = useNavigate();
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [image, setImage] = useState();
@@ -17,6 +23,7 @@ const AddFoodPage = () => {
     const [imageEncode, setImageEncode] = useState();
 
     const handleImage = (e) => {
+        e.preventDefault();
         const newImg = e.target.files[0];
         setImage(newImg);
         setImageEncode(URL.createObjectURL(newImg));
@@ -30,13 +37,16 @@ const AddFoodPage = () => {
                 setName(data.name);
                 setPrice(data.price);
                 setImageId(data.image);
+            } else {
+                setName('');
+                setPrice();
+                setImageId();
             }
         };
         fetch();
     }, [id]);
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
         const formData = new FormData();
         formData.append('name', name);
         formData.append('price', price);
@@ -47,46 +57,23 @@ const AddFoodPage = () => {
         }
         if (id) {
             if (await updateFood(id, formData, user?.accessToken)) {
-                navigate('/food');
+                handleClose();
             }
         } else {
             if (await addFood(formData, user?.accessToken)) {
-                navigate('/food');
+                handleClose();
             }
         }
     };
 
     return (
-        <div className="p-4">
-            <h5 className="mb-4 fw-bold">Thức ăn</h5>
-            <CForm>
-                <CRow className="mb-3">
-                    <CCol>
-                        <h6>{id ? 'Cập nhật' : 'Thêm'} thức ăn</h6>
-                    </CCol>
-                    <CCol>
-                        <div className="button add float-end" onClick={handleSubmit}>
-                            Chấp nhận
-                        </div>
-                    </CCol>
-                </CRow>
-                <CRow>
-                    <CCol>
-                        <CFormLabel className="fw-bold" htmlFor="image">
-                            Hình ảnh <span style={{ color: 'red' }}>*</span>
-                        </CFormLabel>
-                        <CFormInput
-                            id="image"
-                            type="file"
-                            name="image"
-                            accept=".jpg, .png"
-                            onChange={(e) => handleImage(e)}
-                            className="mb-3"
-                        />
-                        {image && <img src={imageEncode} style={{ height: '200px', marginTop: '20px' }} alt="" />}
-                        {imageId && <ImageBase pathImg={imageId} style={{ height: '200px', marginTop: '20px' }} />}
-                    </CCol>
-                    <CCol>
+        <CModal alignment="center" visible={show} onClose={handleClose}>
+            <CForm onSubmit={handleSubmit}>
+                <CModalHeader>
+                    <CModalTitle>{id !== null ? 'Cập nhật' : 'Thêm mới'} thức ăn</CModalTitle>
+                </CModalHeader>
+                <CModalBody>
+                    <div>
                         <CFormLabel className="fw-bold" htmlFor="name">
                             Tên <span style={{ color: 'red' }}>*</span>
                         </CFormLabel>
@@ -99,8 +86,8 @@ const AddFoodPage = () => {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                         />
-                    </CCol>
-                    <CCol>
+                    </div>
+                    <div className="mt-3">
                         <CFormLabel className="fw-bold" htmlFor="price">
                             Giá tiền <span style={{ color: 'red' }}>*</span>
                         </CFormLabel>
@@ -112,11 +99,34 @@ const AddFoodPage = () => {
                             value={price}
                             onChange={(e) => setPrice(e.target.value)}
                         />
-                    </CCol>
-                </CRow>
+                    </div>
+                    <div className="mt-3">
+                        <CFormLabel className="fw-bold" htmlFor="image">
+                            Hình ảnh <span style={{ color: 'red' }}>*</span>
+                        </CFormLabel>
+                        <CFormInput
+                            id="image"
+                            type="file"
+                            name="image"
+                            accept=".jpg, .png"
+                            onChange={handleImage}
+                            className="mb-3"
+                        />
+                        {image && <img src={imageEncode} style={{ height: '100px', marginTop: '20px' }} alt="" />}
+                        {imageId && <ImageBase pathImg={imageId} style={{ height: '100px', marginTop: '5px' }} />}
+                    </div>
+                </CModalBody>
+                <CModalFooter>
+                    <CButton color="secondary" onClick={handleClose}>
+                        Đóng
+                    </CButton>
+                    <CButton type="submit" color="primary">
+                        Lưu
+                    </CButton>
+                </CModalFooter>
             </CForm>
-        </div>
+        </CModal>
     );
 };
 
-export default AddFoodPage;
+export default AddFood;

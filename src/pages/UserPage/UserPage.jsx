@@ -68,12 +68,16 @@ const UserPage = () => {
 
     return (
         <div className="p-4">
-            <h5 className="mb-4 fw-bold">Thức ăn</h5>
+            <Row className="mb-4">
+                <Col>
+                    <h5 className="fw-bold">Tài khoản người dùng</h5>
+                </Col>
+            </Row>
             <Row className="mb-3">
-                <Col xs={3}>
+                <Col>
                     <ShowPage numberPage={numberPage} handleNumberPage={handleNumberPage} />
                 </Col>
-                <Col xs={3}>
+                <Col>
                     <SearchBar handleSubmit={handleSearch} />
                 </Col>
             </Row>

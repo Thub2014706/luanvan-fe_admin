@@ -12,6 +12,7 @@ import ShowPage from '~/components/ShowPage/ShowPage';
 import { Link, useNavigate } from 'react-router-dom';
 import { allPerformer, deletePerformer } from '~/services/PerformerService';
 import { useSelector } from 'react-redux';
+import AddPerformer from '~/components/AddPerformer/AddPerformer';
 
 const PerformerPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -24,6 +25,8 @@ const PerformerPage = () => {
     const [showDelete, setShowDelete] = useState(false);
     const [idDelete, setIdDelete] = useState(null);
     const [nameDelete, setNameDelete] = useState(null);
+    const [showAdd, setShowAdd] = useState(false);
+    const [idUpdate, setIdUpdate] = useState(null);
 
     useEffect(() => {
         const fetch = async () => {
@@ -32,7 +35,7 @@ const PerformerPage = () => {
             setLength(data.sumPage);
         };
         fetch();
-    }, [number, idDelete, numberPage, search]);
+    }, [number, idDelete, numberPage, search, showAdd]);
 
     const handleNumberPage = (value) => {
         setNumberPage(value);
@@ -65,24 +68,33 @@ const PerformerPage = () => {
         setNumber(num);
     };
 
-    const handleShowAdd = () => {
-        navigate('/performer/add');
+    const handleShowAdd = (id) => {
+        setIdUpdate(id);
+        setShowAdd(true);
+    };
+
+    const handleCloseAdd = () => {
+        setShowAdd(false);
+        setIdUpdate(null);
     };
 
     return (
         <div className="p-4">
-            <h5 className="mb-4 fw-bold">Diễn viên</h5>
-            <Row className="mb-3">
-                <Col xs={6}>
-                    <div className="button add" onClick={handleShowAdd}>
-                        {/* <FontAwesomeIcon icon={faPlus} className='me-1' /> */}
+            <Row className="mb-4">
+                <Col>
+                    <h5 className="fw-bold">Diễn viên</h5>
+                </Col>
+                <Col>
+                    <div className="button add float-end" onClick={() => handleShowAdd(null)}>
                         Thêm mới
                     </div>
                 </Col>
-                <Col xs={3}>
+            </Row>
+            <Row className="mb-3">
+                <Col>
                     <ShowPage numberPage={numberPage} handleNumberPage={handleNumberPage} />
                 </Col>
-                <Col xs={3}>
+                <Col>
                     <SearchBar handleSubmit={handleSearch} />
                 </Col>
             </Row>
@@ -121,14 +133,13 @@ const PerformerPage = () => {
                                     {item.birth && moment(item.birth).format('DD-MM-YYYY')}
                                 </td>
                                 <td className="text-center align-middle">
-                                    <Link to={`/performer/update/${item._id}`}>
-                                        <FontAwesomeIcon
-                                            className="me-4"
-                                            icon={faPenToSquare}
-                                            color="green"
-                                            style={{ cursor: 'pointer' }}
-                                        />
-                                    </Link>
+                                    <FontAwesomeIcon
+                                        className="me-4"
+                                        icon={faPenToSquare}
+                                        color="green"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => handleShowAdd(item._id)}
+                                    />
                                     <FontAwesomeIcon
                                         color="red"
                                         onClick={() => handleShowDelete(item._id, item.name)}
@@ -145,6 +156,7 @@ const PerformerPage = () => {
                 <Pagination length={length} selectNumber={handleNumber} currentPage={number} />
             </Row>
 
+            <AddPerformer show={showAdd} handleClose={handleCloseAdd} id={idUpdate} />
             {idDelete !== null && (
                 <ModalQuestion
                     text={

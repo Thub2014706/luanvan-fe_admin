@@ -43,7 +43,7 @@ const AddStaff = ({ show, handleClose }) => {
         };
         fetch();
     }, []);
-    console.log(theaters);
+    // console.log(theaters);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -56,6 +56,7 @@ const AddStaff = ({ show, handleClose }) => {
         formData.append('avatar', avatar);
         formData.append('theater', theater);
         if (await createStaff(formData, user?.accessToken)) {
+            console.log('sao z')
             handleClose();
         }
     };

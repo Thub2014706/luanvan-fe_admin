@@ -63,17 +63,21 @@ const FilmPage = () => {
 
     return (
         <div className="p-4">
-            <h5 className="mb-4 fw-bold">Phim</h5>
-            <Row className="mb-3">
-                <Col xs={6}>
-                    <div className="button add" onClick={handleAdd}>
+            <Row className="mb-4">
+                <Col>
+                    <h5 className="fw-bold">Phim</h5>
+                </Col>
+                <Col>
+                    <div className="button add float-end" onClick={handleAdd}>
                         Thêm mới
                     </div>
                 </Col>
-                <Col xs={3}>
+            </Row>
+            <Row className="mb-3">
+                <Col>
                     <ShowPage numberPage={numberPage} handleNumberPage={handleNumberPage} />
                 </Col>
-                <Col xs={3}>
+                <Col>
                     <SearchBar handleSubmit={handleSearch} />
                 </Col>
             </Row>
@@ -103,12 +107,13 @@ const FilmPage = () => {
                                 </td>
                                 <td className="align-middle">{item.name}</td>
                                 <td className="text-center align-middle">
-                                    {item.genre.map((name) => (
-                                        <span>
-                                            <Name id={name} detail={detailGenre} />
-                                            <br />
-                                        </span>
-                                    ))}
+                                    {item.genre.length > 0 &&
+                                        item.genre.map((name) => (
+                                            <span>
+                                                <Name id={name} detail={detailGenre} />
+                                                <br />
+                                            </span>
+                                        ))}
                                 </td>
                                 <td className="text-center align-middle">{item.time} phút</td>
                                 <td className="text-center align-middle">{item.nation}</td>

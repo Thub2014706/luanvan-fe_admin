@@ -29,7 +29,7 @@ export const statusTheater = async (id, token) => {
 
 export const deleteTheater = async (id, token) => {
     try {
-        await axios.patch(`${process.env.REACT_APP_API_URL}/api/theater/delete/${id}`, {
+        await axios.patch(`${process.env.REACT_APP_API_URL}/api/theater/delete/${id}`, {}, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Xóa thành công', 'success');

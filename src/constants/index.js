@@ -9,6 +9,7 @@ import {
     faStopwatch,
     faStore,
     faTag,
+    faTicket,
     faTv,
     faUser,
     faUsersRectangle,
@@ -198,7 +199,7 @@ export const itemMenu = [
     },
     {
         index: 16,
-        icon: faStore,
+        icon: faTicket,
         name: 'Danh sách vé',
         link: '/list-order',
     },

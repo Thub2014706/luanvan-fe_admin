@@ -10,12 +10,11 @@ import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
 import { allDirector, deleteDirector } from '~/services/DirectorService';
-import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import AddDirector from '~/components/AddDirector/AddDirector';
 
 const DirectorPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
-    const navigate = useNavigate();
     const [directors, setDirectors] = useState([]);
     const [search, setSearch] = useState('');
     const [number, setNumber] = useState(1);
@@ -24,6 +23,8 @@ const DirectorPage = () => {
     const [showDelete, setShowDelete] = useState(false);
     const [idDelete, setIdDelete] = useState(null);
     const [nameDelete, setNameDelete] = useState(null);
+    const [showAdd, setShowAdd] = useState(false);
+    const [idUpdate, setIdUpdate] = useState(null);
 
     useEffect(() => {
         const fetch = async () => {
@@ -32,7 +33,7 @@ const DirectorPage = () => {
             setLength(data.sumPage);
         };
         fetch();
-    }, [number, idDelete, numberPage, search]);
+    }, [number, idDelete, numberPage, search, showAdd]);
 
     const handleNumberPage = (value) => {
         setNumberPage(value);
@@ -65,24 +66,33 @@ const DirectorPage = () => {
         setNumber(num);
     };
 
-    const handleShowAdd = () => {
-        navigate('/director/add');
+    const handleShowAdd = (id) => {
+        setIdUpdate(id);
+        setShowAdd(true);
+    };
+
+    const handleCloseAdd = () => {
+        setShowAdd(false);
+        setIdUpdate(null);
     };
 
     return (
         <div className="p-4">
-            <h5 className="mb-4 fw-bold">Đạo diễn</h5>
-            <Row className="mb-3">
-                <Col xs={6}>
-                    <div className="button add" onClick={handleShowAdd}>
-                        {/* <FontAwesomeIcon icon={faPlus} className='me-1' /> */}
+            <Row className="mb-4">
+                <Col>
+                    <h5 className="fw-bold">Đạo diễn</h5>
+                </Col>
+                <Col>
+                    <div className="button add float-end" onClick={() => handleShowAdd(null)}>
                         Thêm mới
                     </div>
                 </Col>
-                <Col xs={3}>
+            </Row>
+            <Row className="mb-3">
+                <Col>
                     <ShowPage numberPage={numberPage} handleNumberPage={handleNumberPage} />
                 </Col>
-                <Col xs={3}>
+                <Col>
                     <SearchBar handleSubmit={handleSearch} />
                 </Col>
             </Row>
@@ -121,14 +131,13 @@ const DirectorPage = () => {
                                     {item.birth && moment(item.birth).format('DD-MM-YYYY')}
                                 </td>
                                 <td className="text-center align-middle">
-                                    <Link to={`/director/update/${item._id}`}>
-                                        <FontAwesomeIcon
-                                            className="me-4"
-                                            icon={faPenToSquare}
-                                            color="green"
-                                            style={{ cursor: 'pointer' }}
-                                        />
-                                    </Link>
+                                    <FontAwesomeIcon
+                                        className="me-4"
+                                        icon={faPenToSquare}
+                                        color="green"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => handleShowAdd(item._id)}
+                                    />
                                     <FontAwesomeIcon
                                         color="red"
                                         onClick={() => handleShowDelete(item._id, item.name)}
@@ -145,6 +154,7 @@ const DirectorPage = () => {
                 <Pagination length={length} selectNumber={handleNumber} currentPage={number} />
             </Row>
 
+            <AddDirector show={showAdd} handleClose={handleCloseAdd} id={idUpdate} />
             {idDelete !== null && (
                 <ModalQuestion
                     text={

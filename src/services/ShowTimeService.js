@@ -52,10 +52,19 @@ export const listShowTimeByDay = async (theater, date, film) => {
 
 export const detailShowTimeById = async (id) => {
     try {
-        const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/api/showtime/detail-by-id/${id}`,
-        );
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/showtime/detail-by-id/${id}`);
         return response.data;
+    } catch (error) {
+        console.log('loi', error);
+    }
+};
+
+export const soldOutSeat = async (showTime) => {
+    try {
+        const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/showtime/check-seat?showTime=${showTime}`,
+        );
+        return response.data.message;
     } catch (error) {
         console.log('loi', error);
     }

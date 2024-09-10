@@ -1,4 +1,4 @@
-import { CDatePicker, CForm, CFormLabel, CMultiSelect } from '@coreui/react-pro';
+import { CCol, CDatePicker, CForm, CFormLabel, CMultiSelect, CRow } from '@coreui/react-pro';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
@@ -70,33 +70,34 @@ const AddSchedule = ({ show, handleClose, id }) => {
                         />
                     </div>
 
-                    <div className="mt-3">
-                        <CFormLabel className="fw-bold" htmlFor="startDate">
-                            Ngày bắt đầu <span style={{ color: 'red' }}>*</span>
-                        </CFormLabel>
-                        <CDatePicker
-                            id="startDate"
-                            name="startDate"
-                            value={startDate}
-                            date={startDate}
-                            onDateChange={(date) => setStartDate(moment(date).format('YYYY-MM-DD'))}
-                            placeholder="Ngày bắt đầu"
-                        />
-                    </div>
-
-                    <div className="mt-3">
-                        <CFormLabel className="fw-bold" htmlFor="endDate">
-                            Ngày kết thúc <span style={{ color: 'red' }}>*</span>
-                        </CFormLabel>
-                        <CDatePicker
-                            id="endDate"
-                            name="endDate"
-                            value={endDate}
-                            date={endDate}
-                            onDateChange={(date) => setEndDate(moment(date).format('YYYY-MM-DD'))}
-                            placeholder="Ngày kết thúc"
-                        />
-                    </div>
+                    <CRow className="mt-3">
+                        <CCol>
+                            <CFormLabel className="fw-bold" htmlFor="startDate">
+                                Ngày bắt đầu <span style={{ color: 'red' }}>*</span>
+                            </CFormLabel>
+                            <CDatePicker
+                                id="startDate"
+                                name="startDate"
+                                value={startDate}
+                                date={startDate}
+                                onDateChange={(date) => setStartDate(moment(date).format('YYYY-MM-DD'))}
+                                placeholder="Ngày bắt đầu"
+                            />
+                        </CCol>
+                        <CCol>
+                            <CFormLabel className="fw-bold" htmlFor="endDate">
+                                Ngày kết thúc <span style={{ color: 'red' }}>*</span>
+                            </CFormLabel>
+                            <CDatePicker
+                                id="endDate"
+                                name="endDate"
+                                value={endDate}
+                                date={endDate}
+                                onDateChange={(date) => setEndDate(moment(date).format('YYYY-MM-DD'))}
+                                placeholder="Ngày kết thúc"
+                            />
+                        </CCol>
+                    </CRow>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>

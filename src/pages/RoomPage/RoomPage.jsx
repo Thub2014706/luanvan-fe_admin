@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
-import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
+import ToggleSwitch from '../../components/ToggleSwitch/ToggleSwitch';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faPenToSquare, faTableCells, faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import ModalQuestion from '../ModalQuestion/ModalQuestion';
+import ModalQuestion from '../../components/ModalQuestion/ModalQuestion';
 import { allRoom, deleteRoom, statusRoom } from '~/services/RoomService';
-import AddRoom from '../AddRoom/AddRoom';
-import SeatGrid from '../SeatGrid/SeatGrid';
+import AddRoom from '../../components/AddRoom/AddRoom';
+import SeatGrid from '../../components/SeatGrid/SeatGrid';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
-const RoomList = ({ idTheater }) => {
+const RoomPage = () => {
+    const { id } = useParams();
     const user = useSelector((state) => state.auth.login.currentUser);
     const [room, setRoom] = useState([]);
     const [showDelete, setShowDelete] = useState(false);
@@ -49,11 +51,11 @@ const RoomList = ({ idTheater }) => {
 
     useEffect(() => {
         const fetch = async () => {
-            const data = await allRoom(idTheater);
+            const data = await allRoom(id);
             setRoom(data);
         };
         fetch();
-    }, [action, room]);
+    }, [action, room, id]);
 
     const handleShowAdd = (id) => {
         setShowAdd(true);
@@ -77,11 +79,12 @@ const RoomList = ({ idTheater }) => {
 
     return (
         <div className="p-4">
-            <hr />
-            <h5 className="mt-4 mb-4 fw-bold">Danh sách phòng chiếu</h5>
-            <Row className="mb-3">
-                <Col xs={6}>
-                    <div className="button add" onClick={() => handleShowAdd(null)}>
+            <Row className="mb-4">
+                <Col>
+                    <h5 className="fw-bold">Danh sách phòng chiếu</h5>
+                </Col>
+                <Col>
+                    <div className="button add float-end" onClick={handleShowAdd}>
                         Thêm mới
                     </div>
                 </Col>
@@ -151,7 +154,7 @@ const RoomList = ({ idTheater }) => {
                 </Table>
             </Row>
 
-            <AddRoom show={showAdd} handleClose={handleCloseAdd} id={idUpdate} idTheater={idTheater} />
+            <AddRoom show={showAdd} handleClose={handleCloseAdd} id={idUpdate} idTheater={id} />
             {idRoomSeat !== null && <SeatGrid show={showSeat} handleClose={handleCloseSeat} idRoom={idRoomSeat} />}
             {idDelete !== null && (
                 <ModalQuestion
@@ -171,4 +174,4 @@ const RoomList = ({ idTheater }) => {
     );
 };
 
-export default RoomList;
+export default RoomPage;

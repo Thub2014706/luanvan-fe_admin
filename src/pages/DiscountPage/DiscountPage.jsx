@@ -1,9 +1,10 @@
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import AddDiscount from '~/components/AddDiscount/AddDiscount';
 import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
@@ -13,7 +14,6 @@ import { allDiscount, deleteDiscount, statusDiscount } from '~/services/Discount
 
 const DiscountPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
-    const navigate = useNavigate();
     const [discount, setDiscount] = useState([]);
     const [showDelete, setShowDelete] = useState(false);
     const [idDelete, setIdDelete] = useState(null);
@@ -23,6 +23,8 @@ const DiscountPage = () => {
     const [search, setSearch] = useState('');
     const [numberPage, setNumberPage] = useState(5);
     const [action, setAction] = useState(false);
+    const [showAdd, setShowAdd] = useState(false);
+    const [idUpdate, setIdUpdate] = useState(null);
 
     const handleNumber = (num) => {
         setNumber(num);
@@ -44,7 +46,7 @@ const DiscountPage = () => {
             setSumPage(data.sumPage);
         };
         fetch();
-    }, [number, action, idDelete, numberPage, search]);
+    }, [number, action, idDelete, numberPage, search, showAdd]);
 
     const handleShowDelete = (id, name) => {
         setShowDelete(true);
@@ -63,13 +65,19 @@ const DiscountPage = () => {
         handleCloseDelete();
     };
 
-    const handleShowAdd = () => {
-        navigate('/discount/add');
+    const handleShowAdd = (id) => {
+        setIdUpdate(id);
+        setShowAdd(true);
+    };
+
+    const handleCloseAdd = () => {
+        setShowAdd(false);
+        setIdUpdate(null);
     };
 
     const handleNumberPage = (value) => {
         setNumberPage(value);
-        setNumber(1)
+        setNumber(1);
     };
 
     const handleSearch = (value) => {
@@ -79,17 +87,21 @@ const DiscountPage = () => {
 
     return (
         <div className="p-4">
-            <h5 className="mb-4 fw-bold">Mã khuyến mãi</h5>
-            <Row className="mb-3">
-                <Col xs={6}>
-                    <div className="button add" onClick={handleShowAdd}>
+            <Row className="mb-4">
+                <Col>
+                    <h5 className="fw-bold">Mã khuyến mãi</h5>
+                </Col>
+                <Col>
+                    <div className="button add float-end" onClick={() => handleShowAdd(null)}>
                         Thêm mới
                     </div>
                 </Col>
-                <Col xs={3}>
+            </Row>
+            <Row className="mb-3">
+                <Col>
                     <ShowPage numberPage={numberPage} handleNumberPage={handleNumberPage} />
                 </Col>
-                <Col xs={3}>
+                <Col>
                     <SearchBar handleSubmit={handleSearch} />
                 </Col>
             </Row>
@@ -102,6 +114,8 @@ const DiscountPage = () => {
                             <th>Mã</th>
                             <th>Phần trăm</th>
                             <th>Số lượng</th>
+                            <th>Ngày bắt đầu</th>
+                            <th>Ngày kết thúc</th>
                             <th>Trạng thái</th>
                             <th>Thao tác</th>
                         </tr>
@@ -114,18 +128,19 @@ const DiscountPage = () => {
                                 <td className="text-center align-middle">{item.code}</td>
                                 <td className="text-center align-middle">{item.percent}%</td>
                                 <td className="text-center align-middle">{item.quantity}</td>
+                                <td className="text-center align-middle">{moment(item.startDate).format('DD-MM-YYYY')}</td>
+                                <td className="text-center align-middle">{moment(item.endDate).format('DD-MM-YYYY')}</td>
                                 <td className="align-content-center">
                                     <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
                                 </td>
                                 <td className="text-center align-middle">
-                                    <Link to={`/discount/update/${item._id}`}>
-                                        <FontAwesomeIcon
-                                            className="me-4"
-                                            icon={faPenToSquare}
-                                            color="green"
-                                            style={{ cursor: 'pointer' }}
-                                        />
-                                    </Link>
+                                    <FontAwesomeIcon
+                                        className="me-4"
+                                        icon={faPenToSquare}
+                                        color="green"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => handleShowAdd(item._id)}
+                                    />
                                     <FontAwesomeIcon
                                         color="red"
                                         onClick={() => handleShowDelete(item._id, item.name)}
@@ -141,6 +156,7 @@ const DiscountPage = () => {
             <Row>
                 <Pagination length={sumPage} selectNumber={handleNumber} currentPage={number} />
             </Row>
+            <AddDiscount show={showAdd} handleClose={handleCloseAdd} id={idUpdate} />
 
             {idDelete !== null && (
                 <ModalQuestion

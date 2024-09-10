@@ -1,12 +1,7 @@
 import OrderComboSuccess from '~/components/OrderComboSuccess/OrderComboSuccess';
 import OrderTicketSuccess from '~/components/OrderTicketSuccess/OrderTicketSuccess';
-import AddComboPage from '~/pages/AddComboPage/AddComboPage';
-import AddDirectorPage from '~/pages/AddDirectorPage/AddDirectorPage';
-import AddDiscountPage from '~/pages/AddDiscountPage/AddDiscountPage';
 import AddFilmPage from '~/pages/AddFilmPage/AddFilmPage';
-import AddFoodPage from '~/pages/AddFoodPage/AddFoodPage';
-import AddPerformerPage from '~/pages/AddPerformerPage/AddPerformerPage';
-import AddTheaterPage from '~/pages/AddTheaterPage/AddTheaterPage';
+import AddPerformerPage from '~/components/AddPerformer/AddPerformer';
 import BookTicketsPage from '~/pages/BookTicketsPage/BookTicketsPage';
 import ComboPage from '~/pages/ComboPage/ComboPage';
 import DirectorPage from '~/pages/DirectorPage/DirectorPage';
@@ -20,6 +15,7 @@ import LoginPage from '~/pages/LoginPage/LoginPage';
 import NotFoundPage from '~/pages/NotFoundPage/NotFoundPage';
 import OrderFoodPage from '~/pages/OrderFoodPage/OrderFoodPage';
 import PerformerPage from '~/pages/PerformerPage/PerformerPage';
+import RoomPage from '~/pages/RoomPage/RoomPage';
 import SchedulePage from '~/pages/SchedulePage/SchedulePage';
 import ShowTimePage from '~/pages/ShowTimePage/ShowTimePage';
 import StaffPage from '~/pages/StaffPage/StaffPage';
@@ -52,14 +48,6 @@ const routes = [
         path: '/director',
         component: DirectorPage,
     },
-    {
-        path: '/director/add',
-        component: AddDirectorPage,
-    },
-    {
-        path: '/director/update/:id',
-        component: AddDirectorPage,
-    },
 
     {
         path: '/performer',
@@ -78,39 +66,15 @@ const routes = [
         path: '/food',
         component: FoodPage,
     },
-    {
-        path: '/food/add',
-        component: AddFoodPage,
-    },
-    {
-        path: '/food/update/:id',
-        component: AddFoodPage,
-    },
 
     {
         path: '/combo',
         component: ComboPage,
     },
-    {
-        path: '/combo/add',
-        component: AddComboPage,
-    },
-    {
-        path: '/combo/update/:id',
-        component: AddComboPage,
-    },
 
     {
         path: '/discount',
         component: DiscountPage,
-    },
-    {
-        path: '/discount/add',
-        component: AddDiscountPage,
-    },
-    {
-        path: '/discount/update/:id',
-        component: AddDiscountPage,
     },
     {
         path: '/user',
@@ -122,12 +86,8 @@ const routes = [
         component: TheaterPage,
     },
     {
-        path: '/theater/add',
-        component: AddTheaterPage,
-    },
-    {
-        path: '/theater/update/:id',
-        component: AddTheaterPage,
+        path: '/theater/room/:id',
+        component: RoomPage,
     },
 
     {

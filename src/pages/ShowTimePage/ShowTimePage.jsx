@@ -1,11 +1,13 @@
 import { CCol, CRow } from '@coreui/react-pro';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import DetailShowTime from '~/components/DetailShowTime/DetailShowTime';
 import SearchShowTime from '~/components/SearchShowTime/SearchShowTime';
 import { allShowTime } from '~/services/ShowTimeService';
 
 const ShowTimePage = () => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const [theater, setTheater] = useState([]);
     const [room, setRoom] = useState('');
     const [date, setDate] = useState(moment(Date.now()).format('YYYY-MM-DD'));
@@ -14,12 +16,12 @@ const ShowTimePage = () => {
 
     useEffect(() => {
         const fetch = async () => {
-            const data = await allShowTime(theater, room, date);
+            const data = await allShowTime(user?.data.theater ? user?.data.theater : theater, room, date);
             setTheaterSearch(data);
             // console.log('dd', data);
         };
         fetch();
-    }, [theater, room, date, action]);
+    }, [theater, room, date, action, user]);
 
     const handleSearch = async (theater, room, date) => {
         setTheater(theater);

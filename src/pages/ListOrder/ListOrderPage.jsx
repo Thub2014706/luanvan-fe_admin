@@ -1,4 +1,4 @@
-import { faBan, faBarcode } from '@fortawesome/free-solid-svg-icons';
+import { faBarcode } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
@@ -126,23 +126,20 @@ const ListOrderPage = () => {
                             <tr key={item._id} className="text-center">
                                 <td>{index + 1}</td>
                                 <td>{item.idOrder}</td>
-                                <td>{item.showTime ? item.film.name : <FontAwesomeIcon icon={faBan} />}</td>
-                                <td>{item.showTime ? item.theater.name : <FontAwesomeIcon icon={faBan} />}</td>
-                                <td>{item.showTime ? item.room.name : <FontAwesomeIcon icon={faBan} />}</td>
+                                <td>{item.showTime && item.film.name}</td>
+                                <td>{item.showTime && item.theater.name}</td>
+                                <td>{item.showTime && item.room.name}</td>
                                 <td>
-                                    {item.showTime ? (
+                                    {item.showTime &&
                                         item.seat.map((mini, index) => (
                                             <>
                                                 <NameSeat id={mini} />
                                                 {index + 1 < item.seat.length && ', '}
                                             </>
-                                        ))
-                                    ) : (
-                                        <FontAwesomeIcon icon={faBan} />
-                                    )}
+                                        ))}
                                 </td>
                                 <td>
-                                    {item.showTime ? (
+                                    {item.showTime && (
                                         <span>
                                             <span className="type-show ing">
                                                 {item.timeStart} - {item.timeEnd}
@@ -151,27 +148,20 @@ const ListOrderPage = () => {
                                                 {moment(item.date).format('DD-MM-YYYY')}
                                             </span>
                                         </span>
-                                    ) : (
-                                        <FontAwesomeIcon icon={faBan} />
                                     )}
                                 </td>
                                 <td>
-                                    {item.comboFood.length > 0 ? (
+                                    {item.comboFood.length > 0 &&
                                         item.comboFood.map((mini) => (
                                             <span>
                                                 {mini.data.name} x {mini.quantity}
                                                 <br />
                                             </span>
-                                        ))
-                                    ) : (
-                                        <FontAwesomeIcon icon={faBan} />
-                                    )}
+                                        ))}
                                 </td>
                                 <td>
-                                    {item.member ? (
+                                    {item.member && (
                                         <Name id={item.member} detail={detailUserById} />
-                                    ) : (
-                                        <FontAwesomeIcon icon={faBan} />
                                     )}
                                 </td>
                                 <td>

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import AddCombo from '~/components/AddCombo/AddCombo';
 import ImageBase from '~/components/ImageBase/ImageBase';
 import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
 import Name from '~/components/Name/Name';
@@ -16,7 +16,6 @@ import { detailFood } from '~/services/FoodService';
 
 const ComboPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
-    const navigate = useNavigate();
     const [combo, setCombo] = useState([]);
     const [showDelete, setShowDelete] = useState(false);
     const [idDelete, setIdDelete] = useState(null);
@@ -26,6 +25,8 @@ const ComboPage = () => {
     const [search, setSearch] = useState('');
     const [numberPage, setNumberPage] = useState(5);
     const [action, setAction] = useState(false);
+    const [showAdd, setShowAdd] = useState(false);
+    const [idUpdate, setIdUpdate] = useState(null);
 
     const handleNumber = (num) => {
         setNumber(num);
@@ -47,7 +48,7 @@ const ComboPage = () => {
             setSumPage(data.sumPage);
         };
         fetch();
-    }, [number, action, idDelete, numberPage, search]);
+    }, [number, action, idDelete, numberPage, search, showAdd]);
 
     const handleShowDelete = (id, name) => {
         setShowDelete(true);
@@ -66,8 +67,14 @@ const ComboPage = () => {
         handleCloseDelete();
     };
 
-    const handleShowAdd = () => {
-        navigate('/combo/add');
+    const handleShowAdd = (id) => {
+        setIdUpdate(id);
+        setShowAdd(true);
+    };
+
+    const handleCloseAdd = () => {
+        setShowAdd(false);
+        setIdUpdate(null);
     };
 
     const handleNumberPage = (value) => {
@@ -82,17 +89,21 @@ const ComboPage = () => {
 
     return (
         <div className="p-4">
-            <h5 className="mb-4 fw-bold">Combo</h5>
-            <Row className="mb-3">
-                <Col xs={6}>
-                    <div className="button add" onClick={handleShowAdd}>
+            <Row className="mb-4">
+                <Col>
+                    <h5 className="fw-bold">Combo</h5>
+                </Col>
+                <Col>
+                    <div className="button add float-end" onClick={() => handleShowAdd(null)}>
                         Thêm mới
                     </div>
                 </Col>
-                <Col xs={3}>
+            </Row>
+            <Row className="mb-3">
+                <Col>
                     <ShowPage numberPage={numberPage} handleNumberPage={handleNumberPage} />
                 </Col>
-                <Col xs={3}>
+                <Col>
                     <SearchBar handleSubmit={handleSearch} />
                 </Col>
             </Row>
@@ -134,14 +145,13 @@ const ComboPage = () => {
                                     <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
                                 </td>
                                 <td className="text-center align-middle">
-                                    <Link to={`/combo/update/${item._id}`}>
-                                        <FontAwesomeIcon
-                                            className="me-4"
-                                            icon={faPenToSquare}
-                                            color="green"
-                                            style={{ cursor: 'pointer' }}
-                                        />
-                                    </Link>
+                                    <FontAwesomeIcon
+                                        className="me-4"
+                                        icon={faPenToSquare}
+                                        color="green"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => handleShowAdd(item._id)}
+                                    />
                                     <FontAwesomeIcon
                                         color="red"
                                         onClick={() => handleShowDelete(item._id, item.name)}
@@ -158,6 +168,7 @@ const ComboPage = () => {
                 <Pagination length={sumPage} selectNumber={handleNumber} currentPage={number} />
             </Row>
 
+            <AddCombo show={showAdd} handleClose={handleCloseAdd} id={idUpdate} />
             {idDelete !== null && (
                 <ModalQuestion
                     text={

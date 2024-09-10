@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ScheduleMini from '../ScheduleMini/ScheduleMini';
-import { detailShowTimeById, listShowTimeByDay } from '~/services/ShowTimeService';
+import { detailShowTimeById, listShowTimeByDay, soldOutSeat } from '~/services/ShowTimeService';
 import moment from 'moment';
 import { nameDay, statusShowTime } from '~/constants';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,7 +31,14 @@ const SelectShowTime = () => {
     useEffect(() => {
         const fetch = async () => {
             const data = await listShowTimeByDay(theater, date, film);
-            setShowTimes(data);
+            const newData = await Promise.all(
+                data.map(async (item) => {
+                    const test = await soldOutSeat({showTime: item._id});
+                    console.log(test);
+                    return { ...item, test };
+                }),
+            );
+            setShowTimes(newData);
         };
         fetch();
     }, [theater, date, film]);
@@ -40,7 +47,6 @@ const SelectShowTime = () => {
         setSelectDay(index);
         setDate(date);
     };
-    // console.log(showTimes);
 
     const handleSubmit = async () => {
         if (idShowTime !== null) {
@@ -89,9 +95,12 @@ const SelectShowTime = () => {
                             {showTimes.map((item, index) => (
                                 <span
                                     style={{ display: 'inline-block' }}
-                                    onClick={() => item.status === statusShowTime[2] && handleShowTime(item._id)}
+                                    onClick={() =>
+                                        (item.status === statusShowTime[2] || item.test === '0') &&
+                                        handleShowTime(item._id)
+                                    }
                                     className={`time-mini me-3 mb-3 ${
-                                        item.status === statusShowTime[2]
+                                        item.status === statusShowTime[2] || item.test === '0'
                                             ? `yes ${item._id === idShowTime ? 'select' : ''}`
                                             : 'no'
                                     }`}

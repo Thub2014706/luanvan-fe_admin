@@ -39,13 +39,13 @@ const AddGenre = ({ show, handleClose, id }) => {
             }
         };
         fetch();
-    }, [id, show]);
+    }, [id]);
 
     return (
         <CModal alignment="center" visible={show} onClose={handleClose}>
             <CForm onSubmit={handleSubmit}>
                 <CModalHeader>
-                    <CModalTitle>{id !== null ? 'Cập nhật' : 'Thêm mới'}</CModalTitle>
+                    <CModalTitle>{id !== null ? 'Cập nhật' : 'Thêm mới'} thể loại phim</CModalTitle>
                 </CModalHeader>
                 <CModalBody>
                     <CFormLabel className="fw-bold">

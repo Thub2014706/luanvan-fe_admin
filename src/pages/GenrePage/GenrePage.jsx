@@ -1,11 +1,10 @@
-import { faMagnifyingGlass, faPenToSquare, faTrashCan, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faTrashCan, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Form, Row, Table } from 'react-bootstrap';
-import ToggleSwitch from '~/components/ToggleSwitch/ToggleSwitch';
+import { Col, Row, Table } from 'react-bootstrap';
 import AddGenre from '~/components/AddGenre/AddGenre';
 import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
-import { allGenre, deleteGenre, updateGenre } from '~/services/GenreService';
+import { allGenre, deleteGenre } from '~/services/GenreService';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
@@ -76,17 +75,21 @@ const GenrePage = () => {
 
     return (
         <div className="p-4">
-            <h5 className="mb-4 fw-bold">Thể loại phim</h5>
-            <Row className="mb-3">
-                <Col xs={6}>
-                    <div className="button add" onClick={() => handleShowAdd(null)}>
+            <Row className="mb-4">
+                <Col>
+                    <h5 className="fw-bold">Thể loại phim</h5>
+                </Col>
+                <Col>
+                    <div className="button add float-end" onClick={() => handleShowAdd(null)}>
                         Thêm mới
                     </div>
                 </Col>
-                <Col xs={3}>
+            </Row>
+            <Row className="mb-3">
+                <Col>
                     <ShowPage numberPage={numberPage} handleNumberPage={handleNumberPage} />
                 </Col>
-                <Col xs={3}>
+                <Col>
                     <SearchBar handleSubmit={handleSearch} />
                 </Col>
             </Row>

@@ -1,18 +1,29 @@
-import { CButton, CCol, CForm, CFormInput, CFormLabel, CFormSelect, CInputGroup, CRow } from '@coreui/react-pro';
+import {
+    CButton,
+    CCol,
+    CForm,
+    CFormInput,
+    CFormLabel,
+    CFormSelect,
+    CInputGroup,
+    CModal,
+    CModalBody,
+    CModalFooter,
+    CModalHeader,
+    CModalTitle,
+    CRow,
+} from '@coreui/react-pro';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 // import { Button, CCol, Form, CRow } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
 import ImageBase from '~/components/ImageBase/ImageBase';
 import { addCombo, detailCombo, updateCombo } from '~/services/ComboService';
 import { listFood } from '~/services/FoodService';
 
-const AddComboPage = () => {
+const AddCombo = ({ id, show, handleClose }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
-    const { id } = useParams();
-    const navigate = useNavigate();
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [foods, setFoods] = useState([]);
@@ -46,6 +57,12 @@ const AddComboPage = () => {
                 setImageId(data.image);
                 setFood(data.variants.map((item) => item.food));
                 setQuantity(data.variants.map((item) => item.quantity));
+            } else {
+                setName('');
+                setPrice('');
+                setImageId();
+                setFood(['']);
+                setQuantity(['']);
             }
         };
         fetch();
@@ -95,33 +112,25 @@ const AddComboPage = () => {
         formData.append('variants', JSON.stringify(variants));
         if (id) {
             if (await updateCombo(id, formData, user?.accessToken)) {
-                navigate('/combo');
+                handleClose();
             }
         } else {
             if (await addCombo(formData, user?.accessToken)) {
-                navigate('/combo');
+                handleClose();
             }
         }
     };
 
-    console.log(variants);
+    console.log(image);
 
     return (
-        <div className="p-4">
-            <h5 className="mb-4 fw-bold">Combo</h5>
-            <CForm>
-                <CRow className="mb-3">
-                    <CCol>
-                        <h6>{id ? 'Cập nhật' : 'Thêm'} Combo</h6>
-                    </CCol>
-                    <CCol>
-                        <div className="button add float-end" onClick={handleSubmit}>
-                            Chấp nhận
-                        </div>
-                    </CCol>
-                </CRow>
-                <CRow>
-                    <CCol>
+        <CModal alignment="center" visible={show} onClose={handleClose}>
+            <CForm onSubmit={handleSubmit}>
+                <CModalHeader>
+                    <CModalTitle>{id !== null ? 'Cập nhật' : 'Thêm mới'} combo</CModalTitle>
+                </CModalHeader>
+                <CModalBody>
+                    <div>
                         <CFormLabel className="fw-bold">
                             Tên <span style={{ color: 'red' }}>*</span>
                         </CFormLabel>
@@ -133,8 +142,8 @@ const AddComboPage = () => {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                         />
-                    </CCol>
-                    <CCol>
+                    </div>
+                    <div className="mt-3">
                         <CFormLabel className="fw-bold">
                             Giá tiền <span style={{ color: 'red' }}>*</span>
                         </CFormLabel>
@@ -145,24 +154,8 @@ const AddComboPage = () => {
                             value={price}
                             onChange={(e) => setPrice(e.target.value)}
                         />
-                    </CCol>
-                </CRow>
-                <CRow className="mt-3">
-                    <CCol>
-                        <CFormLabel className="fw-bold">
-                            Hình ảnh <span style={{ color: 'red' }}>*</span>
-                        </CFormLabel>
-                        <CFormInput
-                            type="file"
-                            name="image"
-                            accept=".jpg, .png"
-                            onChange={(e) => handleImage(e)}
-                            className="mb-3"
-                        />
-                        {image && <img src={imageEncode} style={{ height: '200px', marginTop: '20px' }} alt="" />}
-                        {imageId && <ImageBase pathImg={imageId} style={{ height: '200px', marginTop: '20px' }} />}
-                    </CCol>
-                    <CCol>
+                    </div>
+                    <div className="mt-3">
                         <CFormLabel className="fw-bold">
                             Chi tiết <span style={{ color: 'red' }}>*</span>
                         </CFormLabel>
@@ -196,7 +189,7 @@ const AddComboPage = () => {
                                 </CCol>
                                 <CCol xs="auto" className="ps-0">
                                     <CButton color="danger" onClick={() => handleDeleteFood(index)}>
-                                        <FontAwesomeIcon icon={faXmark} color='white' />
+                                        <FontAwesomeIcon icon={faXmark} color="white" />
                                     </CButton>
                                 </CCol>
                             </CInputGroup>
@@ -204,11 +197,33 @@ const AddComboPage = () => {
                         <div className="button select" onClick={handleAddFood}>
                             Thêm
                         </div>
-                    </CCol>
-                </CRow>
+                    </div>
+                    <div className="mt-3">
+                        <CFormLabel className="fw-bold">
+                            Hình ảnh <span style={{ color: 'red' }}>*</span>
+                        </CFormLabel>
+                        <CFormInput
+                            type="file"
+                            name="image"
+                            accept=".jpg, .png"
+                            onChange={handleImage}
+                            className="mb-3"
+                        />
+                        {image && <img src={imageEncode} style={{ height: '100px', marginTop: '20px' }} alt="" />}
+                        {imageId && <ImageBase pathImg={imageId} style={{ height: '100px', marginTop: '20px' }} />}
+                    </div>
+                </CModalBody>
+                <CModalFooter>
+                    <CButton color="secondary" onClick={handleClose}>
+                        Đóng
+                    </CButton>
+                    <CButton type="submit" color="primary">
+                        Lưu
+                    </CButton>
+                </CModalFooter>
             </CForm>
-        </div>
+        </CModal>
     );
 };
 
-export default AddComboPage;
+export default AddCombo;

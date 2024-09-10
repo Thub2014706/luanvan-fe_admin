@@ -1,10 +1,12 @@
 import { CCol, CDatePicker, CFormLabel, CFormSelect, CMultiSelect, CRow } from '@coreui/react-pro';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { listRoomByTheater } from '~/services/RoomService';
 import { listTheater } from '~/services/TheaterService';
 
 const SearchShowTime = ({ handleSearch }) => {
+    const user = useSelector((state) => state.auth.login.currentUser);
     const [theater, setTheater] = useState([]);
     const [room, setRoom] = useState('');
     const [dateSearch, setDateSearch] = useState(moment(Date.now()).format('YYYY-MM-DD'));
@@ -15,9 +17,17 @@ const SearchShowTime = ({ handleSearch }) => {
         const fetch = async () => {
             const data = await listTheater();
             setTheaters(data);
+            if (user?.data.theater) {
+                const selectedTheater = data.find((item) => item._id === user.data.theater);
+                if (selectedTheater) {
+                    setTheater([{ value: selectedTheater._id, label: selectedTheater.name }]);
+                }
+            } else {
+                setTheater([]);
+            }
         };
         fetch();
-    }, []);
+    }, [user]);
 
     useEffect(() => {
         const fetch = async () => {
@@ -25,7 +35,7 @@ const SearchShowTime = ({ handleSearch }) => {
                 const data = await listRoomByTheater(theater[0].value);
                 setRooms(data);
             } else {
-                setRooms([])
+                setRooms([]);
             }
         };
         fetch();
@@ -48,10 +58,12 @@ const SearchShowTime = ({ handleSearch }) => {
                                 id="theater"
                                 multiple={false}
                                 optionsStyle="text"
+                                disabled={!!user?.data.theater}
                                 clearSearchOnSelect
                                 options={theaters.map((item) => ({
                                     value: item._id,
                                     label: item.name,
+                                    selected: theater.length > 0 && theater[0].value === item._id,
                                 }))}
                                 value={theater}
                                 onChange={(value) => setTheater(value)}
