@@ -33,7 +33,8 @@ const SelectShowTime = () => {
             const data = await listShowTimeByDay(theater, date, film);
             const newData = await Promise.all(
                 data.map(async (item) => {
-                    const test = await soldOutSeat({showTime: item._id});
+                    const showTime = await detailShowTimeById(item._id);
+                    const test = await soldOutSeat(item._id, showTime.room);
                     console.log(test);
                     return { ...item, test };
                 }),
@@ -96,11 +97,10 @@ const SelectShowTime = () => {
                                 <span
                                     style={{ display: 'inline-block' }}
                                     onClick={() =>
-                                        (item.status === statusShowTime[2] || item.test === '0') &&
-                                        handleShowTime(item._id)
+                                        item.status === statusShowTime[2] && item.test === 1 && handleShowTime(item._id)
                                     }
                                     className={`time-mini me-3 mb-3 ${
-                                        item.status === statusShowTime[2] || item.test === '0'
+                                        item.status === statusShowTime[2] && item.test === 1
                                             ? `yes ${item._id === idShowTime ? 'select' : ''}`
                                             : 'no'
                                     }`}

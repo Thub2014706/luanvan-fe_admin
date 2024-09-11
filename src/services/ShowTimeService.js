@@ -59,10 +59,10 @@ export const detailShowTimeById = async (id) => {
     }
 };
 
-export const soldOutSeat = async (showTime) => {
+export const soldOutSeat = async (showTime, room) => {
     try {
         const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/api/showtime/check-seat?showTime=${showTime}`,
+            `${process.env.REACT_APP_API_URL}/api/showtime/check-seat?showTime=${showTime}&room=${room}`,
         );
         return response.data.message;
     } catch (error) {

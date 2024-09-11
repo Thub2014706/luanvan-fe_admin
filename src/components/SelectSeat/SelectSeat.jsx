@@ -93,6 +93,7 @@ const SelectSeat = () => {
                     arrayRow[seatIndex - 2] &&
                     arrayRow[seatIndex - 2].isDelete === false &&
                     arrayRow[seatIndex - 1] &&
+                    arrayRow[seatIndex - 1].isDelete === false &&
                     (selled.includes(arrayRow[seatIndex - 2]._id) ||
                         selectSeat.includes(arrayRow[seatIndex - 2]) ||
                         arrayRow[seatIndex - 2].status === false) &&
@@ -104,25 +105,27 @@ const SelectSeat = () => {
                 }
 
                 // Kiểm tra ghế trống bên phải
-                // if (
-                //     arrayRow[seatIndex + 2] &&
-                //     arrayRow[seatIndex + 2].isDelete === false &&
-                //     arrayRow[seatIndex + 1] &&
-                //     (selled.includes(arrayRow[seatIndex + 2]._id) ||
-                //         selectSeat.includes(arrayRow[seatIndex + 2]) ||
-                //         arrayRow[seatIndex + 2].status === false) &&
-                //     !selectSeat.includes(arrayRow[seatIndex + 1]) &&
-                //     !selled.includes(arrayRow[seatIndex + 1]._id) &&
-                //     arrayRow[seatIndex + 1].status === true
-                // ) {
-                //     hasGap = true;
-                // }
+                if (
+                    arrayRow[seatIndex + 2] &&
+                    arrayRow[seatIndex + 2].isDelete === false &&
+                    arrayRow[seatIndex + 1] &&
+                    arrayRow[seatIndex + 1].isDelete === false &&
+                    (selled.includes(arrayRow[seatIndex + 2]._id) ||
+                        selectSeat.includes(arrayRow[seatIndex + 2]) ||
+                        arrayRow[seatIndex + 2].status === false) &&
+                    !selectSeat.includes(arrayRow[seatIndex + 1]) &&
+                    !selled.includes(arrayRow[seatIndex + 1]._id) &&
+                    arrayRow[seatIndex + 1].status === true
+                ) {
+                    hasGap = true;
+                }
 
                 // Kiểm tra ghế trống bên trái
                 if (
                     (!arrayRow[seatIndex - 2] ||
                         (arrayRow[seatIndex - 2] && arrayRow[seatIndex - 2].isDelete === true)) &&
                     arrayRow[seatIndex - 1] &&
+                    arrayRow[seatIndex - 1].isDelete === false &&
                     !selectSeat.includes(arrayRow[seatIndex - 1]) &&
                     !selled.includes(arrayRow[seatIndex - 1]._id) &&
                     arrayRow[seatIndex - 1].status === true
@@ -135,6 +138,8 @@ const SelectSeat = () => {
                     (!arrayRow[seatIndex + 2] ||
                         (arrayRow[seatIndex + 2] && arrayRow[seatIndex + 2].isDelete === true)) &&
                     arrayRow[seatIndex + 1] &&
+                    arrayRow[seatIndex + 1].left === 0 &&
+                    arrayRow[seatIndex + 1].isDelete === false &&
                     !selectSeat.includes(arrayRow[seatIndex + 1]) &&
                     !selled.includes(arrayRow[seatIndex + 1]._id) &&
                     arrayRow[seatIndex + 1].status === true
@@ -148,6 +153,7 @@ const SelectSeat = () => {
                     arrayRow[seatIndex - 1].left > 0 &&
                     arrayRow[seatIndex - 1].status === true &&
                     arrayRow[seatIndex - 2].isDelete === false &&
+                    arrayRow[seatIndex - 1].isDelete === false &&
                     !selectSeat.includes(arrayRow[seatIndex - 1]) &&
                     !selled.includes(arrayRow[seatIndex - 1]._id)
                 ) {
@@ -158,6 +164,8 @@ const SelectSeat = () => {
                     arrayRow[seatIndex + 2] &&
                     arrayRow[seatIndex + 2].left > 0 &&
                     arrayRow[seatIndex + 2].status === true &&
+                    arrayRow[seatIndex + 2].isDelete === false &&
+                    arrayRow[seatIndex + 1] &&
                     arrayRow[seatIndex + 1].isDelete === false &&
                     !selectSeat.includes(arrayRow[seatIndex + 1]) &&
                     !selled.includes(arrayRow[seatIndex + 1]._id)
