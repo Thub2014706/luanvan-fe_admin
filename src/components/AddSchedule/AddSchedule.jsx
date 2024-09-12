@@ -25,7 +25,7 @@ const AddSchedule = ({ show, handleClose, id }) => {
         const fetch = async () => {
             if (id !== null) {
                 const data = await detailSchedule(id);
-                setFilms(data.film);
+                setFilm(data.film);
                 setStartDate(data.startDate);
                 setEndDate(data.endDate);
             }
