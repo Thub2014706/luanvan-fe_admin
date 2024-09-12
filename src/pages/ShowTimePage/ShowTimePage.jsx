@@ -30,7 +30,7 @@ const ShowTimePage = () => {
         const data = await allShowTime(theater, room, date);
         setTheaterSearch(data);
     };
-    // console.log('ê', theater, room, date);
+    console.log('ê', theaterSearch);
     const handleAddSuccess = async () => {
         setAction(true);
     };

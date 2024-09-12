@@ -5,7 +5,7 @@ import { Button, Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { allTranslate } from '~/constants';
 import { detailFilm } from '~/services/FilmService';
-import { listSchedule } from '~/services/ScheduleService';
+import { detailSchedule, listSchedule } from '~/services/ScheduleService';
 import { addShowTime } from '~/services/ShowTimeService';
 import Name from '../Name/Name';
 import { detailTheater } from '~/services/TheaterService';
@@ -31,7 +31,7 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
         e.preventDefault();
         if (
             await addShowTime(
-                { theater, room, film: film[0].value, date: dateAdd, translate, timeStart, timeEnd },
+                { theater, room, schedule: film[0].value, date: dateAdd, translate, timeStart, timeEnd },
                 user?.accessToken,
             )
         ) {
@@ -53,7 +53,9 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
     useEffect(() => {
         const fetch = async () => {
             if (timeStart !== '' && film.length > 0) {
-                const data = await detailFilm(film[0].value);
+                const schedule = await detailSchedule(film[0].value)
+                console.log(schedule);
+                const data = await detailFilm(schedule.film);
                 const initialTime = moment.tz(timeStart, 'HH:mm', 'Asia/Ho_Chi_Minh');
                 const modMinute = initialTime.minutes() % 5 === 0 ? 0 : 5 - (initialTime.minutes() % 5);
                 setTimeStart(initialTime.format('HH:mm'));
@@ -66,7 +68,6 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
         fetch();
     }, [timeStart, film]);
 
-    // console.log(translate);
 
     useEffect(() => {
         const fetch = () => {
@@ -104,7 +105,7 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
                             options={
                                 films &&
                                 films.map((item) => ({
-                                    value: item.schedule.film,
+                                    value: item.schedule._id,
                                     label: `${item.nameFilm} (${item.schedule.type})`,
                                 }))
                             }

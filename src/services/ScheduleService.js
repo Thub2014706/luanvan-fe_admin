@@ -55,3 +55,14 @@ export const listSchedule = async (date) => {
         console.log('loi', error);
     }
 };
+
+export const listScheduleNotScreened = async (search) => {
+    try {
+        const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/schedule/list-schedule-not-screened?search=${search}`,
+        );
+        return response.data;
+    } catch (error) {
+        console.log('loi', error);
+    }
+};

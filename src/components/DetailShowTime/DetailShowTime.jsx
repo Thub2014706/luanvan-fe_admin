@@ -3,10 +3,26 @@ import AddShowTime from '../AddShowTime/AddShowTime';
 import { Table } from 'react-bootstrap';
 import { detailFilm } from '~/services/FilmService';
 import { statusShowTime, typeShowTime } from '~/constants';
-import Name from '../Name/Name';
+import { detailSchedule } from '~/services/ScheduleService';
 
 const DetailShowTime = ({ props, theater, room, date, onAddSuccess }) => {
     const [showAdd, setShowAdd] = useState(false);
+    const [detailProps, setDetailProps] = useState([]);
+
+    useEffect(() => {
+        const fetch = async () => {
+            const data = await Promise.all(
+                props.map(async (item) => {
+                    const schedule = await detailSchedule(item.schedule);
+                    const film = await detailFilm(schedule.film);
+                    return { ...item, film: film.name };
+                }),
+            );
+            setDetailProps(data);
+            // console.log('dd', data);
+        };
+        fetch();
+    }, [props]);
 
     const handleShowAdd = () => {
         setShowAdd(true);
@@ -17,7 +33,7 @@ const DetailShowTime = ({ props, theater, room, date, onAddSuccess }) => {
     };
 
     let now = Date.now();
-    console.log('e', date);
+    console.log('e', detailProps);
     return (
         <div>
             <Table bordered>
@@ -31,12 +47,10 @@ const DetailShowTime = ({ props, theater, room, date, onAddSuccess }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {props.length > 0 ? (
-                        props.map((item) => (
+                    {detailProps.length > 0 ? (
+                        detailProps.map((item) => (
                             <tr key={item._id}>
-                                <td>
-                                    <Name id={item.film} detail={detailFilm} />
-                                </td>
+                                <td>{item.film}</td>
                                 <td className="text-center align-middle">{item.translate}</td>
                                 <td className="text-center align-middle">
                                     <p className="time-show">

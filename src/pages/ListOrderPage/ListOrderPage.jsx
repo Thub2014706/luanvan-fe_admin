@@ -15,6 +15,7 @@ import { detailFilm } from '~/services/FilmService';
 import { detailFood } from '~/services/FoodService';
 import { allOrderTicket } from '~/services/OrderTicketService';
 import { detailRoom } from '~/services/RoomService';
+import { detailSchedule } from '~/services/ScheduleService';
 import { detailShowTimeById } from '~/services/ShowTimeService';
 import { detailStaff } from '~/services/StaffService';
 import { detailTheater } from '~/services/TheaterService';
@@ -62,7 +63,8 @@ const ListOrderPage = () => {
                     );
                     if (item.showTime) {
                         const showTime = await detailShowTimeById(item.showTime);
-                        const film = await detailFilm(showTime.film);
+                        const schedule = await detailSchedule(showTime.schedule)
+                        const film = await detailFilm(schedule.film);
                         const theater = await detailTheater(showTime.theater);
                         const room = await detailRoom(showTime.room);
                         const timeStart = showTime.timeStart;

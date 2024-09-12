@@ -15,7 +15,7 @@ const SelectShowTime = () => {
     const [idShowTime, setIdShowTime] = useState(null);
     const [war, setWar] = useState('');
     const dispatch = useDispatch();
-    const film = useSelector((state) => state.showTime.film);
+    const schedule = useSelector((state) => state.showTime.schedule);
     const theater = useSelector((state) => state.showTime.theater);
 
     const now = new Date();
@@ -30,19 +30,19 @@ const SelectShowTime = () => {
 
     useEffect(() => {
         const fetch = async () => {
-            const data = await listShowTimeByDay(theater, date, film);
+            const data = await listShowTimeByDay(theater, date, schedule);
+            console.log(data);
             const newData = await Promise.all(
                 data.map(async (item) => {
                     const showTime = await detailShowTimeById(item._id);
                     const test = await soldOutSeat(item._id, showTime.room);
-                    console.log(test);
                     return { ...item, test };
                 }),
             );
             setShowTimes(newData);
         };
         fetch();
-    }, [theater, date, film]);
+    }, [theater, date, schedule]);
 
     const handleSelect = async (index, date) => {
         setSelectDay(index);

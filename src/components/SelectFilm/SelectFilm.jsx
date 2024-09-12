@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 import SearchBar from '../SearchBar/SearchBar';
 import FilmTitle from '../FilmTitle/FilmTitle';
-import { Link } from 'react-router-dom';
-import { listFilmNotScreened } from '~/services/FilmService';
 import { listTheater } from '~/services/TheaterService';
 import { useDispatch, useSelector } from 'react-redux';
-import { filmValue, stepNext } from '~/features/showTime/showTimeSlice';
+import { scheduleValue, stepNext } from '~/features/showTime/showTimeSlice';
+import { listScheduleNotScreened } from '~/services/ScheduleService';
 
 const SelectFilm = () => {
-    const [films, setFilms] = useState([]);
+    const [schedule, setSchedule] = useState([]);
     const [search, setSearch] = useState('');
     const [theaters, setTheaters] = useState([]);
     const dispatch = useDispatch()
@@ -17,8 +16,8 @@ const SelectFilm = () => {
 
     useEffect(() => {
         const fetch = async () => {
-            const data = await listFilmNotScreened(search);
-            setFilms(data);
+            const data = await listScheduleNotScreened(search);
+            setSchedule(data);
         };
         fetch();
     }, [search]);
@@ -36,11 +35,11 @@ const SelectFilm = () => {
     };
 
     const handleFilm = (id) => {
-        dispatch(filmValue(id))
+        dispatch(scheduleValue(id))
         dispatch(stepNext(2))
     }
 
-    console.log(films);
+    // console.log(schedule);
     return (
         <div>
             <Row className="mb-3">
@@ -57,9 +56,9 @@ const SelectFilm = () => {
                 </Col>
             </Row>
             <Row>
-                {films.map((item) => (
+                {schedule.map((item) => (
                     <Col className="mt-3" key={item._id} xs={3} onClick={() => handleFilm(item._id)}>
-                        <FilmTitle image={item.image} name={item.name} />
+                        <FilmTitle id={item.film} />
                     </Col>
                 ))}
             </Row>

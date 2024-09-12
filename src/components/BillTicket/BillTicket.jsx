@@ -12,6 +12,7 @@ import Name from '../Name/Name';
 import { detailStaff } from '~/services/StaffService';
 import moment from 'moment';
 import Barcode from 'react-barcode';
+import { detailSchedule } from '~/services/ScheduleService';
 
 const BillTicket = ({ componentRef }) => {
     const dispatch = useDispatch();
@@ -38,7 +39,8 @@ const BillTicket = ({ componentRef }) => {
                 setRoom(data4);
                 const data5 = await Promise.all(data1.seat.map(async (item) => await detailSeat(item)));
                 setSeats(data5);
-                const data6 = await detailFilm(data2.film);
+                const data8 = await detailSchedule(data2.schedule)
+                const data6 = await detailFilm(data8.film);
                 setFilm(data6);
                 const data7 = await Promise.all(
                     data1.combo.map(async (item) => {

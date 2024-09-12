@@ -7,9 +7,10 @@ import { detailRoom } from '~/services/RoomService';
 import moment from 'moment';
 import { detailFilm } from '~/services/FilmService';
 import { detailCombo } from '~/services/ComboService';
+import { detailSchedule } from '~/services/ScheduleService';
 
 const CardBookTicket = () => {
-    const idFilm = useSelector((state) => state.showTime.film);
+    const idSchedule = useSelector((state) => state.showTime.schedule);
     const [film, setFilm] = useState(null);
     const idRoom = useSelector((state) => state.showTime.room);
     const time = useSelector((state) => state.showTime.time);
@@ -21,11 +22,12 @@ const CardBookTicket = () => {
 
     useEffect(() => {
         const fetch = async () => {
-            const data = await detailFilm(idFilm);
-            setFilm(data);
+            const data = await detailSchedule(idSchedule);
+            const dataMain = await detailFilm(data.film)
+            setFilm(dataMain)
         };
         fetch();
-    }, [idFilm]);
+    }, [idSchedule]);
 
     useEffect(() => {
         const fetch = async () => {
