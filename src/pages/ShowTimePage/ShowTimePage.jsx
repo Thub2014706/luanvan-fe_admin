@@ -30,7 +30,7 @@ const ShowTimePage = () => {
         const data = await allShowTime(theater, room, date);
         setTheaterSearch(data);
     };
-    console.log('ê', theaterSearch);
+    // console.log('ê', theaterSearch);
     const handleAddSuccess = async () => {
         setAction(true);
     };
@@ -64,7 +64,7 @@ const ShowTimePage = () => {
                         <h5 className='text-center h5-theater'>Rạp: {item.theater.name}</h5>
                         {item.rooms.map((mini) => (
                             <div className="my-5">
-                                <h6 className='fw-bold ms-3'>{mini.room.name}</h6>
+                                <h6 className='fw-bold ms-3'>{mini.room.name} ({mini.room.type})</h6>
                                 <DetailShowTime
                                     props={mini.showTimes}
                                     theater={item.theater._id}
