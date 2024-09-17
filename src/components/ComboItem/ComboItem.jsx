@@ -21,21 +21,22 @@ const ComboItem = ({ item, value, handleValue, handleMinus, handleAdd }) => {
                     }}
                 />
             </Col>
-            <Col>
-                <p>
+            <Col className='d-flex flex-column justify-content-between'>
+                <div>
                     <span className="fw-bold">{item.name}</span>
                     <br />
-                    {item.variants.map((food) => (
-                        <span>
-                            <Name id={food.food} detail={detailFood} /> x {food.quantity}
-                            <br />
-                        </span>
-                    ))}
-                    <p className="mt-2">
+                    {item.variants &&
+                        item.variants.map((food) => (
+                            <span>
+                                <Name id={food.food} detail={detailFood} /> x {food.quantity}
+                                <br />
+                            </span>
+                        ))}
+                    <div className="mt-2">
                         Giá: <span style={{ color: 'red' }}>{item.price.toLocaleString('it-IT')}đ</span>
-                    </p>
-                </p>
-                <InputGroup size="sm">
+                    </div>
+                </div>
+                <InputGroup size="sm" className='mt-auto'>
                     <Button variant="outline-secondary" onClick={handleMinus}>
                         <FontAwesomeIcon icon={faMinus} />
                     </Button>

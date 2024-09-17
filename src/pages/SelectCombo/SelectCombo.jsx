@@ -125,47 +125,13 @@ const SelectCombo = () => {
                 ))}
                 {food.map((item, index) => (
                     <Col className="mb-5" sm={6}>
-                        <Row>
-                            <Col xs="auto">
-                                <ImageBase
-                                    pathImg={item.image}
-                                    style={{
-                                        height: '130px',
-                                        width: '130px',
-                                        display: 'flex',
-                                        objectFit: 'cover',
-                                        borderRadius: '5px',
-                                    }}
-                                />
-                            </Col>
-                            <Col>
-                                <p>
-                                    <span className="fw-bold">{item.name}</span>
-                                    <br />
-                                    <p className="mt-2">
-                                        Giá: <span style={{ color: 'red' }}>{item.price.toLocaleString('it-IT')}đ</span>
-                                    </p>
-                                </p>
-                                <InputGroup size="sm">
-                                    <Button variant="outline-secondary" onClick={() => handleMinus(index, 'food')}>
-                                        <FontAwesomeIcon icon={faMinus} />
-                                    </Button>
-                                    <Form.Control
-                                        type="text"
-                                        style={{
-                                            maxWidth: '40px',
-                                            textAlign: 'center',
-                                            border: '1px solid gray',
-                                        }}
-                                        value={selectFood[index].quantity}
-                                        onChange={(e) => handleValue(e, index, 'food')}
-                                    />
-                                    <Button variant="outline-secondary" onClick={() => handleAdd(index, 'food')}>
-                                        <FontAwesomeIcon icon={faPlus} />
-                                    </Button>
-                                </InputGroup>
-                            </Col>
-                        </Row>
+                        <ComboItem
+                            item={item}
+                            value={selectFood[index].quantity}
+                            handleValue={(e) => handleValue(e, index, 'food')}
+                            handleMinus={() => handleMinus(index, 'food')}
+                            handleAdd={() => handleAdd(index, 'food')}
+                        />
                     </Col>
                 ))}
             </Row>
