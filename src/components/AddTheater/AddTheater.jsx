@@ -33,7 +33,7 @@ const AddTheater = ({ id, show, handleClose }) => {
 
     useEffect(() => {
         const fetch = async () => {
-            if (id) {
+            if (id !== null) {
                 const data = await detailTheater(id);
                 setName(data.name);
                 const getProvince = provinces.find((item) => item.name === data.province);
@@ -49,11 +49,11 @@ const AddTheater = ({ id, show, handleClose }) => {
                 setNameDistrict(data.district);
                 setNameWard(data.ward);
             } else {
-                setName('')
-                setProvince('')
-                setDistrict('')
-                setWard('')
-                setAddress('')
+                setName('');
+                setProvince('');
+                setDistrict('');
+                setWard('');
+                setAddress('');
                 setNameProvince('');
                 setNameDistrict('');
                 setNameWard('');
@@ -83,7 +83,7 @@ const AddTheater = ({ id, show, handleClose }) => {
         setNameWard(findValue.name);
     };
 
-    console.log(nameProvince);
+    // console.log(nameProvince);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

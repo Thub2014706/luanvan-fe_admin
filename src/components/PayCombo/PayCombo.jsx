@@ -97,6 +97,8 @@ const PayCombo = () => {
         } else if (war === '') {
             if (selectPay === 'momo') {
                 const data = await momoPaymentCombo({ amount: price });
+                console.log(data);
+                
                 await addOrderCombo(
                     {
                         idOrder: data.orderId,

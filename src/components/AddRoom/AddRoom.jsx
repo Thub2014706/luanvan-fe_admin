@@ -14,6 +14,8 @@ const AddRoom = ({ show, handleClose, id, idTheater }) => {
     useEffect(() => {
         const fetch = async () => {
             if (id !== null) {
+                console.log(id);
+                
                 const data = await detailRoom(id);
                 setName(data.name);
                 setType(data.type);

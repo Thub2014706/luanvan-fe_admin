@@ -159,7 +159,7 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
                             <CCol>
                                 <CTimePicker
                                     seconds={false}
-                                    hours={[7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]}
+                                    hours={[7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]}
                                     minutes={[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 59]}
                                     placeholder="Bắt đầu"
                                     disabled={film.length === 0}
@@ -172,7 +172,7 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
                             <CCol>
                                 <CTimePicker
                                     seconds={false}
-                                    hours={[7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]}
+                                    hours={[7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]}
                                     minutes={[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 59]}
                                     disabled
                                     placeholder="Kết thúc"

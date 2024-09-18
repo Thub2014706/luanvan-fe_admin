@@ -84,7 +84,7 @@ const RoomPage = () => {
                     <h5 className="fw-bold">Danh sách phòng chiếu</h5>
                 </Col>
                 <Col>
-                    <div className="button add float-end" onClick={handleShowAdd}>
+                    <div className="button add float-end" onClick={() => handleShowAdd(null)}>
                         Thêm mới
                     </div>
                 </Col>
