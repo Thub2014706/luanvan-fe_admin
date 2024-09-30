@@ -166,7 +166,7 @@ const PaymentStaff = () => {
                 );
                 dispatch(idOrderValue(data.orderId));
                 window.location.href = data.payUrl;
-                console.log(data);
+                // console.log(data);
             } else {
                 const data = await addOrderTicket(
                     {
