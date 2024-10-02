@@ -52,26 +52,26 @@ const ListOrderPage = () => {
             const data1 = await allOrderTicket(user?.data.theater ? user?.data.theater : theater, number, numberPage);
             const detail = await Promise.all(
                 data1.data.map(async (item) => {
-                    const comboFood = await Promise.all(
-                        item.combo.map(async (mini) => {
-                            const data = (await detailCombo(mini.id)) || (await detailFood(mini.id));
-                            return {
-                                data,
-                                quantity: mini.quantity,
-                            };
-                        }),
-                    );
+                    // const comboFood = await Promise.all(
+                    //     item.combo.map(async (mini) => {
+                    //         const data = (await detailCombo(mini.id)) || (await detailFood(mini.id));
+                    //         return {
+                    //             data,
+                    //             quantity: mini.quantity,
+                    //         };
+                    //     }),
+                    // );
                     if (item.showTime) {
                         const showTime = await detailShowTimeById(item.showTime);
-                        const schedule = await detailSchedule(showTime.schedule)
+                        const schedule = await detailSchedule(showTime.schedule);
                         const film = await detailFilm(schedule.film);
                         const theater = await detailTheater(showTime.theater);
                         const room = await detailRoom(showTime.room);
                         const timeStart = showTime.timeStart;
                         const timeEnd = showTime.timeEnd;
                         const date = showTime.date;
-                        return { ...item, film, theater, room, timeStart, timeEnd, date, comboFood };
-                    } else return { ...item, comboFood };
+                        return { ...item, film, theater, room, timeStart, timeEnd, date };
+                    } else return { ...item };
                 }),
             );
             setOrder(detail);
@@ -153,19 +153,15 @@ const ListOrderPage = () => {
                                     )}
                                 </td>
                                 <td>
-                                    {item.comboFood.length > 0 &&
-                                        item.comboFood.map((mini) => (
+                                    {item.combo.length > 0 &&
+                                        item.combo.map((mini) => (
                                             <span>
-                                                {mini.data.name} x {mini.quantity}
+                                                {mini.name} x {mini.quantity}
                                                 <br />
                                             </span>
                                         ))}
                                 </td>
-                                <td>
-                                    {item.member && (
-                                        <Name id={item.member} detail={detailUserById} />
-                                    )}
-                                </td>
+                                <td>{item.member && <Name id={item.member} detail={detailUserById} />}</td>
                                 <td>
                                     <Name id={item.staff} detail={detailStaff} />
                                 </td>

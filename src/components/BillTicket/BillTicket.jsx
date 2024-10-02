@@ -13,6 +13,7 @@ import { detailStaff } from '~/services/StaffService';
 import moment from 'moment';
 import Barcode from 'react-barcode';
 import { detailSchedule } from '~/services/ScheduleService';
+import { Col, Row } from 'react-bootstrap';
 
 const BillTicket = ({ componentRef }) => {
     const dispatch = useDispatch();
@@ -39,7 +40,7 @@ const BillTicket = ({ componentRef }) => {
                 setRoom(data4);
                 const data5 = await Promise.all(data1.seat.map(async (item) => await detailSeat(item)));
                 setSeats(data5);
-                const data8 = await detailSchedule(data2.schedule)
+                const data8 = await detailSchedule(data2.schedule);
                 const data6 = await detailFilm(data8.film);
                 setFilm(data6);
                 const data7 = await Promise.all(
@@ -115,7 +116,9 @@ const BillTicket = ({ componentRef }) => {
                                     </span>
                                 </p>
                                 <p>
-                                    <span className="me-5 fw-bold">{room.name}</span>
+                                    <span className="me-5 fw-bold">
+                                        {room.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '')}
+                                    </span>
                                     <span className="fw-bold">
                                         {seats
                                             ?.map((item) => `${String.fromCharCode(64 + item.row)}${item.col}`)
@@ -125,22 +128,62 @@ const BillTicket = ({ componentRef }) => {
                                         {seats[0].type.normalize('NFD').replace(/[\u0300-\u036f]/g, '')}
                                     </span>
                                 </p>
-                                <p>------------------------------------------</p>
-                                <p>
-                                    Combo:
-                                    {combo.map((item) => (
-                                        <p className="text-end fw-bold">
-                                            <span className="ms-5">{item.data.name}</span>
-                                            <span className="ms-5">x {item.quantity}</span>
+                                {combo.length > 0 && (
+                                    <>
+                                        <p>------------------------------------------</p>
+                                        <p>
+                                            Combo:
+                                            {combo.map((item) => (
+                                                <p className="text-end fw-bold">
+                                                    <span className="ms-5">{item.data.name}</span>
+                                                    <span className="ms-5">x {item.quantity}</span>
+                                                </p>
+                                            ))}
                                         </p>
-                                    ))}
-                                </p>
+                                    </>
+                                )}
                                 <p>==========================================</p>
-                                <p className="text-end fw-bold fs-5">
-                                    <span className="me-5">Tong</span>
-                                    <span className="me-5">VND</span>
-                                    <span>{order.price.toLocaleString('it-IT')}</span>
-                                </p>
+                                {order.usePoint && (
+                                    <>
+                                        <Row className="fs-5">
+                                            <Col xs={6}>
+                                                <span className="float-end">Tong</span>
+                                            </Col>
+                                            <Col xs={2}>
+                                                <span className="float-end">VND</span>
+                                            </Col>
+                                            <Col xs={4}>
+                                                <span className="float-end">
+                                                    {(order.price + order.usePoint).toLocaleString('it-IT')}
+                                                </span>
+                                            </Col>
+                                        </Row>
+                                        <Row className="fs-5">
+                                            <Col xs={6}>
+                                                <span className="float-end">Diem thanh toan</span>
+                                            </Col>
+                                            <Col xs={2}>
+                                                <span className="float-end">VND</span>
+                                            </Col>
+                                            <Col xs={4}>
+                                                <span className="float-end">
+                                                    -{order.usePoint.toLocaleString('it-IT')}
+                                                </span>
+                                            </Col>
+                                        </Row>
+                                    </>
+                                )}
+                                <Row className="fw-bold fs-5">
+                                    <Col xs={6}>
+                                        <span className="float-end">Tong thanh toan</span>
+                                    </Col>
+                                    <Col xs={2}>
+                                        <span className="float-end">VND</span>
+                                    </Col>
+                                    <Col xs={4}>
+                                        <span className="float-end">{order.price.toLocaleString('it-IT')}</span>
+                                    </Col>
+                                </Row>
                                 <div className="justify-content-center d-flex">
                                     <Barcode
                                         value={order.idOrder}

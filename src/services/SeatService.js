@@ -62,3 +62,22 @@ export const detailSeat = async (id) => {
         console.log('loi', error);
     }
 };
+
+export const allHold = async (showTime) => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/redis/all-hold?showTime=${showTime}`);
+        return response.data;
+    } catch (error) {
+        console.log('loi', error);
+    }
+};
+
+export const testHold = async (showTime, seatId) => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/redis/test-hold?showTime=${showTime}&seatId=${seatId}`);
+        return response.data;
+    } catch (error) {
+        showToast(error.response.data.message, 'error');
+        console.log('loi', error);
+    }
+};

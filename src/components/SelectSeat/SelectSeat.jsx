@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
 import { showToast, typeSeatEnum } from '~/constants';
-import { allSeatRoom } from '~/services/SeatService';
+import { allHold, allSeatRoom, testHold } from '~/services/SeatService';
 import { useDispatch, useSelector } from 'react-redux';
 import { preStep2, seatValue, stepNext } from '~/features/showTime/showTimeSlice';
 import CardBookTicket from '../CardBookTicket/CardBookTicket';
@@ -17,6 +17,16 @@ const SelectSeat = () => {
     const idShowTime = useSelector((state) => state.showTime.idShowTime);
     const [selled, setSelled] = useState([]);
     const [show, setShow] = useState(false);
+    const [hold, setHold] = useState([]);
+
+    useEffect(() => {
+        const handleNavigation = async () => {
+            const data = await allHold(idShowTime);
+            setHold(Object.keys(data));
+        };
+
+        handleNavigation();
+    }, [idShowTime]);
 
     useEffect(() => {
         const fetch = async () => {
@@ -77,7 +87,7 @@ const SelectSeat = () => {
     };
     console.log(selectSeat);
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         // if ()
         if (selectSeat.length === 0) {
             setWar('Vui lòng chọn ghế!');
@@ -95,10 +105,12 @@ const SelectSeat = () => {
                     arrayRow[seatIndex - 1] &&
                     arrayRow[seatIndex - 1].isDelete === false &&
                     (selled.includes(arrayRow[seatIndex - 2]._id) ||
+                        hold.includes(arrayRow[seatIndex - 2]._id) ||
                         selectSeat.includes(arrayRow[seatIndex - 2]) ||
                         arrayRow[seatIndex - 2].status === false) &&
                     !selectSeat.includes(arrayRow[seatIndex - 1]) &&
                     !selled.includes(arrayRow[seatIndex - 1]._id) &&
+                    !hold.includes(arrayRow[seatIndex - 1]._id) &&
                     arrayRow[seatIndex - 1].status === true
                 ) {
                     hasGap = true;
@@ -111,10 +123,12 @@ const SelectSeat = () => {
                     arrayRow[seatIndex + 1] &&
                     arrayRow[seatIndex + 1].isDelete === false &&
                     (selled.includes(arrayRow[seatIndex + 2]._id) ||
+                        hold.includes(arrayRow[seatIndex + 2]._id) ||
                         selectSeat.includes(arrayRow[seatIndex + 2]) ||
                         arrayRow[seatIndex + 2].status === false) &&
                     !selectSeat.includes(arrayRow[seatIndex + 1]) &&
                     !selled.includes(arrayRow[seatIndex + 1]._id) &&
+                    !hold.includes(arrayRow[seatIndex + 1]._id) &&
                     arrayRow[seatIndex + 1].status === true
                 ) {
                     hasGap = true;
@@ -128,6 +142,7 @@ const SelectSeat = () => {
                     arrayRow[seatIndex - 1].isDelete === false &&
                     !selectSeat.includes(arrayRow[seatIndex - 1]) &&
                     !selled.includes(arrayRow[seatIndex - 1]._id) &&
+                    !hold.includes(arrayRow[seatIndex - 1]._id) &&
                     arrayRow[seatIndex - 1].status === true
                 ) {
                     hasGap = true;
@@ -142,6 +157,7 @@ const SelectSeat = () => {
                     arrayRow[seatIndex + 1].isDelete === false &&
                     !selectSeat.includes(arrayRow[seatIndex + 1]) &&
                     !selled.includes(arrayRow[seatIndex + 1]._id) &&
+                    !hold.includes(arrayRow[seatIndex + 1]._id) &&
                     arrayRow[seatIndex + 1].status === true
                 ) {
                     hasGap = true;
@@ -155,7 +171,8 @@ const SelectSeat = () => {
                     arrayRow[seatIndex - 2].isDelete === false &&
                     arrayRow[seatIndex - 1].isDelete === false &&
                     !selectSeat.includes(arrayRow[seatIndex - 1]) &&
-                    !selled.includes(arrayRow[seatIndex - 1]._id)
+                    !selled.includes(arrayRow[seatIndex - 1]._id) &&
+                    !hold.includes(arrayRow[seatIndex - 1]._id)
                 ) {
                     hasGap = true;
                 }
@@ -168,7 +185,8 @@ const SelectSeat = () => {
                     arrayRow[seatIndex + 1] &&
                     arrayRow[seatIndex + 1].isDelete === false &&
                     !selectSeat.includes(arrayRow[seatIndex + 1]) &&
-                    !selled.includes(arrayRow[seatIndex + 1]._id)
+                    !selled.includes(arrayRow[seatIndex + 1]._id) &&
+                    !hold.includes(arrayRow[seatIndex + 1]._id)
                 ) {
                     hasGap = true;
                 }
@@ -177,8 +195,15 @@ const SelectSeat = () => {
             if (hasGap) {
                 showToast('Vui lòng không bỏ trống ghế bên trái hoặc bên phải của các ghế bạn đã chọn', 'warning');
             } else {
-                dispatch(seatValue(selectSeat));
-                dispatch(stepNext(4));
+                if (
+                    await testHold(
+                        idShowTime,
+                        selectSeat.map((item) => item._id),
+                    )
+                ) {
+                    dispatch(seatValue(selectSeat));
+                    dispatch(stepNext(4));
+                }
             }
         }
     };
@@ -207,7 +232,7 @@ const SelectSeat = () => {
                                                 } ${seat.type === typeSeatEnum[2] && 'couple'} ${
                                                     !seat.status && 'inaction'
                                                 } ${selectSeat.find((item) => item === seat) && 'select'}
-                                                ${selled.includes(seat._id) && 'selled'}
+                                                ${(selled.includes(seat._id) || hold.includes(seat._id)) && 'selled'}
                                                 `}
                                                 style={{
                                                     marginBottom: `${seat.bottom * 17.5}px`,
@@ -216,6 +241,7 @@ const SelectSeat = () => {
                                                 }}
                                                 onClick={() =>
                                                     !selled.includes(seat._id) &&
+                                                    !hold.includes(seat._id) &&
                                                     seat.status === true &&
                                                     (seat.type !== typeSeatEnum[2]
                                                         ? handleSelectSeat(seat)

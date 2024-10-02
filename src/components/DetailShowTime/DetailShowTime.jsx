@@ -65,9 +65,9 @@ const DetailShowTime = ({ props, theater, room, date, onAddSuccess }) => {
                                 <td className="text-center align-middle">
                                     <p
                                         className={`type-show 
-                                            ${item.status === statusShowTime[0] ? 'ing' : ''}
+                                            ${item.status === statusShowTime[0] ? 'okk' : ''}
                                             ${item.status === statusShowTime[1] ? 'early' : ''}
-                                            ${item.status === statusShowTime[2] ? 'okk' : ''}
+                                            ${item.status === statusShowTime[2] ? 'ing' : ''}
                                           `}
                                     >
                                         {item.status}

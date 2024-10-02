@@ -80,7 +80,7 @@ const SearchShowTime = ({ handleSearch }) => {
                         </CFormLabel>
                         <CCol sm={8}>
                             <CFormSelect id="room" value={room} name="room" onChange={(e) => setRoom(e.target.value)}>
-                                <option>Chọn phòng chiếu</option>
+                                <option value="">Chọn phòng chiếu</option>
                                 {rooms?.map((item) => (
                                     <option key={item._id} value={item._id}>
                                         {item.name}

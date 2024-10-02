@@ -20,6 +20,8 @@ const OffcanvasCombo = ({ show, handleClose }) => {
                 return {
                     id: item._id,
                     quantity: com ? com.quantity : 0,
+                    name: item.name,
+                    price: item.price,
                 };
             });
             setSelectCombo(array);
