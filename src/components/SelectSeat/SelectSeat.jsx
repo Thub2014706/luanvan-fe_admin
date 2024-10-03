@@ -270,6 +270,8 @@ const SelectSeat = () => {
                     <p className="my-auto ms-2">Ghế đang bảo trì</p>
                     <div className="selled seat ms-4"></div>
                     <p className="my-auto ms-2">Ghế đã mua</p>
+                    <div className="select seat ms-4"></div>
+                    <p className="my-auto ms-2">Ghế chọn</p>
                 </div>
                 <p style={{ color: 'red', position: 'absolute' }}>{war}</p>
                 <div className="float-end d-flex">

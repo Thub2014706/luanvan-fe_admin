@@ -324,7 +324,7 @@ const PaymentStaff = () => {
                                 <CCol sm={10}>
                                     <CFormInput
                                         type="number"
-                                        value={point}
+                                        value={point > 0 ? point : ''}
                                         disabled={
                                             phone === '' ||
                                             (phone !== '' && userInfo.point < 20000) ||
