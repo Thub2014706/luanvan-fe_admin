@@ -1,10 +1,7 @@
-import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Form, InputGroup, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import ComboItem from '~/components/ComboItem/ComboItem';
-import ImageBase from '~/components/ImageBase/ImageBase';
 import { addCart, stepNext } from '~/features/comboCart/comboCart';
 import { listCombo } from '~/services/ComboService';
 import { listFood } from '~/services/FoodService';
@@ -16,7 +13,7 @@ const SelectCombo = () => {
     const [selectFood, setSelectFood] = useState([]);
     const [war, setWar] = useState('');
     const dispatch = useDispatch();
-    const [select, setSelect] = useState([])
+    const [select, setSelect] = useState([]);
 
     useEffect(() => {
         const fetch = async () => {
@@ -57,14 +54,14 @@ const SelectCombo = () => {
                 (accumulator, currentValue) => accumulator + currentValue.price * currentValue.quantity,
                 0,
             );
-            setSelect(data)
+            setSelect(data);
             dispatch(addCart({ combo: data, price: sum }));
         };
         fetch();
     }, [selectCombo, selectFood, dispatch]);
 
     const handleValue = (e, index, check) => {
-        setWar('')
+        setWar('');
         let copy = check === 'combo' ? [...selectCombo] : [...selectFood];
         const updated = {
             ...copy[index],
@@ -76,7 +73,7 @@ const SelectCombo = () => {
     };
 
     const handleMinus = (index, check) => {
-        setWar('')
+        setWar('');
         let copy = check === 'combo' ? [...selectCombo] : [...selectFood];
         if (copy[index].quantity > 0) {
             const updated = {
@@ -89,7 +86,7 @@ const SelectCombo = () => {
     };
 
     const handleAdd = (index, check) => {
-        setWar('')
+        setWar('');
         let copy = check === 'combo' ? [...selectCombo] : [...selectFood];
         const updated = {
             ...copy[index],
@@ -111,6 +108,17 @@ const SelectCombo = () => {
 
     return (
         <div>
+            <Row className="mb-5">
+                <Col>
+                    <hr />
+                </Col>
+                <Col xs="auto">
+                    <h5>COMBO</h5>
+                </Col>
+                <Col>
+                    <hr />
+                </Col>
+            </Row>
             <Row>
                 {combo.map((item, index) => (
                     <Col className="mb-5" sm={6}>
@@ -123,6 +131,19 @@ const SelectCombo = () => {
                         />
                     </Col>
                 ))}
+            </Row>
+            <Row className="my-5">
+                <Col>
+                    <hr />
+                </Col>
+                <Col xs="auto">
+                    <h5>THỨC ĂN LẺ</h5>
+                </Col>
+                <Col>
+                    <hr />
+                </Col>
+            </Row>
+            <Row>
                 {food.map((item, index) => (
                     <Col className="mb-5" sm={6}>
                         <ComboItem

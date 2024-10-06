@@ -59,9 +59,11 @@ const SelectSeat = () => {
             if (!allSameType) {
                 showToast('Hãy chọn ghế cùng loại', 'warning');
             } else {
+                dispatch(seatValue(seatArray));
                 setSelectSeat(seatArray); // Cập nhật state với mảng ghế mới
             }
         } else {
+            dispatch(seatValue(selectSeat.filter((item) => item !== seat)));
             setSelectSeat(selectSeat.filter((item) => item !== seat));
         }
     };
@@ -79,13 +81,15 @@ const SelectSeat = () => {
             if (!allSameType) {
                 showToast('Hãy chọn ghế cùng loại', 'warning');
             } else {
+                dispatch(seatValue(seatArray));
                 setSelectSeat(seatArray);
             }
         } else {
+            dispatch(seatValue(selectSeat.filter((item) => item !== seat && item !== nextChair)));
             setSelectSeat(selectSeat.filter((item) => item !== seat && item !== nextChair));
         }
     };
-    console.log(selectSeat);
+    // console.log(selectSeat);
 
     const handleSubmit = async () => {
         // if ()
@@ -201,7 +205,6 @@ const SelectSeat = () => {
                         selectSeat.map((item) => item._id),
                     )
                 ) {
-                    dispatch(seatValue(selectSeat));
                     dispatch(stepNext(4));
                 }
             }

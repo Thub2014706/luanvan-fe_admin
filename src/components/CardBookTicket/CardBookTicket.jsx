@@ -8,6 +8,7 @@ import moment from 'moment';
 import { detailFilm } from '~/services/FilmService';
 import { detailCombo } from '~/services/ComboService';
 import { detailSchedule } from '~/services/ScheduleService';
+import { detailFood } from '~/services/FoodService';
 
 const CardBookTicket = () => {
     const idSchedule = useSelector((state) => state.showTime.schedule);
@@ -35,7 +36,7 @@ const CardBookTicket = () => {
                 let sum = 0;
                 await Promise.all(
                     combo.map(async (item) => {
-                        const data = await detailCombo(item.id);
+                        const data = await detailCombo(item.id) || await detailFood(item.id);
                         sum += data.price * item.quantity;
                     }),
                 );
@@ -102,7 +103,8 @@ const CardBookTicket = () => {
                             {combo.length !== 0 &&
                                 combo.map((item, index) => (
                                     <span key={index} className="fw-bold text-end" style={{ display: 'block' }}>
-                                        <Name id={item.id} detail={detailCombo} /> x {item.quantity}
+                                        {item.name} x {item.quantity}
+                                        {/* <Name id={item.id} detail={detailCombo} /> x {item.quantity} */}
                                     </span>
                                 ))}
                         </div>

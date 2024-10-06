@@ -1,10 +1,10 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import CardCombo from '~/components/CardCombo/CardCombo';
-import SelectCombo from '../SelectCombo/SelectCombo';
 import Step from '~/components/Step/Step';
 import { useSelector } from 'react-redux';
 import PayCombo from '~/components/PayCombo/PayCombo';
+import SelectCombo from '~/components/SelectCombo/SelectCombo';
 
 const OrderFoodPage = () => {
     const step = useSelector((state) => state.comboCart.step);

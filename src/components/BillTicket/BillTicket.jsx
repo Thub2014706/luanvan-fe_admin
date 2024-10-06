@@ -14,6 +14,7 @@ import moment from 'moment';
 import Barcode from 'react-barcode';
 import { detailSchedule } from '~/services/ScheduleService';
 import { Col, Row } from 'react-bootstrap';
+import { detailFood } from '~/services/FoodService';
 
 const BillTicket = ({ componentRef }) => {
     const dispatch = useDispatch();
@@ -45,7 +46,7 @@ const BillTicket = ({ componentRef }) => {
                 setFilm(data6);
                 const data7 = await Promise.all(
                     data1.combo.map(async (item) => {
-                        const data = await detailCombo(item.id);
+                        const data = (await detailCombo(item.id)) || (await detailFood(item.id));
                         return {
                             data,
                             quantity: item.quantity,
@@ -143,7 +144,7 @@ const BillTicket = ({ componentRef }) => {
                                     </>
                                 )}
                                 <p>==========================================</p>
-                                {order.usePoint && (
+                                {order.usePoint > 0 && (
                                     <>
                                         <Row className="fs-5">
                                             <Col xs={6}>
