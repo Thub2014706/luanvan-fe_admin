@@ -6,6 +6,7 @@ import {
     faMasksTheater,
     faMoneyBill1Wave,
     faMoneyCheckDollar,
+    faPrint,
     faStopwatch,
     faStore,
     faTag,
@@ -203,6 +204,12 @@ export const itemMenu = [
         name: 'Danh sách vé',
         link: '/list-order',
     },
+    {
+        index: 17,
+        icon: faPrint,
+        name: 'In vé',
+        link: '/print-ticket',
+    },
 ];
 
 export const timePrice = {
@@ -258,4 +265,9 @@ export const typePay = {
     0: 'Chờ thanh toán',
     1: 'Thanh toán thành công',
     2: 'Thanh toán không thành công',
+}
+
+export const statusTicket = {
+    0: 'Vé không hợp lệ',
+    1: 'Vé hợp lệ',
 }

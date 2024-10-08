@@ -22,6 +22,7 @@ import StaffPage from '~/pages/StaffPage/StaffPage';
 import TheaterPage from '~/pages/TheaterPage/TheaterPage';
 import TicketPricePage from '~/pages/TicketPricePage/TicketPricePage';
 import UserPage from '~/pages/UserPage/UserPage';
+import PrintTicketPage from '~/pages/PrintTicketPage/PrintTicketPage';
 
 const routes = [
     {
@@ -132,6 +133,11 @@ const routes = [
     {
         path: '/list-order',
         component: ListOrderPage,
+    },
+
+    {
+        path: '/print-ticket',
+        component: PrintTicketPage,
     },
 
     {

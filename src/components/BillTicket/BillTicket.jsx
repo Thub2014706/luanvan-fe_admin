@@ -16,9 +16,8 @@ import { detailSchedule } from '~/services/ScheduleService';
 import { Col, Row } from 'react-bootstrap';
 import { detailFood } from '~/services/FoodService';
 
-const BillTicket = ({ componentRef }) => {
+const BillTicket = ({ componentRef, idOrder }) => {
     const dispatch = useDispatch();
-    const idOrder = useSelector((state) => state.showTime.idOrder);
     const [order, setOrder] = useState(null);
     const [showTime, setShowTime] = useState(null);
     const [theater, setTheater] = useState(null);
@@ -93,13 +92,15 @@ const BillTicket = ({ componentRef }) => {
                                     {theater.district.normalize('NFD').replace(/[\u0300-\u036f]/g, '')},{' '}
                                     {theater.province.normalize('NFD').replace(/[\u0300-\u036f]/g, '')}
                                 </p>
-                                <p>
-                                    Nhan vien:{' '}
-                                    <Name
-                                        id={order.staff.normalize('NFD').replace(/[\u0300-\u036f]/g, '')}
-                                        detail={detailStaff}
-                                    />
-                                </p>
+                                {order.staff && (
+                                    <p>
+                                        Nhan vien:{' '}
+                                        <Name
+                                            id={order.staff.normalize('NFD').replace(/[\u0300-\u036f]/g, '')}
+                                            detail={detailStaff}
+                                        />
+                                    </p>
+                                )}
                                 <p>==========================================</p>
                                 <p>
                                     <span className="fw-bold fs-4 me-1">

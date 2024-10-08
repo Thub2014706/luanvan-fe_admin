@@ -61,7 +61,7 @@ const OrderTicketSuccess = () => {
                     In vé
                 </Button>
             </div>
-            <BillTicket componentRef={componentRef} />
+            <BillTicket componentRef={componentRef} idOrder={idOrder} />
         </div>
     ) : (
         <div className="d-flex flex-column align-items-center justify-content-center p-5">
