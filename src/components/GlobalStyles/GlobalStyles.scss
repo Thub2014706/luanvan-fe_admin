@@ -518,3 +518,25 @@ body {
 .element::-webkit-scrollbar-thumb {
     background-color: rgba(172, 172, 172, 0.5);
 }
+
+// .line-button {
+//     padding: 10px;
+//     cursor: pointer;
+    
+//     &.yes {
+//         border-radius: 5px 5px 0 0;
+//         border: 1px solid gray;
+//         border-bottom: none;
+//         color: #16777a;
+//     }
+
+//     &.no {
+//         border-bottom: 1px solid white;
+//     }
+// }
+
+.card-statis {
+    padding: 10px 5px;
+    border-radius: 10px;
+    background-color: white;
+}

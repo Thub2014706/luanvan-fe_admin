@@ -10,9 +10,7 @@ import NameSeat from '~/components/NameSeat/NameSeat';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchOrder from '~/components/SearchOrder/SearchOrder';
 import ShowPage from '~/components/ShowPage/ShowPage';
-import { detailCombo } from '~/services/ComboService';
 import { detailFilm } from '~/services/FilmService';
-import { detailFood } from '~/services/FoodService';
 import { allOrderTicket } from '~/services/OrderTicketService';
 import { detailRoom } from '~/services/RoomService';
 import { detailSchedule } from '~/services/ScheduleService';
@@ -125,7 +123,7 @@ const ListOrderPage = () => {
                     </thead>
                     <tbody>
                         {order.map((item, index) => (
-                            <tr key={item._id} className="text-center">
+                            <tr key={index} className="text-center">
                                 <td>{index + 1}</td>
                                 <td>{item.idOrder}</td>
                                 <td>{item.showTime && item.film.name}</td>
@@ -163,7 +161,7 @@ const ListOrderPage = () => {
                                 </td>
                                 <td>{item.member && <Name id={item.member} detail={detailUserById} />}</td>
                                 <td>
-                                    <Name id={item.staff} detail={detailStaff} />
+                                    {item.staff ? <Name id={item.staff} detail={detailStaff} /> : <span></span>}
                                 </td>
                                 <td>
                                     <FontAwesomeIcon

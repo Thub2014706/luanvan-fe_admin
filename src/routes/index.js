@@ -23,12 +23,13 @@ import TheaterPage from '~/pages/TheaterPage/TheaterPage';
 import TicketPricePage from '~/pages/TicketPricePage/TicketPricePage';
 import UserPage from '~/pages/UserPage/UserPage';
 import PrintTicketPage from '~/pages/PrintTicketPage/PrintTicketPage';
+import StatisticalPage from '~/pages/StatisticalPage/StatisticalPage';
 
 const routes = [
-    {
-        path: '/',
-        component: HomePage,
-    },
+    // {
+    //     path: '/',
+    //     component: HomePage,
+    // },
     {
         path: '/genre',
         component: GenrePage,
@@ -138,6 +139,11 @@ const routes = [
     {
         path: '/print-ticket',
         component: PrintTicketPage,
+    },
+
+    {
+        path: '/',
+        component: StatisticalPage,
     },
 
     {
