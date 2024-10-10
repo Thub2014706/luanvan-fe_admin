@@ -8,15 +8,17 @@ import { listCommentByFilm } from '~/services/CommentService';
 
 const AddFilmPage = () => {
     const { id } = useParams();
-    const [sumCom, setSumCom] = useState(0)
+    const [sumCom, setSumCom] = useState(0);
     const [step, setStep] = useState(1);
     const [comments, setComments] = useState([]);
 
     useEffect(() => {
         const fetch = async () => {
-            const data = await listCommentByFilm(id);
-            setComments(data);
-            setSumCom(data.length)
+            if (id) {
+                const data = await listCommentByFilm(id);
+                setComments(data);
+                setSumCom(data.length);
+            }
         };
         fetch();
     }, [id]);
