@@ -25,33 +25,36 @@ const BasicStatistics = () => {
 
         fetchFilms();
     }, []);
+    console.log(revenue2);
 
     return (
         <div>
             <Row>
                 <Col xs={3}>
-                    <Row className="card-statis" style={{ width: '100%' }}>
-                        <Col xs={10}>
-                            <p style={{ marginBottom: '5px' }}>DOANH THU TRONG NGÀY</p>
-                            <p className="fw-bold">{revenue1?.toLocaleString('it-IT')} VNĐ</p>
-                            <p style={{ color: '#6971e1', fontSize: '0.9rem', marginBottom: '5px' }}>
-                                {moment().format('DD-MM-YYYY')}
-                            </p>
-                        </Col>
-                        <Col xs={2}>
-                            <div
-                                className="d-flex justify-content-center align-items-center"
-                                style={{
-                                    borderRadius: '50%',
-                                    backgroundColor: '#6971e1',
-                                    width: '30px',
-                                    height: '30px',
-                                }}
-                            >
-                                <FontAwesomeIcon color="white" icon={faCoins} />
-                            </div>
-                        </Col>
-                    </Row>
+                    {revenue1 && (
+                        <Row className="card-statis" style={{ width: '100%' }}>
+                            <Col xs={10}>
+                                <p style={{ marginBottom: '5px' }}>DOANH THU TRONG NGÀY</p>
+                                <p className="fw-bold">{revenue1.toLocaleString('it-IT')} VNĐ</p>
+                                <p style={{ color: '#6971e1', fontSize: '0.9rem', marginBottom: '5px' }}>
+                                    {moment().format('DD-MM-YYYY')}
+                                </p>
+                            </Col>
+                            <Col xs={2}>
+                                <div
+                                    className="d-flex justify-content-center align-items-center"
+                                    style={{
+                                        borderRadius: '50%',
+                                        backgroundColor: '#6971e1',
+                                        width: '30px',
+                                        height: '30px',
+                                    }}
+                                >
+                                    <FontAwesomeIcon color="white" icon={faCoins} />
+                                </div>
+                            </Col>
+                        </Row>
+                    )}
                 </Col>
 
                 <Col xs={3}>
@@ -80,49 +83,59 @@ const BasicStatistics = () => {
                 </Col>
 
                 <Col xs={3}>
-                    <Row className="card-statis" style={{ width: '100%' }}>
-                        <Col xs={10}>
-                            <p style={{ marginBottom: '5px' }}>TỔNG VÉ</p>
-                            <p className="fw-bold">{revenue3}</p>
-                            <p style={{ color: '#fa524f', fontSize: '0.9rem', marginBottom: '5px' }}>aaaa</p>
-                        </Col>
-                        <Col xs={2}>
-                            <div
-                                className="d-flex justify-content-center align-items-center"
-                                style={{
-                                    borderRadius: '50%',
-                                    backgroundColor: '#fa524f',
-                                    width: '30px',
-                                    height: '30px',
-                                }}
-                            >
-                                <FontAwesomeIcon color="white" icon={faCalculator} />
-                            </div>
-                        </Col>
-                    </Row>
+                    {revenue3 && (
+                        <Row className="card-statis" style={{ width: '100%' }}>
+                            <Col xs={10}>
+                                <p style={{ marginBottom: '5px' }}>TỔNG VÉ</p>
+                                <p className="fw-bold">{revenue3.total}</p>
+                                <p style={{ color: '#fa524f', fontSize: '0.9rem', marginBottom: '5px' }}>
+                                    {moment(revenue3.startDate).format('DD-MM-YYYY')} |{' '}
+                                    {moment(revenue3.endDate).format('DD-MM-YYYY')}
+                                </p>
+                            </Col>
+                            <Col xs={2}>
+                                <div
+                                    className="d-flex justify-content-center align-items-center"
+                                    style={{
+                                        borderRadius: '50%',
+                                        backgroundColor: '#fa524f',
+                                        width: '30px',
+                                        height: '30px',
+                                    }}
+                                >
+                                    <FontAwesomeIcon color="white" icon={faCalculator} />
+                                </div>
+                            </Col>
+                        </Row>
+                    )}
                 </Col>
 
                 <Col xs={3}>
-                    <Row className="card-statis" style={{ width: '100%' }}>
-                        <Col xs={10}>
-                            <p style={{ marginBottom: '5px' }}>TỔNG DOANH THU</p>
-                            <p className="fw-bold">{revenue4?.toLocaleString('it-IT')} VNĐ</p>
-                            <p style={{ color: '#eca846', fontSize: '0.9rem', marginBottom: '5px' }}>aaaa</p>
-                        </Col>
-                        <Col xs={2}>
-                            <div
-                                className="d-flex justify-content-center align-items-center"
-                                style={{
-                                    borderRadius: '50%',
-                                    backgroundColor: '#eca846',
-                                    width: '30px',
-                                    height: '30px',
-                                }}
-                            >
-                                <FontAwesomeIcon color="white" icon={faSackDollar} />
-                            </div>
-                        </Col>
-                    </Row>
+                    {revenue4 && (
+                        <Row className="card-statis" style={{ width: '100%' }}>
+                            <Col xs={10}>
+                                <p style={{ marginBottom: '5px' }}>TỔNG DOANH THU</p>
+                                <p className="fw-bold">{revenue4.total.toLocaleString('it-IT')} VNĐ</p>
+                                <p style={{ color: '#eca846', fontSize: '0.9rem', marginBottom: '5px' }}>
+                                    {moment(revenue4.startDate).format('DD-MM-YYYY')} |{' '}
+                                    {moment(revenue4.endDate).format('DD-MM-YYYY')}
+                                </p>
+                            </Col>
+                            <Col xs={2}>
+                                <div
+                                    className="d-flex justify-content-center align-items-center"
+                                    style={{
+                                        borderRadius: '50%',
+                                        backgroundColor: '#eca846',
+                                        width: '30px',
+                                        height: '30px',
+                                    }}
+                                >
+                                    <FontAwesomeIcon color="white" icon={faSackDollar} />
+                                </div>
+                            </Col>
+                        </Row>
+                    )}
                 </Col>
             </Row>
         </div>

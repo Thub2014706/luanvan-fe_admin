@@ -271,3 +271,10 @@ export const statusTicket = {
     0: 'Vé không hợp lệ',
     1: 'Vé hợp lệ',
 }
+
+export const typeStatistical = {
+    0: '7 ngày gần nhất',
+    1: 'Tháng này',
+    2: 'Tháng trước',
+    3: 'Trong năm'
+}
