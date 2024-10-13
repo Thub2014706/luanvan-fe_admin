@@ -24,7 +24,7 @@ const ModalTheaterComboRevenue = ({show, handleClose}) => {
       <div>
             <Modal size="lg" centered show={show} onHide={handleClose}>
                 <Modal.Header>
-                    <h5>DOANH THU THEO RẠP</h5>
+                    <h5>DOANH THU BẮP NƯỚC THEO RẠP</h5>
                 </Modal.Header>
                 <Modal.Body style={{ maxHeight: '80vh', overflowY: 'auto' }}>
                     <SearchBar handleSubmit={handleSearch} />

@@ -1,6 +1,7 @@
 import {
     faBurger,
     faCalendarDays,
+    faChartColumn,
     faClapperboard,
     faFilm,
     faMasksTheater,
@@ -209,6 +210,18 @@ export const itemMenu = [
         icon: faPrint,
         name: 'In vé',
         link: '/print-ticket',
+    },
+    {
+        index: 18,
+        icon: faChartColumn,
+        name: 'Thống kê',
+        link: '/',
+    },
+    {
+        index: 19,
+        icon: faChartColumn,
+        name: 'Quảng cáo',
+        link: '/advertisement',
     },
 ];
 

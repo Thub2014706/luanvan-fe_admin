@@ -31,30 +31,28 @@ const BasicStatistics = () => {
         <div>
             <Row>
                 <Col xs={3}>
-                    {revenue1 && (
-                        <Row className="card-statis" style={{ width: '100%' }}>
-                            <Col xs={10}>
-                                <p style={{ marginBottom: '5px' }}>DOANH THU TRONG NGÀY</p>
-                                <p className="fw-bold">{revenue1.toLocaleString('it-IT')} VNĐ</p>
-                                <p style={{ color: '#6971e1', fontSize: '0.9rem', marginBottom: '5px' }}>
-                                    {moment().format('DD-MM-YYYY')}
-                                </p>
-                            </Col>
-                            <Col xs={2}>
-                                <div
-                                    className="d-flex justify-content-center align-items-center"
-                                    style={{
-                                        borderRadius: '50%',
-                                        backgroundColor: '#6971e1',
-                                        width: '30px',
-                                        height: '30px',
-                                    }}
-                                >
-                                    <FontAwesomeIcon color="white" icon={faCoins} />
-                                </div>
-                            </Col>
-                        </Row>
-                    )}
+                    <Row className="card-statis" style={{ width: '100%' }}>
+                        <Col xs={10}>
+                            <p style={{ marginBottom: '5px' }}>DOANH THU TRONG NGÀY</p>
+                            <p className="fw-bold">{revenue1?.toLocaleString('it-IT')} VNĐ</p>
+                            <p style={{ color: '#6971e1', fontSize: '0.9rem', marginBottom: '5px' }}>
+                                {moment().format('DD-MM-YYYY')}
+                            </p>
+                        </Col>
+                        <Col xs={2}>
+                            <div
+                                className="d-flex justify-content-center align-items-center"
+                                style={{
+                                    borderRadius: '50%',
+                                    backgroundColor: '#6971e1',
+                                    width: '30px',
+                                    height: '30px',
+                                }}
+                            >
+                                <FontAwesomeIcon color="white" icon={faCoins} />
+                            </div>
+                        </Col>
+                    </Row>
                 </Col>
 
                 <Col xs={3}>

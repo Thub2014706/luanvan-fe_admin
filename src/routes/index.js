@@ -24,6 +24,7 @@ import TicketPricePage from '~/pages/TicketPricePage/TicketPricePage';
 import UserPage from '~/pages/UserPage/UserPage';
 import PrintTicketPage from '~/pages/PrintTicketPage/PrintTicketPage';
 import StatisticalPage from '~/pages/StatisticalPage/StatisticalPage';
+import AdvertisementPage from '~/pages/AdvertisementPage/AdvertisementPage';
 
 const routes = [
     // {
@@ -144,6 +145,10 @@ const routes = [
     {
         path: '/',
         component: StatisticalPage,
+    },
+    {
+        path: '/advertisement',
+        component: AdvertisementPage,
     },
 
     {

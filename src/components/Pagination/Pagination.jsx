@@ -27,7 +27,7 @@ const Pagination = ({ selectNumber, length, currentPage }) => {
             <div className="text-center align-middle panigation" onClick={() => handlePre()}>
                 <FontAwesomeIcon icon={faAngleLeft} />
             </div>
-            {length <= 4 ? (
+            {length <= 7 ? (
                 array.map((item) => (
                     <div
                         key={item}
@@ -37,14 +37,11 @@ const Pagination = ({ selectNumber, length, currentPage }) => {
                         <span className="text-center align-middle">{item}</span>
                     </div>
                 ))
-            ) : currentPage <= Math.floor(length / 2) - 1 ? (
+            ) : currentPage < 5 ? (
                 <>
                     {array.map(
                         (item) =>
-                            (item === currentPage ||
-                                item === currentPage + 1 ||
-                                item === currentPage - 1 ||
-                                item === currentPage - 2) && (
+                            item <= 5 && (
                                 <div
                                     key={item}
                                     className={`text-center align-middle panigation ${
@@ -70,6 +67,39 @@ const Pagination = ({ selectNumber, length, currentPage }) => {
                         {length}
                     </div>
                 </>
+            ) : currentPage >= 5 && currentPage <= length - 4 ? (
+                <>
+                    <div
+                        key={1}
+                        className={`text-center align-middle panigation ${currentPage === 1 && 'select'}`}
+                        onClick={() => handleNumber(1)}
+                    >
+                        {1}
+                    </div>
+                    <div className={`text-center align-middle panigation`}>...</div>
+                    {array.map(
+                        (item) =>
+                            (item === currentPage - 1 || item === currentPage || item === currentPage + 1) && (
+                                <div
+                                    key={item}
+                                    className={`text-center align-middle panigation ${
+                                        currentPage === item && 'select'
+                                    }`}
+                                    onClick={() => handleNumber(item)}
+                                >
+                                    <span className="text-center align-middle">{item}</span>
+                                </div>
+                            ),
+                    )}
+                    <div className={`text-center align-middle panigation`}>...</div>
+                    <div
+                        key={length}
+                        className={`text-center align-middle panigation ${currentPage === length && 'select'}`}
+                        onClick={() => handleNumber(length)}
+                    >
+                        {length}
+                    </div>
+                </>
             ) : (
                 <>
                     <div
@@ -87,8 +117,7 @@ const Pagination = ({ selectNumber, length, currentPage }) => {
                     </div>
                     {array.map(
                         (item) =>
-                            item >= Math.floor(length / 2) &&
-                            (item === currentPage || item === currentPage + 1 || item === currentPage - 1) && (
+                            item >= length - 4 && (
                                 <div
                                     key={item}
                                     className={`text-center align-middle panigation ${
