@@ -3,18 +3,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import AddAdvertisement from '~/components/AddAdvertisement/AddAdvertisement';
+import AddEvent from '~/components/AddEvent/AddEvent';
 import ImageBase from '~/components/ImageBase/ImageBase';
 import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
 import ToggleSwitch from '~/components/ToggleSwitch/ToggleSwitch';
-import { allAdvertisement, deleteAdvertisement, statusAdvertisement } from '~/services/AdvertisementService';
+import { allEvent, deleteEvent, statusEvent } from '~/services/EventService';
 
-const AdvertisementPage = () => {
+const EventPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
-    const [advertisement, setAdvertisement] = useState([]);
+    const [event, setEvent] = useState([]);
     const [showDelete, setShowDelete] = useState(false);
     const [idDelete, setIdDelete] = useState(null);
     const [nameDelete, setNameDelete] = useState(null);
@@ -30,7 +30,7 @@ const AdvertisementPage = () => {
     };
 
     const handleStatus = async (id) => {
-        await statusAdvertisement(id, user?.accessToken);
+        await statusEvent(id, user?.accessToken);
         setAction(true);
     };
 
@@ -40,8 +40,8 @@ const AdvertisementPage = () => {
 
     useEffect(() => {
         const fetch = async () => {
-            const data = await allAdvertisement(number, numberPage);
-            setAdvertisement(data.data);
+            const data = await allEvent(number, numberPage);
+            setEvent(data.data);
             setSumPage(data.sumPage);
         };
         fetch();
@@ -60,7 +60,7 @@ const AdvertisementPage = () => {
     };
 
     const handleDelete = async () => {
-        await deleteAdvertisement(idDelete, user?.accessToken);
+        await deleteEvent(idDelete, user?.accessToken);
         handleCloseDelete();
     };
 
@@ -79,11 +79,24 @@ const AdvertisementPage = () => {
         setNumber(1);
     };
 
+    const truncateText = (text, maxLength) => {
+        if (text.length > maxLength) {
+            return text.slice(0, maxLength) + '...';
+        }
+        return text;
+    };
+
+    const convertToPlainText = (htmlContent) => {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlContent;
+        return tempDiv.textContent || tempDiv.innerText || '';
+    };
+
     return (
         <div className="p-4">
             <Row className="mb-4">
                 <Col>
-                    <h5 className="fw-bold">Quảng cáo</h5>
+                    <h5 className="fw-bold">Sự kiện</h5>
                 </Col>
                 <Col>
                     <div className="button add float-end" onClick={() => handleShowAdd(null)}>
@@ -101,23 +114,31 @@ const AdvertisementPage = () => {
                     <thead>
                         <tr className="text-center">
                             <th>STT</th>
+                            <th>Tiêu đề</th>
                             <th>Hình ảnh</th>
-                            <th>Đường dẫn</th>
+                            <th>Nội dung</th>
                             <th>Trạng thái</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {advertisement.map((item, index) => (
+                        {event.map((item, index) => (
                             <tr key={item._id}>
                                 <td className="text-center align-middle">{index + 1}</td>
+                                <td className="align-middle">{item.title}</td>
                                 <td className="text-center align-middle">
                                     <ImageBase
                                         pathImg={item.image}
-                                        style={{ width: '300px', height: '100px', objectFit: 'cover' }}
+                                        style={{ width: '80px', height: '100px', objectFit: 'cover' }}
                                     />
                                 </td>
-                                <td className="text-center align-middle">{item.link}</td>
+                                <td className="text-center align-middle" style={{ maxWidth: '400px' }}>
+                                    <p
+                                        dangerouslySetInnerHTML={{
+                                            __html: convertToPlainText(truncateText(item.content, 200)),
+                                        }}
+                                    ></p>
+                                </td>
                                 <td className="align-content-center">
                                     <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
                                 </td>
@@ -145,7 +166,7 @@ const AdvertisementPage = () => {
                 <Pagination length={sumPage} selectNumber={handleNumber} currentPage={number} />
             </Row>
 
-            <AddAdvertisement show={showAdd} handleClose={handleCloseAdd} id={idUpdate} />
+            <AddEvent show={showAdd} handleClose={handleCloseAdd} id={idUpdate} />
             {idDelete !== null && (
                 <ModalQuestion
                     text={
@@ -164,4 +185,4 @@ const AdvertisementPage = () => {
     );
 };
 
-export default AdvertisementPage;
+export default EventPage;

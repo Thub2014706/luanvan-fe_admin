@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
 
-export const allAdvertisement = async (number, show) => {
+export const allEvent = async (number, show) => {
     try {
         const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/api/advertisement/all?&number=${number}&show=${show}`,
+            `${process.env.REACT_APP_API_URL}/api/event/all?&number=${number}&show=${show}`,
         );
         return response.data;
     } catch (error) {
@@ -12,9 +12,9 @@ export const allAdvertisement = async (number, show) => {
     }
 };
 
-export const statusAdvertisement = async (id, token) => {
+export const statusEvent = async (id, token) => {
     try {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/advertisement/status/${id}`, {}, {
+        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/event/status/${id}`, {}, {
             headers: { authorization: `Bearer ${token}` },
         });
         return response.data;
@@ -23,9 +23,9 @@ export const statusAdvertisement = async (id, token) => {
     }
 };
 
-export const addAdvertisement = async (formData, token) => {
+export const addEvent = async (formData, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/advertisement/`, formData, {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/event/`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
                 authorization: `Bearer ${token}`
@@ -39,18 +39,18 @@ export const addAdvertisement = async (formData, token) => {
     }
 };
 
-export const detailAdvertisement = async (id) => {
+export const detailEvent = async (id) => {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/advertisement/detail/${id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/event/detail/${id}`);
         return response.data;
     } catch (error) {
         console.log('loi', error);
     }
 };
 
-export const updateAdvertisement = async (id, formData, token) => {
+export const updateEvent = async (id, formData, token) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/advertisement/update/${id}`, formData, {
+        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/event/update/${id}`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
                 authorization: `Bearer ${token}`
@@ -64,9 +64,9 @@ export const updateAdvertisement = async (id, formData, token) => {
     }
 };
 
-export const deleteAdvertisement = async (id, token) => {
+export const deleteEvent = async (id, token) => {
     try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/api/advertisement/delete/${id}`, {
+        await axios.delete(`${process.env.REACT_APP_API_URL}/api/event/delete/${id}`, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Xóa thành công', 'success');

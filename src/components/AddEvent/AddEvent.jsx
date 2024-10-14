@@ -11,12 +11,15 @@ import {
 } from '@coreui/react-pro';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { addAdvertisement, detailAdvertisement, updateAdvertisement } from '~/services/AdvertisementService';
+import { addEvent, detailEvent, updateEvent } from '~/services/EventService';
 import ImageBase from '../ImageBase/ImageBase';
+import ReactQuill from 'react-quill';
+import { fomarts, modules } from '~/constants';
 
-const AddAdvertisement = ({ show, handleClose, id }) => {
+const AddEvent = ({ show, handleClose, id }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
-    const [link, setLink] = useState('');
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
     const [image, setImage] = useState();
     const [imageId, setImageId] = useState();
     const [imageEncode, setImageEncode] = useState();
@@ -31,11 +34,13 @@ const AddAdvertisement = ({ show, handleClose, id }) => {
     useEffect(() => {
         const fetch = async () => {
             if (id) {
-                const data = await detailAdvertisement(id);
-                setLink(data.link);
+                const data = await detailEvent(id);
+                setTitle(data.title);
+                setContent(data.content);
                 setImageId(data.image);
             } else {
-                setLink('');
+                setTitle('');
+                setContent('');
                 setImageId();
             }
         };
@@ -45,18 +50,19 @@ const AddAdvertisement = ({ show, handleClose, id }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append('link', link);
+        formData.append('title', title);
+        formData.append('content', content);
         if (imageId) {
             formData.append('imageId', imageId);
         } else {
             formData.append('image', image);
         }
         if (id) {
-            if (await updateAdvertisement(id, formData, user?.accessToken)) {
+            if (await updateEvent(id, formData, user?.accessToken)) {
                 handleClose();
             }
         } else {
-            if (await addAdvertisement(formData, user?.accessToken)) {
+            if (await addEvent(formData, user?.accessToken)) {
                 handleClose();
             }
         }
@@ -64,13 +70,26 @@ const AddAdvertisement = ({ show, handleClose, id }) => {
 
     // console.log(link, image)
     return (
-        <CModal alignment="center" visible={show} onClose={handleClose}>
+        <CModal alignment="center" size='lg' visible={show} onClose={handleClose}>
             <CForm onSubmit={handleSubmit}>
                 <CModalHeader>
-                    <CModalTitle>{id !== null ? 'Cập nhật' : 'Thêm mới'} quảng cáo</CModalTitle>
+                    <CModalTitle>{id !== null ? 'Cập nhật' : 'Thêm mới'} sự kiện</CModalTitle>
                 </CModalHeader>
                 <CModalBody>
-                    <div>
+                    <div className="mt-3">
+                        <CFormLabel className="fw-bold">
+                            Tiêu đề <span style={{ color: 'red' }}>*</span>
+                        </CFormLabel>
+                        <CFormInput
+                            required
+                            type="text"
+                            placeholder="Tiêu đề"
+                            name="title"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                    </div>
+                    <div className="mt-3">
                         <CFormLabel className="fw-bold">
                             Hình ảnh <span style={{ color: 'red' }}>*</span>
                         </CFormLabel>
@@ -86,15 +105,15 @@ const AddAdvertisement = ({ show, handleClose, id }) => {
                     </div>
                     <div className="mt-3">
                         <CFormLabel className="fw-bold">
-                            Đường dẫn <span style={{ color: 'red' }}>*</span>
+                            Nội dung <span style={{ color: 'red' }}>*</span>
                         </CFormLabel>
-                        <CFormInput
-                            required
-                            type="text"
-                            placeholder="Đường dẫn"
-                            name="link"
-                            value={link}
-                            onChange={(e) => setLink(e.target.value)}
+                        <ReactQuill
+                            theme="snow"
+                            value={content}
+                            onChange={setContent}
+                            modules={modules}
+                            formats={fomarts}
+                            placeholder="Viết nội dung..."
                         />
                     </div>
                 </CModalBody>
@@ -111,4 +130,4 @@ const AddAdvertisement = ({ show, handleClose, id }) => {
     );
 };
 
-export default AddAdvertisement;
+export default AddEvent;

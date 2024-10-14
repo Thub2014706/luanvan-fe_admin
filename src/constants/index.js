@@ -1,5 +1,7 @@
 import {
+    faBullhorn,
     faBurger,
+    faCalendarCheck,
     faCalendarDays,
     faChartColumn,
     faClapperboard,
@@ -7,6 +9,7 @@ import {
     faMasksTheater,
     faMoneyBill1Wave,
     faMoneyCheckDollar,
+    faNewspaper,
     faPrint,
     faStopwatch,
     faStore,
@@ -219,9 +222,21 @@ export const itemMenu = [
     },
     {
         index: 19,
-        icon: faChartColumn,
+        icon: faBullhorn,
         name: 'Quảng cáo',
         link: '/advertisement',
+    },
+    {
+        index: 20,
+        icon: faCalendarCheck,
+        name: 'Sự kiện',
+        link: '/event',
+    },
+    {
+        index: 21,
+        icon: faNewspaper,
+        name: 'Tin tức',
+        link: '/news',
     },
 ];
 

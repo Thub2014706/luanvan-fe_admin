@@ -25,6 +25,8 @@ import UserPage from '~/pages/UserPage/UserPage';
 import PrintTicketPage from '~/pages/PrintTicketPage/PrintTicketPage';
 import StatisticalPage from '~/pages/StatisticalPage/StatisticalPage';
 import AdvertisementPage from '~/pages/AdvertisementPage/AdvertisementPage';
+import EventPage from '~/pages/EventPage/EventPage';
+import NewsPage from '~/pages/NewsPage/NewsPage';
 
 const routes = [
     // {
@@ -149,6 +151,14 @@ const routes = [
     {
         path: '/advertisement',
         component: AdvertisementPage,
+    },
+    {
+        path: '/event',
+        component: EventPage,
+    },
+    {
+        path: '/news',
+        component: NewsPage,
     },
 
     {
