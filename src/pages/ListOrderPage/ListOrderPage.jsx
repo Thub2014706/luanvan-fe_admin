@@ -1,23 +1,15 @@
-import { faBarcode } from '@fortawesome/free-solid-svg-icons';
+import { faInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import BarCode from '~/components/BarCode/BarCode';
-import Name from '~/components/Name/Name';
-import NameSeat from '~/components/NameSeat/NameSeat';
+import DetailOrder from '~/components/DetailOrder/DetailOrder';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchOrder from '~/components/SearchOrder/SearchOrder';
 import ShowPage from '~/components/ShowPage/ShowPage';
-import { detailFilm } from '~/services/FilmService';
-import { allOrderTicket } from '~/services/OrderTicketService';
-import { detailRoom } from '~/services/RoomService';
-import { detailSchedule } from '~/services/ScheduleService';
-import { detailShowTimeById } from '~/services/ShowTimeService';
-import { detailStaff } from '~/services/StaffService';
-import { detailTheater } from '~/services/TheaterService';
-import { detailUserById } from '~/services/UserService';
+import { allOrderTicket, exportOrderTicket } from '~/services/OrderTicketService';
 
 const ListOrderPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -29,18 +21,6 @@ const ListOrderPage = () => {
     const [theater, setTheater] = useState([]);
     const [show, setShow] = useState(false);
 
-    const handleShow = (id) => {
-        setIdShow(id);
-        setShow(true);
-    };
-
-    const handleClose = () => {
-        setIdShow(null);
-        setShow(false);
-    };
-
-    console.log(order);
-
     const handleNumber = (num) => {
         setNumber(num);
     };
@@ -48,31 +28,7 @@ const ListOrderPage = () => {
     useEffect(() => {
         const fetch = async () => {
             const data1 = await allOrderTicket(user?.data.theater ? user?.data.theater : theater, number, numberPage);
-            const detail = await Promise.all(
-                data1.data.map(async (item) => {
-                    // const comboFood = await Promise.all(
-                    //     item.combo.map(async (mini) => {
-                    //         const data = (await detailCombo(mini.id)) || (await detailFood(mini.id));
-                    //         return {
-                    //             data,
-                    //             quantity: mini.quantity,
-                    //         };
-                    //     }),
-                    // );
-                    if (item.showTime) {
-                        const showTime = await detailShowTimeById(item.showTime);
-                        const schedule = await detailSchedule(showTime.schedule);
-                        const film = await detailFilm(schedule.film);
-                        const theater = await detailTheater(showTime.theater);
-                        const room = await detailRoom(showTime.room);
-                        const timeStart = showTime.timeStart;
-                        const timeEnd = showTime.timeEnd;
-                        const date = showTime.date;
-                        return { ...item, film, theater, room, timeStart, timeEnd, date };
-                    } else return { ...item };
-                }),
-            );
-            setOrder(detail);
+            setOrder(data1.data);
             setSumPage(data1.sumPage);
         };
         fetch();
@@ -88,19 +44,41 @@ const ListOrderPage = () => {
         setNumber(1);
     };
 
+    const handlExport = async () => {
+        try {
+            await exportOrderTicket(theater);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleShowDetail = (item) => {
+        setIdShow(item)
+        setShow(true)
+    }
+
+    const handleCloseDetail = () => {
+        setIdShow(null)
+        setShow(false)
+    }
+
     return (
         <div className="p-4" style={{ overflowX: 'auto', minWidth: '100%' }}>
             <h5 className="mb-4 fw-bold">Danh sách vé</h5>
             <Row className="mt-4">
-                <SearchOrder handleSearchAll={handleSearchAll} />
+                <Col xs="auto">
+                    <SearchOrder handleSearchAll={handleSearchAll} />
+                </Col>
+                <Col>
+                    <div className="button add" style={{ width: '120px' }} onClick={handlExport}>
+                        Xuất báo cáo
+                    </div>
+                </Col>
             </Row>
             <Row className="my-3">
                 <Col xs={3}>
                     <ShowPage numberPage={numberPage} handleNumberPage={handleNumberPage} />
                 </Col>
-                {/* <Col xs={3}>
-                    <SearchBar handleSubmit={handleSearch} />
-                </Col> */}
             </Row>
             <Row className="my-3">
                 <Table responsive striped bordered hover style={{ minWidth: '1500px' }}>
@@ -114,11 +92,8 @@ const ListOrderPage = () => {
                             <th>Ghế</th>
                             <th>Suất chiếu</th>
                             <th>Combo</th>
-                            <th>Thành viên</th>
-                            <th>Nhân viên bán</th>
-                            <th>Mã vạch</th>
-                            <th>Thời gian đặt vé</th>
                             <th>Tổng tiền</th>
+                            <th>Chi tiết</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -126,14 +101,14 @@ const ListOrderPage = () => {
                             <tr key={index} className="text-center">
                                 <td>{index + 1}</td>
                                 <td>{item.idOrder}</td>
-                                <td>{item.showTime && item.film.name}</td>
-                                <td>{item.showTime && item.theater.name}</td>
-                                <td>{item.showTime && item.room.name}</td>
+                                <td>{item.showTime && item.showTime.schedule.film.name}</td>
+                                <td>{item.showTime ? item.showTime.theater.name : item.theater.name}</td>
+                                <td>{item.showTime && item.showTime.room.name}</td>
                                 <td>
-                                    {item.showTime &&
+                                    {item.seat &&
                                         item.seat.map((mini, index) => (
                                             <>
-                                                <NameSeat id={mini} />
+                                                {String.fromCharCode(64 + mini.row)}{mini.col}
                                                 {index + 1 < item.seat.length && ', '}
                                             </>
                                         ))}
@@ -142,10 +117,10 @@ const ListOrderPage = () => {
                                     {item.showTime && (
                                         <span>
                                             <span className="type-show ing">
-                                                {item.timeStart} - {item.timeEnd}
+                                                {item.showTime.timeStart} - {item.showTime.timeEnd}
                                             </span>{' '}
                                             <span className="type-show okk ms-2">
-                                                {moment(item.date).format('DD-MM-YYYY')}
+                                                {moment(item.showTime.date).format('DD-MM-YYYY')}
                                             </span>
                                         </span>
                                     )}
@@ -159,19 +134,24 @@ const ListOrderPage = () => {
                                             </span>
                                         ))}
                                 </td>
-                                <td>{item.member && <Name id={item.member} detail={detailUserById} />}</td>
-                                <td>
-                                    {item.staff ? <Name id={item.staff} detail={detailStaff} /> : <span></span>}
-                                </td>
-                                <td>
-                                    <FontAwesomeIcon
-                                        icon={faBarcode}
-                                        onClick={() => handleShow(item.idOrder)}
-                                        style={{ cursor: 'pointer' }}
-                                    />
-                                </td>
-                                <td>{moment(item.createdAt).format('HH:mm:ss DD-MM-YYYY')}</td>
                                 <td>{(item.price + (item.usePoint ? item.usePoint : 0)).toLocaleString('it-IT')}đ</td>
+                                <td className='d-flex justify-content-center'>
+                                    <div
+                                        style={{
+                                            borderRadius: '50%',
+                                            backgroundColor: 'rgb(115, 163, 212)',
+                                            width: '23px',
+                                            height: '23px',
+                                            justifyContent: 'center',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            cursor: 'pointer'
+                                        }}
+                                        onClick={() => handleShowDetail(item)}
+                                    >
+                                        <FontAwesomeIcon icon={faInfo} color='white' />
+                                    </div>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
@@ -180,7 +160,7 @@ const ListOrderPage = () => {
             <Row>
                 <Pagination length={sumPage} selectNumber={handleNumber} currentPage={number} />
             </Row>
-            {idShow !== null && <BarCode show={show} handleClose={handleClose} id={idShow} />}
+            {idShow !== null && <DetailOrder show={show} handleClose={handleCloseDetail} item={idShow} />}
         </div>
     );
 };

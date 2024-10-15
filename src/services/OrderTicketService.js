@@ -1,4 +1,5 @@
 import axios from 'axios';
+import FileSaver from 'file-saver';
 import { showToast } from '~/constants';
 
 export const addOrderTicket = async (data, token) => {
@@ -37,8 +38,26 @@ export const allOrderTicketSelled = async (showTime) => {
 
 export const allOrderTicket = async (theater, number, show) => {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/order-ticket?theater=${theater}&number=${number}&show=${show}`);
+        const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/order-ticket?theater=${theater}&number=${number}&show=${show}`,
+        );
         return response.data;
+    } catch (error) {
+        showToast(error.response.data.message, 'error');
+        console.log('loi', error);
+    }
+};
+
+export const exportOrderTicket = async (theater) => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/order-ticket/export?theater=${theater}`, {
+            responseType: 'blob',
+        });
+
+        const blob = new Blob([response.data], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+        FileSaver.saveAs(blob, 'danh_sach_ve.xlsx');
     } catch (error) {
         showToast(error.response.data.message, 'error');
         console.log('loi', error);
