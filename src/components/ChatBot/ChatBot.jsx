@@ -1,67 +1,79 @@
 import React, { useEffect, useRef, useState } from 'react';
-import socketIOClient from 'socket.io-client';
+import { useSelector } from 'react-redux';
+import socketIOClient, { io } from 'socket.io-client';
+import ChatList from '../ChatList/ChatList';
+import InputText from '../InputText/InputText';
+import { detailUserById } from '~/services/UserService';
+import ImageBase from '../ImageBase/ImageBase';
+import Avatar from 'react-avatar';
 
-const ChatBot = () => {
-    const host = "http://localhost:3001";
-    const [mess, setMess] = useState([]);
-    const [message, setMessage] = useState('');
-    const [id, setId] = useState();
-
-    const socketRef = useRef();
+const ChatBot = ({ receiver }) => {
+    const socket = io(process.env.REACT_APP_API_URL);
+    const [chats, setChats] = useState([]);
+    const [detailDeceiver, setDetailDeceiver] = useState();
 
     useEffect(() => {
-        socketRef.current = socketIOClient.connect(host);
-
-        socketRef.current.on('getId', (data) => {
-            setId(data);
-        }); // phần này đơn giản để gán id cho mỗi phiên kết nối vào page. Mục đích chính là để phân biệt đoạn nào là của mình đang chat.
-
-        socketRef.current.on('sendDataServer', (dataGot) => {
-            setMess((oldMsgs) => [...oldMsgs, dataGot.data]);
-        }); // mỗi khi có tin nhắn thì mess sẽ được render thêm
-
-        return () => {
-            socketRef.current.disconnect();
+        const fetch = async () => {
+            if (receiver) {
+                const data = await detailUserById(receiver);
+                setDetailDeceiver(data);
+            }
         };
-    }, []);
+        fetch();
+    }, [receiver]);
 
-    const sendMessage = () => {
-        if (message !== null) {
-            const msg = {
-                content: message,
-                id: id,
+    useEffect(() => {
+        if (receiver) {
+            socket.emit('join', receiver);
+
+            socket.on('chat', (listChat) => {
+                setChats(listChat);
+            });
+
+            socket.on('message', (msg) => {
+                setChats((pre) => [...pre, msg]);
+            });
+
+            return () => {
+                socket.off('chat');
+                socket.off('message');
             };
-            socketRef.current.emit('sendDataClient', msg);
+        }
+    }, [receiver]);
 
-            /*Khi emit('sendDataClient') bên phía server sẽ nhận được sự kiện có tên 'sendDataClient' và handle như câu lệnh trong file index.js
-               socket.on("sendDataClient", function(data) { // Handle khi có sự kiện tên là sendDataClient từ phía client
-                 socketIo.emit("sendDataServer", { data });// phát sự kiện  có tên sendDataServer cùng với dữ liệu tin nhắn từ phía server
-               })
-         */
-            setMessage('');
+    const addMessage = (chat) => {
+        if (chat && chat !== '') {
+            const newChat = { user: receiver, message: chat, senderType: false };
+            socket.emit('newMessage', newChat);
         }
     };
-    const renderMess = mess.map((m, index) => (
-        <div key={index} className={`${m.id === id ? 'your-message' : 'other-people'} chat-item`}>
-            {m.content}
-        </div>
-    ));
 
     return (
-        <div>
-            {/* <div class="box-chat">
-                <div class="box-chat_message">{renderMess}</div>
-    
-                <div class="send-box">
-                    <textarea
-                        value={message}
-                        //   onKeyDown={}
-                        onChange={(e) => setMessage(e.target.value)}
-                        placeholder="Nhập tin nhắn ..."
-                    />
-                    <button onClick={sendMessage}>Send</button>
-                </div>
-            </div> */}
+        <div className="chat-container">
+            <div className="header-chat">
+                <h5 className="mb-0">
+                    {detailDeceiver && (
+                        <>
+                            {detailDeceiver.avatar ? (
+                                <ImageBase
+                                    pathImg={detailDeceiver.avatar}
+                                    style={{
+                                        width: '50px',
+                                        height: '50px',
+                                        borderRadius: '50%',
+                                        objectFit: 'cover',
+                                    }}
+                                />
+                            ) : (
+                                <Avatar name={detailDeceiver.username.charAt(0)} size="50" round={true} color="gray" />
+                            )}
+                            <span className='ms-2'>{detailDeceiver.username}</span>
+                        </>
+                    )}
+                </h5>
+            </div>
+            <ChatList chats={chats} receiver={receiver} />
+            <InputText addMessage={addMessage} />
         </div>
     );
 };

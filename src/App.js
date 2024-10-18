@@ -11,7 +11,7 @@ function App() {
     // const isAuthenticated = false;
     const user = useSelector((state) => state.auth.login.currentUser);
     const idOrder = useSelector((state) => state.showTime.idOrder);
-    console.log('aaa', idOrder);
+    console.log('aaa', user);
     return (
         <Router>
             <div className="App">

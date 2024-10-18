@@ -238,6 +238,12 @@ export const itemMenu = [
         name: 'Tin tức',
         link: '/news',
     },
+    {
+        index: 22,
+        icon: faNewspaper,
+        name: 'Hỗ trợ',
+        link: '/chat',
+    },
 ];
 
 export const timePrice = {
