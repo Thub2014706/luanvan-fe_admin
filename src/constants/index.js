@@ -5,6 +5,7 @@ import {
     faCalendarDays,
     faChartColumn,
     faClapperboard,
+    faComments,
     faFilm,
     faMasksTheater,
     faMoneyBill1Wave,
@@ -240,7 +241,7 @@ export const itemMenu = [
     },
     {
         index: 22,
-        icon: faNewspaper,
+        icon: faComments,
         name: 'Hỗ trợ',
         link: '/chat',
     },

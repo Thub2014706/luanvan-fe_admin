@@ -21,19 +21,15 @@ const ChatPage = () => {
             setUsers(list);
         });
 
-        // socket.on('chat', (listChat) => {
-        //     setChats(listChat);
-        // });
-
-        // socket.on('message', (msg) => {
-        //     setChats((pre) => [...pre, msg]);
-        // });
+        socket.on('message', (msg) => {
+            socket.emit('listUser', user?.data.id);
+        });
 
         return () => {
-            socket.off('chat');
+            socket.off('userList');
             socket.off('message');
         };
-    }, []);
+    }, [user?.data.id]);
     console.log(users);
 
     return (

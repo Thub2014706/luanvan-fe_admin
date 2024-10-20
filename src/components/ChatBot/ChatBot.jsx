@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import socketIOClient, { io } from 'socket.io-client';
+import React, { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
 import ChatList from '../ChatList/ChatList';
 import InputText from '../InputText/InputText';
 import { detailUserById } from '~/services/UserService';
@@ -24,7 +23,7 @@ const ChatBot = ({ receiver }) => {
 
     useEffect(() => {
         if (receiver) {
-            socket.emit('join', receiver);
+            socket.emit('adminJoin', receiver);
 
             socket.on('chat', (listChat) => {
                 setChats(listChat);
@@ -37,6 +36,7 @@ const ChatBot = ({ receiver }) => {
             return () => {
                 socket.off('chat');
                 socket.off('message');
+                socket.emit('leave', receiver)
             };
         }
     }, [receiver]);

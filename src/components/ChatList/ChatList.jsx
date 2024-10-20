@@ -41,7 +41,7 @@ const ChatList = ({ chats, receiver }) => {
                                         <>
                                             <br />
                                             <span className="text-end mb-0 text-secondary" style={{ fontSize: '12px' }}>
-                                                {moment(item.createdAt).format('HH:ss')}
+                                                {moment(item.createdAt).format('HH:mm')}
                                             </span>
                                         </>
                                     )}
@@ -71,7 +71,7 @@ const ChatList = ({ chats, receiver }) => {
                                         <>
                                             <br />
                                             <span className="text-end mb-0 text-secondary" style={{ fontSize: '11px' }}>
-                                                {moment(item.createdAt).format('HH:ss')}
+                                                {moment(item.createdAt).format('HH:mm')}
                                             </span>
                                         </>
                                     )}
