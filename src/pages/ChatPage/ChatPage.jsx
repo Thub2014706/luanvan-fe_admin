@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import Avatar from 'react-avatar';
-import { Col, Row } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { Badge, Col, Row } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import ChatBot from '~/components/ChatBot/ChatBot';
 import ImageBase from '~/components/ImageBase/ImageBase';
+import { setSocketConnect } from '~/features/socket/socketSlide';
 
 const ChatPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
     const [users, setUsers] = useState([]);
     const [selectUser, setSelectUser] = useState();
     // const [chats, setChats] = useState([]);
-
-    const socket = io(process.env.REACT_APP_API_URL);
+    const dispatch = useDispatch()
 
     useEffect(() => {
+        const socket = io(process.env.REACT_APP_API_URL);
+        dispatch(setSocketConnect(socket))
         socket.emit('listUser', user?.data.id);
 
         socket.on('userList', (list) => {
@@ -28,6 +30,7 @@ const ChatPage = () => {
         return () => {
             socket.off('userList');
             socket.off('message');
+            socket.disconnect();
         };
     }, [user?.data.id]);
     console.log(users);
@@ -47,7 +50,7 @@ const ChatPage = () => {
                 >
                     {users.map((item) => (
                         <div
-                            className="d-flex align-items-center"
+                            className="d-flex align-items-center justify-content-between"
                             style={{
                                 cursor: 'pointer',
                                 backgroundColor: selectUser === item._id ? '#d7d7d7' : 'transparent',
@@ -55,20 +58,31 @@ const ChatPage = () => {
                             }}
                             onClick={() => setSelectUser(item._id)}
                         >
-                            {item.avatar ? (
-                                <ImageBase
-                                    pathImg={item.avatar}
-                                    style={{
-                                        width: '40px',
-                                        height: '40px',
-                                        borderRadius: '50%',
-                                        objectFit: 'cover',
-                                    }}
-                                />
-                            ) : (
-                                <Avatar name={item.username.charAt(0)} size="40" round={true} color="gray" />
-                            )}
-                            <h5 className="mb-0 ms-2">{item.username}</h5>
+                            <div className='d-flex align-items-center '>
+                                {item.avatar ? (
+                                    <ImageBase
+                                        pathImg={item.avatar}
+                                        style={{
+                                            width: '40px',
+                                            height: '40px',
+                                            borderRadius: '50%',
+                                            objectFit: 'cover',
+                                        }}
+                                    />
+                                ) : (
+                                    <Avatar name={item.username.charAt(0)} size="40" round={true} color="gray" />
+                                )}
+                                <h5 className="mb-0 ms-2">{item.username}</h5>
+                            </div>
+                            <div>
+                                <Badge
+                                    // style={{ top: 0, position: 'absolute', transform: 'translate(-50%, 0%)' }}
+                                    pill
+                                    bg="danger"
+                                >
+                                    {1}
+                                </Badge>
+                            </div>
                         </div>
                     ))}
                 </Col>
