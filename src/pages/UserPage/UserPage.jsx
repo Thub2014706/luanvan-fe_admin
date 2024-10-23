@@ -91,9 +91,10 @@ const UserPage = () => {
                             <th>E-mail</th>
                             <th>Số điện thoại</th>
                             <th>Mã QR</th>
-                            <th>Trạng thái</th>
+                            <th>Cấp độ</th>
                             <th>Điểm</th>
                             <th>Ngày tạo</th>
+                            <th>Trạng thái</th>
                             {/* <th>Thao tác</th> */}
                         </tr>
                     </thead>
@@ -127,12 +128,13 @@ const UserPage = () => {
                                         onClick={() => handleShowQr(item.qrCode)}
                                     />
                                 </td>
-                                <td className="align-content-center">
-                                    <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
-                                </td>
+                                <td className="text-center align-middle">{item.level === 1 ? 'Member' : 'VIP'}</td>
                                 <td className="text-center align-middle">{item.point}</td>
                                 <td className="text-center align-middle">
                                     {moment(item.createdAt).format('DD-MM-YYYY HH:mm:ss')}
+                                </td>
+                                <td className="align-content-center">
+                                    <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
                                 </td>
                                 {/* <td className="align-content-center">
                                     <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />

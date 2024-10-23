@@ -176,6 +176,7 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
                                     minutes={[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 59]}
                                     disabled
                                     placeholder="Kết thúc"
+                                    cleaner={false}
                                     time={timeEnd}
                                     onTimeChange={(time) => handleTimeEnd(time)}
                                 />
