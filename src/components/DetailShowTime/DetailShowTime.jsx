@@ -39,7 +39,7 @@ const DetailShowTime = ({ props, theater, room, date, onAddSuccess }) => {
             <Table bordered>
                 <thead>
                     <tr className="text-center">
-                        <th>Phim chiếu</th>
+                        <th style={{width: '490px'}}>Phim chiếu</th>
                         <th>Hình thức dịch</th>
                         <th>Thời gian chiếu</th>
                         <th>Loại suất chiếu</th>

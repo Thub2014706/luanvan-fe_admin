@@ -175,15 +175,8 @@ const PrintTicketPage = () => {
                         <Form.Control type="text" value={idOrder} onChange={(e) => setIdOrder(e.target.value)} />
                     </Form.Group>
                 </Row>
-                {order && order.test.message === statusTicket[1] && (
-                    <>
-                        <Button className="ms-2" onClick={handlePrint}>
-                            In vé
-                        </Button>
-                        {idOrder !== '' && <BillTicket componentRef={componentRef} idOrder={idOrder} />}
-                    </>
-                )}
-                <div>
+
+                <div className='d-flex'>
                     <Button
                         className="my-3"
                         onClick={() => {
@@ -192,6 +185,14 @@ const PrintTicketPage = () => {
                     >
                         {showReader ? 'Ẩn máy quét' : 'Hiển thị máy quét'}
                     </Button>
+                    {order && order.test.message === statusTicket[1] && (
+                        <>
+                            <Button className="ms-3 my-3" onClick={handlePrint}>
+                                In vé
+                            </Button>
+                            {idOrder !== '' && <BillTicket componentRef={componentRef} idOrder={idOrder} />}
+                        </>
+                    )}
                 </div>
                 {showReader && <div id="reader"></div>}
             </div>

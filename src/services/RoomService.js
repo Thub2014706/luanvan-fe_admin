@@ -27,7 +27,7 @@ export const statusRoom = async (id, token) => {
 
 export const deleteRoom = async (id, token) => {
     try {
-        await axios.patch(`${process.env.REACT_APP_API_URL}/api/room/delete/${id}`, {
+        await axios.patch(`${process.env.REACT_APP_API_URL}/api/room/delete/${id}`, {}, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Xóa thành công', 'success');

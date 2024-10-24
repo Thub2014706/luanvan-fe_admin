@@ -15,6 +15,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getDistrictsByProvinceCode, getProvinces, getWardsByDistrictCode } from 'sub-vn';
 import { addTheater, detailTheater, updateTheater } from '~/services/TheaterService';
+import ImageBase from '../ImageBase/ImageBase';
 
 const AddTheater = ({ id, show, handleClose }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -26,6 +27,9 @@ const AddTheater = ({ id, show, handleClose }) => {
     const [nameDistrict, setNameDistrict] = useState('');
     const [nameWard, setNameWard] = useState('');
     const [address, setAddress] = useState('');
+    const [image, setImage] = useState();
+    const [imageEncode, setImageEncode] = useState();
+    const [imageId, setImageId] = useState();
 
     const provinces = getProvinces();
     const districts = getDistrictsByProvinceCode(province);
@@ -48,6 +52,7 @@ const AddTheater = ({ id, show, handleClose }) => {
                 setNameProvince(data.province);
                 setNameDistrict(data.district);
                 setNameWard(data.ward);
+                setImageId(data.image);
             } else {
                 setName('');
                 setProvince('');
@@ -57,6 +62,7 @@ const AddTheater = ({ id, show, handleClose }) => {
                 setNameProvince('');
                 setNameDistrict('');
                 setNameWard('');
+                setImageId();
             }
         };
         fetch();
@@ -83,39 +89,32 @@ const AddTheater = ({ id, show, handleClose }) => {
         setNameWard(findValue.name);
     };
 
-    // console.log(nameProvince);
+    const handleImg = (e) => {
+        const newFiles = e.target.files[0];
+        setImage(newFiles);
+        setImageEncode(URL.createObjectURL(newFiles));
+        setImageId();
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('province', nameProvince);
+        formData.append('district', nameDistrict);
+        formData.append('ward', nameWard);
+        formData.append('address', address);
+        if (imageId) {
+            formData.append('imageId', imageId);
+        } else {
+            formData.append('image', image);
+        }
         if (id) {
-            if (
-                await updateTheater(
-                    id,
-                    {
-                        name,
-                        province: nameProvince,
-                        district: nameDistrict,
-                        ward: nameWard,
-                        address,
-                    },
-                    user?.accessToken,
-                )
-            ) {
+            if (await updateTheater(id, formData, user?.accessToken)) {
                 handleClose();
             }
         } else {
-            if (
-                await addTheater(
-                    {
-                        name,
-                        province: nameProvince,
-                        district: nameDistrict,
-                        ward: nameWard,
-                        address,
-                    },
-                    user?.accessToken,
-                )
-            ) {
+            if (await addTheater(formData, user?.accessToken)) {
                 handleClose();
             }
         }
@@ -129,6 +128,21 @@ const AddTheater = ({ id, show, handleClose }) => {
                 </CModalHeader>
                 <CModalBody>
                     <div>
+                        <CFormLabel className="fw-bold" htmlFor="image">
+                            Hình ảnh <span style={{ color: 'red' }}>*</span>
+                        </CFormLabel>
+                        <CFormInput
+                            id="image"
+                            name="image"
+                            accept=".jpg, .png"
+                            type="file"
+                            placeholder="Hình ảnh"
+                            onChange={(e) => handleImg(e)}
+                        />
+                        {image && <img src={imageEncode} alt="" style={{ height: '100px', marginTop: '20px' }} />}
+                        {imageId && <ImageBase pathImg={imageId} style={{ height: '100px', marginTop: '20px' }} />}
+                    </div>
+                    <div className="mt-3">
                         <CFormLabel className="fw-bold" htmlFor="name">
                             Tên <span style={{ color: 'red' }}>*</span>
                         </CFormLabel>

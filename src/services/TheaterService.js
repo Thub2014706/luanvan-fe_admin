@@ -29,9 +29,13 @@ export const statusTheater = async (id, token) => {
 
 export const deleteTheater = async (id, token) => {
     try {
-        await axios.patch(`${process.env.REACT_APP_API_URL}/api/theater/delete/${id}`, {}, {
-            headers: { authorization: `Bearer ${token}` },
-        });
+        await axios.patch(
+            `${process.env.REACT_APP_API_URL}/api/theater/delete/${id}`,
+            {},
+            {
+                headers: { authorization: `Bearer ${token}` },
+            },
+        );
         showToast('Xóa thành công', 'success');
     } catch (error) {
         showToast('Xóa không thành công', 'error');
@@ -39,10 +43,10 @@ export const deleteTheater = async (id, token) => {
     }
 };
 
-export const addTheater = async (data, token) => {
+export const addTheater = async (formData, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/theater/`, data, {
-            headers: { authorization: `Bearer ${token}` },
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/theater/`, formData, {
+            headers: { 'content-type': 'multipart/form-data', authorization: `Bearer ${token}` },
         });
         showToast('Thêm mới thành công', 'success');
         return response.data;
@@ -52,10 +56,10 @@ export const addTheater = async (data, token) => {
     }
 };
 
-export const updateTheater = async (id, data, token) => {
+export const updateTheater = async (id, formData, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/theater/update/${id}`, data, {
-            headers: { authorization: `Bearer ${token}` },
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/theater/update/${id}`, formData, {
+            headers: { 'content-type': 'multipart/form-data', authorization: `Bearer ${token}` },
         });
         showToast('Cập nhật thành công', 'success');
         return response.data;

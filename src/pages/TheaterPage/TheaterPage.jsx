@@ -5,6 +5,7 @@ import { Col, Row, Table } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import AddTheater from '~/components/AddTheater/AddTheater';
+import ImageBase from '~/components/ImageBase/ImageBase';
 import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
@@ -110,6 +111,7 @@ const TheaterPage = () => {
                     <thead>
                         <tr className="text-center">
                             <th>STT</th>
+                            <th>Hình ảnh</th>
                             <th>Tên</th>
                             <th>Địa chỉ</th>
                             <th>Trạng thái</th>
@@ -120,6 +122,9 @@ const TheaterPage = () => {
                         {theater.map((item, index) => (
                             <tr key={item._id}>
                                 <td className="text-center align-middle">{index + 1}</td>
+                                <td className="text-center align-middle">
+                                    <ImageBase pathImg={item.image} style={{ height: '60px' }} />
+                                </td>
                                 <td className="text-center align-middle">{item.name}</td>
                                 <td className="text-center align-middle">
                                     {item.address}, {item.ward}, {item.district}, {item.province}
