@@ -219,7 +219,7 @@ export const itemMenu = [
         index: 18,
         icon: faChartColumn,
         name: 'Thống kê',
-        link: '/',
+        link: '/statistical',
     },
     {
         index: 19,

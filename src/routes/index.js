@@ -30,10 +30,10 @@ import NewsPage from '~/pages/NewsPage/NewsPage';
 import ChatPage from '~/pages/ChatPage/ChatPage';
 
 const routes = [
-    // {
-    //     path: '/',
-    //     component: HomePage,
-    // },
+    {
+        path: '/',
+        component: HomePage,
+    },
     {
         path: '/genre',
         component: GenrePage,
@@ -146,7 +146,7 @@ const routes = [
     },
 
     {
-        path: '/',
+        path: '/statistical',
         component: StatisticalPage,
     },
     {

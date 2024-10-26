@@ -5,7 +5,7 @@ import MainContent from '../components/MainContent/MainContent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '~/services/UserService';
+import { logout } from '~/services/StaffService';
 
 const MainLayout = ({ children }) => {
     const dispatch = useDispatch();

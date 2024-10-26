@@ -30,10 +30,10 @@ const DiscountPage = () => {
         setNumber(num);
     };
 
-    const handleStatus = async (id) => {
-        await statusDiscount(id, user?.accessToken);
-        setAction(true);
-    };
+    // const handleStatus = async (id) => {
+    //     await statusDiscount(id, user?.accessToken);
+    //     setAction(true);
+    // };
 
     useEffect(() => {
         setAction(false);
@@ -116,7 +116,7 @@ const DiscountPage = () => {
                             <th>Số lượng</th>
                             <th>Ngày bắt đầu</th>
                             <th>Ngày kết thúc</th>
-                            <th>Trạng thái</th>
+                            {/* <th>Trạng thái</th> */}
                             <th>Thao tác</th>
                         </tr>
                     </thead>
@@ -130,9 +130,9 @@ const DiscountPage = () => {
                                 <td className="text-center align-middle">{item.quantity}</td>
                                 <td className="text-center align-middle">{moment(item.startDate).format('DD-MM-YYYY')}</td>
                                 <td className="text-center align-middle">{moment(item.endDate).format('DD-MM-YYYY')}</td>
-                                <td className="align-content-center">
+                                {/* <td className="align-content-center">
                                     <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
-                                </td>
+                                </td> */}
                                 <td className="text-center align-middle">
                                     <FontAwesomeIcon
                                         className="me-4"

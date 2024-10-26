@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
 import ToggleSwitch from '../../components/ToggleSwitch/ToggleSwitch';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faPenToSquare, faTableCells, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faCouch, faPenToSquare, faTableCells, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import ModalQuestion from '../../components/ModalQuestion/ModalQuestion';
 import { allRoom, deleteRoom, statusRoom } from '~/services/RoomService';
 import AddRoom from '../../components/AddRoom/AddRoom';
@@ -121,7 +121,7 @@ const RoomPage = () => {
                                     </td>
                                     <td className="text-center align-middle">
                                         <FontAwesomeIcon
-                                            icon={faTableCells}
+                                            icon={faCouch}
                                             className="me-4"
                                             color="rgb(164, 156, 11)"
                                             style={{ cursor: 'pointer' }}

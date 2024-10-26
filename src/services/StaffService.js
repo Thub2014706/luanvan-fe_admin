@@ -28,6 +28,7 @@ export const loginStaff = async (user, navigate, dispatch) => {
         const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/staff/signin`, user);
         dispatch(loginSuccess(response.data));
         navigate('/');
+        
     } catch (error) {
         dispatch(loginFailed);
         if (error.response) {

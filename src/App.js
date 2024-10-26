@@ -57,17 +57,18 @@ function App() {
                                         <route.component />
                                     </Fragment>
                                 ) : user ? (
-                                    // (route.path === '/book-tickets/success' && idOrder !== null) ||
-                                    user.data.role === 0 ||
+                                    (user.data.role === 0 &&
+                                        route.path !== '/book-tickets' &&
+                                        route.path !== '/order-food') ||
                                     route.path === '/' ||
                                     itemMenu.some(
                                         (item) =>
                                             (route.path.startsWith(item.link) &&
                                                 user.data.access.includes(item.name) &&
                                                 route.path !== '/book-tickets/success' &&
-                                                route.path !== '/order-combo/success') ||
+                                                route.path !== '/order-food/success') ||
                                             ((route.path === '/book-tickets/success' ||
-                                                route.path === '/order-combo/success') &&
+                                                route.path === '/order-food/success') &&
                                                 idOrder !== null),
                                     ) ? (
                                         <MainLayout>

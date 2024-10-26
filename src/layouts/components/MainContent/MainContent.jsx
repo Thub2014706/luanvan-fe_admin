@@ -4,12 +4,12 @@ import { useLocation } from 'react-router-dom';
 const MainContent = ({children}) => {
     const location = useLocation();
 
-    const isHomePage = location.pathname === '/';
+    const isStatistical = location.pathname === '/statistical';
 
     // console.log(isHomePage);
     
     return (
-        <div className={!isHomePage ? "col-main" : ''}>
+        <div className={!isStatistical ? "col-main" : ''}>
             {children}
         </div>
     );

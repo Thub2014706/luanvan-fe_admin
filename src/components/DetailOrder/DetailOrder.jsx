@@ -3,14 +3,25 @@ import React from 'react';
 import Barcode from 'react-barcode';
 import { Modal, Table } from 'react-bootstrap';
 
-const DetailOrder = ({ item, show, handleClose }) => {
+const DetailOrder = ({ item, show, handleClose, refund }) => {
     console.log(item);
 
     return (
         item && (
             <Modal size="lg" centered show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Mã vé: {item.idOrder}</Modal.Title>
+                    <Modal.Title>
+                        Mã vé: {item.idOrder}{' '}
+                        <span className="h5">
+                            (Trạng thái:{' '}
+                            {refund ? (
+                                <span style={{ color: 'red' }}>Đã hoàn trả</span>
+                            ) : (
+                                <span style={{ color: 'green' }}>Đã hoàn tất</span>
+                            )}
+                            )
+                        </span>
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="justify-content-center d-flex">
@@ -22,19 +33,42 @@ const DetailOrder = ({ item, show, handleClose }) => {
                             fontOptions="Courier New, monospace"
                         />
                     </div>
-                    {item.member && (
-                        <p>
-                            Khách hàng: <span className="fw-bold">{item.member.username}</span>
-                        </p>
-                    )}
-                    <p>
-                        Ngày đặt vé:{' '}
-                        <span className="fw-bold">{moment(item.createdAt).format('HH:mm DD-MM-YYYY')}</span>
-                    </p>
-                    <p>
-                        Hình thức đặt vé:{' '}
-                        <span className="fw-bold">{item.staff ? 'Đặt vé tại rạp' : 'Đặt vé online'}</span>
-                    </p>
+                    <Table className="my-3">
+                        <tr>
+                            {item.member && (
+                                <>
+                                    <td style={{ width: '160px' }}>Khách hàng:</td>
+                                    <td className="fw-bold">{item.member.username}</td>
+                                </>
+                            )}
+                            <td style={{ width: '160px' }}>Thời gian đặt vé:</td>
+                            <td className="fw-bold" style={{width: 'auto'}}>{moment(item.createdAt).format('HH:mm DD-MM-YYYY')}</td>
+                        </tr>
+                        <tr>
+                            {item.member && (
+                                <>
+                                    <td style={{ width: '160px' }}>Số điện thoại:</td>
+                                    <td className="fw-bold">{item.member.phone}</td>
+                                </>
+                            )}
+                            <td style={{ width: '160px' }}>Hình thức đặt vé:</td>
+                            <td className="fw-bold">{item.staff ? 'Đặt vé tại rạp' : 'Đặt vé online'}</td>
+                        </tr>
+                        <tr>
+                            {item.member && (
+                                <>
+                                    <td style={{ width: '160px' }}>Email:</td>
+                                    <td className="fw-bold">{item.member.email}</td>
+                                </>
+                            )}
+                            {item.staff && (
+                                <>
+                                    <td style={{ width: '160px' }}>Nhân viên bán vé:</td>
+                                    <td className="fw-bold">{item.staff.username}</td>
+                                </>
+                            )}
+                        </tr>
+                    </Table>
 
                     <Table bordered className="text-center">
                         <thead>
@@ -97,7 +131,7 @@ const DetailOrder = ({ item, show, handleClose }) => {
                                                 (item.discount ? item.discount.useDiscount : 0) +
                                                 item.price
                                             ).toLocaleString('it-IT')}{' '}
-                                           đ
+                                            đ
                                         </p>
                                     )}
                                     {item.usePoint > 0 && (

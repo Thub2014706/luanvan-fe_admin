@@ -1,13 +1,18 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import logo from '~/assets/images/CINETHU.png';
 import { itemMenu } from '~/constants';
 
 const Menu = () => {
-    const [select, setSelect] = useState(0);
+    const location = useLocation();
+    const [select, setSelect] = useState(location.pathname);
     const user = useSelector((state) => state.auth.login.currentUser);
+
+    useEffect(() => {
+        setSelect(location.pathname); 
+    }, [location.pathname]);
 
     return (
         <div className="col-menu mt-3" style={{ height: '94vh' }}>
@@ -15,14 +20,17 @@ const Menu = () => {
                 <img src={logo} className="mx-auto d-block" alt="" style={{ height: '40px' }} />
                 <hr style={{ width: '80%' }} className="mx-auto" />
             </div>
-            <div className='element' style={{ height: '85%', overflowX: 'hidden', overflowY: 'auto' }}>
+            <div className="element" style={{ height: '85%', overflowX: 'hidden', overflowY: 'auto' }}>
                 {itemMenu.map(
                     (item, index) =>
-                        (user.data.access.includes(item.name) || user.data.role === 0) && (
+                        (user.data.access.includes(item.name) ||
+                            (user.data.role === 0 && item.link !== '/book-tickets' && item.link !== '/order-food')) && (
                             <Link key={index} to={item.link} className="text-decoration-none">
                                 <div
-                                    className={`mx-2 align-items-center item-menu ${select === item.index && 'select'}`}
-                                    onClick={() => setSelect(item.index)}
+                                    className={`mx-2 align-items-center item-menu ${
+                                        select && select.startsWith(item.link) && 'select'
+                                    }`}
+                                    onClick={() => setSelect(item.link)}
                                 >
                                     <FontAwesomeIcon className="mb-0 ms-4" icon={item.icon} />
                                     <p className="my-auto ms-3">{item.name}</p>

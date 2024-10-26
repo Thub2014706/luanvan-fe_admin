@@ -57,7 +57,7 @@ export const exportOrderTicket = async (theater) => {
         const blob = new Blob([response.data], {
             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         });
-        FileSaver.saveAs(blob, 'danh_sach_ve.xlsx');
+        FileSaver.saveAs(blob, 'danh_sach_ve_da_hoan_tat.xlsx');
     } catch (error) {
         showToast(error.response.data.message, 'error');
         console.log('loi', error);

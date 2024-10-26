@@ -1,15 +1,19 @@
-import React from 'react'
-import Chair from '~/components/Chair/Chair'
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { itemMenu } from '~/constants';
 
 const HomePage = () => {
-  const value = ''
-  return (
-    <div>
-      {/* <Chair /> */}
-      <p dangerouslySetInnerHTML={{__html: value}}></p>
-    </div>
-  )
-}
+    const user = useSelector((state) => state.auth.login.currentUser);
+    const navigate = useNavigate();
 
-export default HomePage
+    useEffect(() => {
+        if (user.data.role === 0 || user.data.access.includes(itemMenu[17].name)) {
+            navigate('/statistical');
+        }
+    });
 
+    return <div>{/* <Chair /> */}</div>;
+};
+
+export default HomePage;

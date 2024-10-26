@@ -12,26 +12,30 @@ export const allCombo = async (search, number, show) => {
     }
 };
 
-export const statusCombo = async (id, token) => {
+// export const statusCombo = async (id, token) => {
+//     try {
+//         const response = await axios.patch(
+//             `${process.env.REACT_APP_API_URL}/api/combo/status/${id}`,
+//             {},
+//             {
+//                 headers: { authorization: `Bearer ${token}` },
+//             },
+//         );
+//         return response.data;
+//     } catch (error) {
+//         console.log('loi', error);
+//     }
+// };
+
+export const deleteCombo = async (id, token) => {
     try {
-        const response = await axios.patch(
-            `${process.env.REACT_APP_API_URL}/api/combo/status/${id}`,
+        await axios.patch(
+            `${process.env.REACT_APP_API_URL}/api/combo/${id}`,
             {},
             {
                 headers: { authorization: `Bearer ${token}` },
             },
         );
-        return response.data;
-    } catch (error) {
-        console.log('loi', error);
-    }
-};
-
-export const deleteCombo = async (id, token) => {
-    try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/api/combo/${id}`, {
-            headers: { authorization: `Bearer ${token}` },
-        });
         showToast('Xóa thành công', 'success');
     } catch (error) {
         showToast('Xóa không thành công', 'error');

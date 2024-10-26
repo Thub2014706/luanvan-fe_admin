@@ -173,7 +173,15 @@ const ChatPage = () => {
                         </div>
                     ))}
                 </Col>
-                <Col xs={9} style={{ height: '78vh', border: '1px solid #d7d7d7', borderTop: 'none' }}>
+                <Col
+                    xs={9}
+                    style={{
+                        height: '78vh',
+                        border: '1px solid #d7d7d7',
+                        borderTop: 'none',
+                        backgroundColor: '#eef0f1',
+                    }}
+                >
                     <div style={{ height: '100%' }}>
                         {/* <div style={{ height: '100%', width: '1px', backgroundColor: 'gray' }}></div> */}
                         {selectUser ? (

@@ -22,39 +22,6 @@ export const refreshToken = async () => {
     }
 };
 
-export const login = async (user, navigate, dispatch) => {
-    dispatch(loginStart());
-    try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/signin`, user);
-        dispatch(loginSuccess(response.data));
-        navigate('/');
-    } catch (error) {
-        dispatch(loginFailed);
-        if (error.response) {
-            showToast(error.response.data.message, 'error');
-        } else {
-            console.log(error);
-            alert('Lỗi mạng');
-        }
-    }
-};
-
-export const logout = async (dispatch, token) => {
-    dispatch(logoutStart());
-    try {
-        await axiosJWT.post(
-            `${process.env.REACT_APP_API_URL}/api/user/logout`,
-            {},
-            {
-                headers: { authorization: `Bearer ${token}` },
-            },
-        );
-        dispatch(logoutSuccess());
-    } catch (error) {
-        dispatch(logoutFailed());
-    }
-};
-
 export const allUser = async (search, number, show) => {
     try {
         const response = await axios.get(
