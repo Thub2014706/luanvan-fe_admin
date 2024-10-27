@@ -1,4 +1,4 @@
-import { faInfo } from '@fortawesome/free-solid-svg-icons';
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
@@ -9,7 +9,7 @@ import { allOrderTicket, exportOrderTicket } from '~/services/OrderTicketService
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 
-const CompletedTicket = ({theater, number, setNumber}) => {
+const CompletedTicket = ({ theater, number, setNumber }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
     const [order, setOrder] = useState([]);
     const [sumPage, setSumPage] = useState(0);
@@ -121,22 +121,14 @@ const CompletedTicket = ({theater, number, setNumber}) => {
                                         ))}
                                 </td>
                                 <td>{(item.price + (item.usePoint ? item.usePoint : 0)).toLocaleString('it-IT')}đ</td>
-                                <td className="d-flex justify-content-center">
-                                    <div
-                                        style={{
-                                            borderRadius: '50%',
-                                            backgroundColor: 'rgb(115, 163, 212)',
-                                            width: '23px',
-                                            height: '23px',
-                                            justifyContent: 'center',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            cursor: 'pointer',
-                                        }}
+                                <td className="text-center align-middle">
+                                    <FontAwesomeIcon
                                         onClick={() => handleShowDetail(item)}
-                                    >
-                                        <FontAwesomeIcon icon={faInfo} color="white" />
-                                    </div>
+                                        icon={faCircleInfo}
+                                        color="rgb(115, 163, 212)"
+                                        style={{ cursor: 'pointer' }}
+                                        size='lg'
+                                    />
                                 </td>
                             </tr>
                         ))}

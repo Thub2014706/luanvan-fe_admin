@@ -28,6 +28,7 @@ import AdvertisementPage from '~/pages/AdvertisementPage/AdvertisementPage';
 import EventPage from '~/pages/EventPage/EventPage';
 import NewsPage from '~/pages/NewsPage/NewsPage';
 import ChatPage from '~/pages/ChatPage/ChatPage';
+import InformationPage from '~/pages/InformationPage/InformationPage';
 
 const routes = [
     {
@@ -164,6 +165,10 @@ const routes = [
     {
         path: '/chat',
         component: ChatPage,
+    },
+    {
+        path: '/information',
+        component: InformationPage,
     },
 
     {

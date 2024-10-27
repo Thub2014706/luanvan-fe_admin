@@ -3,13 +3,13 @@ import { Col, Row, Table } from 'react-bootstrap';
 import ShowPage from '../ShowPage/ShowPage';
 import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfo } from '@fortawesome/free-solid-svg-icons';
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import Pagination from '../Pagination/Pagination';
 import DetailOrder from '../DetailOrder/DetailOrder';
 import { useSelector } from 'react-redux';
 import { allOrderTicketRefund, exportTicketRefund } from '~/services/TicketRefundService';
 
-const RefundedTicket = ({theater, number, setNumber}) => {
+const RefundedTicket = ({ theater, number, setNumber }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
     const [order, setOrder] = useState([]);
     const [sumPage, setSumPage] = useState(0);
@@ -23,7 +23,11 @@ const RefundedTicket = ({theater, number, setNumber}) => {
 
     useEffect(() => {
         const fetch = async () => {
-            const data1 = await allOrderTicketRefund(user?.data.theater ? user?.data.theater : theater, number, numberPage);
+            const data1 = await allOrderTicketRefund(
+                user?.data.theater ? user?.data.theater : theater,
+                number,
+                numberPage,
+            );
             setOrder(data1.data);
             setSumPage(data1.sumPage);
         };
@@ -54,7 +58,6 @@ const RefundedTicket = ({theater, number, setNumber}) => {
     };
 
     console.log(order);
-    
 
     return (
         <div>
@@ -123,23 +126,20 @@ const RefundedTicket = ({theater, number, setNumber}) => {
                                             </span>
                                         ))}
                                 </td>
-                                <td>{(item.order.price + (item.order.usePoint ? item.order.usePoint : 0)).toLocaleString('it-IT')}đ</td>
-                                <td className="d-flex justify-content-center">
-                                    <div
-                                        style={{
-                                            borderRadius: '50%',
-                                            backgroundColor: 'rgb(115, 163, 212)',
-                                            width: '23px',
-                                            height: '23px',
-                                            justifyContent: 'center',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            cursor: 'pointer',
-                                        }}
+                                <td>
+                                    {(
+                                        item.order.price + (item.order.usePoint ? item.order.usePoint : 0)
+                                    ).toLocaleString('it-IT')}
+                                    đ
+                                </td>
+                                <td className="text-center align-middle">
+                                    <FontAwesomeIcon
                                         onClick={() => handleShowDetail(item.order)}
-                                    >
-                                        <FontAwesomeIcon icon={faInfo} color="white" />
-                                    </div>
+                                        icon={faCircleInfo}
+                                        color="rgb(115, 163, 212)"
+                                        style={{ cursor: 'pointer' }}
+                                        size="lg"
+                                    />
                                 </td>
                             </tr>
                         ))}

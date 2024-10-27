@@ -4,6 +4,7 @@ import {
     faCalendarCheck,
     faCalendarDays,
     faChartColumn,
+    faCircleInfo,
     faClapperboard,
     faComments,
     faFilm,
@@ -244,6 +245,12 @@ export const itemMenu = [
         icon: faComments,
         name: 'Hỗ trợ',
         link: '/chat',
+    },
+    {
+        index: 23,
+        icon: faCircleInfo,
+        name: 'Thông tin',
+        link: '/information',
     },
 ];
 

@@ -1,17 +1,31 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { authRoutes, routes } from './routes';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import MainLayout from './layouts/MainLayout/MainLayout';
 import { ToastContainer } from 'react-toastify';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { itemMenu } from './constants';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
+import { detailInfomation } from './services/InformationService';
 
 function App() {
     // const isAuthenticated = false;
     const user = useSelector((state) => state.auth.login.currentUser);
     const idOrder = useSelector((state) => state.showTime.idOrder);
     console.log('aaa', user);
+    // const [info, setInfo] = useState()
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        const fetch = async () => {
+            const data = await detailInfomation(dispatch);
+            // if (data) {
+            //     setInfo(data);
+            // }
+        };
+        fetch();
+    }, [dispatch]);
+
     return (
         <Router>
             <div className="App">

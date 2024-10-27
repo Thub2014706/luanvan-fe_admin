@@ -113,7 +113,7 @@ const AddFood = ({ id, show, handleClose }) => {
                             className="mb-3"
                         />
                         {image && <img src={imageEncode} style={{ height: '100px', marginTop: '20px' }} alt="" />}
-                        {imageId && <ImageBase pathImg={imageId} style={{ height: '100px', marginTop: '5px' }} />}
+                        {imageId && <ImageBase pathImg={imageId} style={{ height: '100px', marginTop: '20px' }} />}
                     </div>
                 </CModalBody>
                 <CModalFooter>
