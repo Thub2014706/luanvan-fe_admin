@@ -48,7 +48,7 @@ const AddRoom = ({ show, handleClose, id, idTheater }) => {
                 <Modal.Header>
                     <Modal.Title>{id !== null ? 'Cập nhật' : 'Thêm mới'}</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                     <Form.Group>
                         <Form.Label className="fw-bold">
                             Tên phòng chiếu <span style={{ color: 'red' }}>*</span>

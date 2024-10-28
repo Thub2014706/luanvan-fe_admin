@@ -67,7 +67,7 @@ const AddStaff = ({ show, handleClose }) => {
                 <CModalHeader>
                     <CModalTitle>Thêm mới</CModalTitle>
                 </CModalHeader>
-                <CModalBody>
+                <CModalBody style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                     <div>
                         <CFormLabel className="fw-bold">
                             Tên nhân viên <span style={{ color: 'red' }}>*</span>

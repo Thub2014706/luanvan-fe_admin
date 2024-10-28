@@ -29,6 +29,7 @@ import EventPage from '~/pages/EventPage/EventPage';
 import NewsPage from '~/pages/NewsPage/NewsPage';
 import ChatPage from '~/pages/ChatPage/ChatPage';
 import InformationPage from '~/pages/InformationPage/InformationPage';
+import ScanTicketPage from '~/pages/ScanTicketPage/ScanTicketPage';
 
 const routes = [
     {
@@ -169,6 +170,10 @@ const routes = [
     {
         path: '/information',
         component: InformationPage,
+    },
+    {
+        path: '/scan-ticket',
+        component: ScanTicketPage,
     },
 
     {

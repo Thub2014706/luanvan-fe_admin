@@ -75,7 +75,7 @@ const AddEvent = ({ show, handleClose, id }) => {
                 <CModalHeader>
                     <CModalTitle>{id !== null ? 'Cập nhật' : 'Thêm mới'} sự kiện</CModalTitle>
                 </CModalHeader>
-                <CModalBody>
+                <CModalBody style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                     <div className="mt-3">
                         <CFormLabel className="fw-bold">
                             Tiêu đề <span style={{ color: 'red' }}>*</span>

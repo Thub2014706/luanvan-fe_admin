@@ -50,7 +50,7 @@ const AllAccess = ({ show, handleClose, id }) => {
                 <Modal.Header>
                     <Modal.Title>Thêm quyền truy cập nhân viên</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                     {itemMenu.map((item) => (
                         <CFormCheck
                             label={item.name}

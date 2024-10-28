@@ -49,7 +49,7 @@ const AddSchedule = ({ show, handleClose, id }) => {
                 <Modal.Header>
                     <Modal.Title>{id !== null ? 'Cập nhật' : 'Thêm mới'}</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                     <div>
                         <CFormLabel className="fw-bold" htmlFor="film">
                             Phim chiếu <span style={{ color: 'red' }}>*</span>

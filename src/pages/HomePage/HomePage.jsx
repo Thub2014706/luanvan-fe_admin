@@ -8,7 +8,7 @@ const HomePage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (user.data.role === 0 || user.data.access.includes(itemMenu[17].name)) {
+        if (user.data.role === 0 || user.data.access.includes(itemMenu[1].name)) {
             navigate('/statistical');
         }
     });

@@ -47,6 +47,7 @@ const AddFood = ({ id, show, handleClose }) => {
     }, [id]);
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
         const formData = new FormData();
         formData.append('name', name);
         formData.append('price', price);
@@ -72,7 +73,7 @@ const AddFood = ({ id, show, handleClose }) => {
                 <CModalHeader>
                     <CModalTitle>{id !== null ? 'Cập nhật' : 'Thêm mới'} thức ăn</CModalTitle>
                 </CModalHeader>
-                <CModalBody>
+                <CModalBody style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                     <div>
                         <CFormLabel className="fw-bold" htmlFor="name">
                             Tên <span style={{ color: 'red' }}>*</span>

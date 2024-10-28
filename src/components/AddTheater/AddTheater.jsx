@@ -126,7 +126,7 @@ const AddTheater = ({ id, show, handleClose }) => {
                 <CModalHeader>
                     <CModalTitle>{id !== null ? 'Cập nhật' : 'Thêm mới'} rạp phim</CModalTitle>
                 </CModalHeader>
-                <CModalBody>
+                <CModalBody style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                     <div>
                         <CFormLabel className="fw-bold" htmlFor="image">
                             Hình ảnh <span style={{ color: 'red' }}>*</span>

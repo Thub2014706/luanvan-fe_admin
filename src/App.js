@@ -13,15 +13,11 @@ function App() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const idOrder = useSelector((state) => state.showTime.idOrder);
     console.log('aaa', user);
-    // const [info, setInfo] = useState()
     const dispatch = useDispatch()
 
     useEffect(() => {
         const fetch = async () => {
-            const data = await detailInfomation(dispatch);
-            // if (data) {
-            //     setInfo(data);
-            // }
+            await detailInfomation(dispatch);
         };
         fetch();
     }, [dispatch]);

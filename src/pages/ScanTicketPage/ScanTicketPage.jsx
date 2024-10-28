@@ -3,24 +3,24 @@ import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { useReactToPrint } from 'react-to-print';
-import BillTicket from '~/components/BillTicket/BillTicket';
 import { statusTicket } from '~/constants';
 import { detailFilmBySchedule } from '~/services/FilmService';
+import { detailOrderCombo } from '~/services/OrderComboService';
 import { detailOrderTicket } from '~/services/OrderTicketService';
-import { addPrintTicket, testPrintTicket } from '~/services/PrintTicketService';
 import { detailRoom } from '~/services/RoomService';
+import { addScanTicket, testScanTicket } from '~/services/ScanTicketService';
 import { detailSeat } from '~/services/SeatService';
 import { detailShowTimeById } from '~/services/ShowTimeService';
 import { detailTheater } from '~/services/TheaterService';
 
-const PrintTicketPage = () => {
+const ScanTicketPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
     const componentRef = useRef();
 
     const [showReader, setShowReader] = useState(false);
     const [idOrder, setIdOrder] = useState('');
-    const [order, setOrder] = useState();
+    const [orderTicket, setOrderTicket] = useState();
+    const [orderCombo, setOrderCombo] = useState();
 
     useEffect(() => {
         if (showReader) {
@@ -47,37 +47,47 @@ const PrintTicketPage = () => {
     useEffect(() => {
         const fetch = async () => {
             if (idOrder !== '') {
-                const data = await detailOrderTicket(idOrder);
-                if (data) {
-                    const showTime = await detailShowTimeById(data.showTime);
+                const data1 = await detailOrderTicket(idOrder);
+                const data2 = await detailOrderCombo(idOrder);
+                if (data1) {
+                    const showTime = await detailShowTimeById(data1.showTime);
                     const film = await detailFilmBySchedule(showTime.schedule);
                     const theater = await detailTheater(showTime.theater);
                     const room = await detailRoom(showTime.room);
-                    const seats = await Promise.all(data.seat.map(async (item) => await detailSeat(item)));
-                    const test = await testPrintTicket(data._id, user?.accessToken);
+                    const seats = await Promise.all(data1.seat.map(async (item) => await detailSeat(item)));
+                    const test = await testScanTicket(data1._id, user?.accessToken);
                     if (test.message === statusTicket[1]) {
-                        await addPrintTicket({ order: data._id }, user?.accessToken);
+                        await addScanTicket({ order: data1._id, type: 'OrderTicket' }, user?.accessToken);
                     }
-                    // console.log(test);
-                    setOrder({ data, showTime, film, theater, room, seats, test });
+                    setOrderTicket({ data: data1, showTime, film, theater, room, seats, test });
+                } else if (data2) {
+                    const theater = await detailTheater(data2.theater);
+                    const test = await testScanTicket(data2._id, user?.accessToken);
+                    if (test.message === statusTicket[1]) {
+                        await addScanTicket({ order: data2._id, type: 'OrderCombo' }, user?.accessToken);
+                    }
+                    setOrderCombo({ data: data2, theater, test });
                 } else {
-                    setOrder();
+                    setOrderTicket();
+                    setOrderCombo();
                 }
             } else {
-                setOrder();
+                setOrderTicket();
+                setOrderCombo();
             }
         };
         fetch();
     }, [idOrder, user]);
+    console.log(orderCombo);
 
-    const handlePrint = useReactToPrint({
-        content: () => componentRef.current,
-    });
+    // const handlePrint = useReactToPrint({
+    //     content: () => componentRef.current,
+    // });
 
     return (
         <div className="p-4">
             <Row className="mb-4">
-                <h5 className="fw-bold">In vé</h5>
+                <h5 className="fw-bold">Quét vé</h5>
             </Row>
             <div>
                 <Row>
@@ -87,7 +97,7 @@ const PrintTicketPage = () => {
                             <Form.Control
                                 disabled
                                 type="text"
-                                value={order ? order.film.name : ''}
+                                value={orderTicket ? orderTicket.film.name : ''}
                                 onChange={(e) => setIdOrder(e.target.value)}
                                 placeholder="Phim"
                             />
@@ -99,7 +109,9 @@ const PrintTicketPage = () => {
                             <Form.Control
                                 disabled
                                 type="text"
-                                value={order ? order.theater.name : ''}
+                                value={`${orderTicket ? orderTicket.theater.name : ''}${
+                                    orderCombo ? orderCombo.theater.name : ''
+                                }`}
                                 onChange={(e) => setIdOrder(e.target.value)}
                                 placeholder="Rạp"
                             />
@@ -111,7 +123,7 @@ const PrintTicketPage = () => {
                             <Form.Control
                                 disabled
                                 type="text"
-                                value={order ? order.room.name : ''}
+                                value={orderTicket ? `${orderTicket.room.name} [${orderTicket.room.type}]` : ''}
                                 onChange={(e) => setIdOrder(e.target.value)}
                                 placeholder="Phòng"
                             />
@@ -126,8 +138,8 @@ const PrintTicketPage = () => {
                                 disabled
                                 type="text"
                                 value={
-                                    order
-                                        ? order.seats
+                                    orderTicket
+                                        ? orderTicket.seats
                                               .map((item) => `${String.fromCharCode(64 + item.row)}${item.col}`)
                                               .join(', ')
                                         : ''
@@ -144,10 +156,10 @@ const PrintTicketPage = () => {
                                 disabled
                                 type="text"
                                 value={
-                                    order
-                                        ? `${moment(order.showTime.date).format('DD-MM-YYYY')} | ${
-                                              order.showTime.timeStart
-                                          } - ${order.showTime.timeEnd}`
+                                    orderTicket
+                                        ? `${moment(orderTicket.showTime.date).format('DD-MM-YYYY')} | ${
+                                              orderTicket.showTime.timeStart
+                                          } - ${orderTicket.showTime.timeEnd}`
                                         : ''
                                 }
                                 onChange={(e) => setIdOrder(e.target.value)}
@@ -161,10 +173,18 @@ const PrintTicketPage = () => {
                             <Form.Control
                                 disabled
                                 type="text"
-                                value={order ? order.test.message : ''}
+                                value={`${orderTicket ? orderTicket.test.message : ''}${
+                                    orderCombo ? orderCombo.test.message : ''
+                                }`}
                                 onChange={(e) => setIdOrder(e.target.value)}
                                 placeholder="Trạng thái"
-                                style={{ color: order && order.test.message === statusTicket[0] ? 'red' : 'green' }}
+                                style={{
+                                    color:
+                                        (orderTicket && orderTicket.test.message === statusTicket[0]) ||
+                                        (orderCombo && orderCombo.test.message === statusTicket[0])
+                                            ? 'red'
+                                            : 'green',
+                                }}
                             />
                         </Form.Group>
                     </Col>
@@ -175,11 +195,15 @@ const PrintTicketPage = () => {
                         <Form.Control
                             disabled
                             type="text"
-                            value={
-                                order && order.data.combo.length > 0
-                                    ? order.data.combo.map((item) => `${item.quantity} ${item.name}`)
+                            value={`${
+                                orderTicket && orderTicket.data.combo.length > 0
+                                    ? orderTicket.data.combo.map((item) => `${item.quantity} ${item.name}`)
                                     : ''
-                            }
+                            }${
+                                orderCombo && orderCombo.data.combo.length > 0
+                                    ? orderCombo.data.combo.map((item) => `${item.quantity} ${item.name}`)
+                                    : ''
+                            }`}
                             onChange={(e) => setIdOrder(e.target.value)}
                             placeholder="Combo"
                         />
@@ -201,14 +225,14 @@ const PrintTicketPage = () => {
                     >
                         {showReader ? 'Ẩn máy quét' : 'Hiển thị máy quét'}
                     </Button>
-                    {order && order.test.message === statusTicket[1] && (
+                    {/* {order && order.test.message === statusTicket[1] && (
                         <>
                             <Button className="ms-3 my-3" onClick={handlePrint}>
                                 In vé
                             </Button>
                             {idOrder !== '' && <BillTicket componentRef={componentRef} idOrder={idOrder} />}
                         </>
-                    )}
+                    )} */}
                 </div>
                 {showReader && <div id="reader"></div>}
             </div>
@@ -216,4 +240,4 @@ const PrintTicketPage = () => {
     );
 };
 
-export default PrintTicketPage;
+export default ScanTicketPage;

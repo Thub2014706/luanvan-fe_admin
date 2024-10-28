@@ -129,7 +129,7 @@ const AddCombo = ({ id, show, handleClose }) => {
                 <CModalHeader>
                     <CModalTitle>{id !== null ? 'Cập nhật' : 'Thêm mới'} combo</CModalTitle>
                 </CModalHeader>
-                <CModalBody>
+                <CModalBody style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                     <div>
                         <CFormLabel className="fw-bold">
                             Tên <span style={{ color: 'red' }}>*</span>

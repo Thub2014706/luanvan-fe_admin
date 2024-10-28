@@ -47,7 +47,7 @@ const AddGenre = ({ show, handleClose, id }) => {
                 <CModalHeader>
                     <CModalTitle>{id !== null ? 'Cập nhật' : 'Thêm mới'} thể loại phim</CModalTitle>
                 </CModalHeader>
-                <CModalBody>
+                <CModalBody style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                     <CFormLabel className="fw-bold">
                         Tên thể loại <span style={{ color: 'red' }}>*</span>
                     </CFormLabel>

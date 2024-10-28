@@ -91,7 +91,7 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
                         </h4>
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                     <div>
                         <CFormLabel className="fw-bold">
                             Phim chiếu <span style={{ color: 'red' }}>*</span>

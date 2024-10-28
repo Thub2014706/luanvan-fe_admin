@@ -81,7 +81,7 @@ const AddPerformer = ({ id, show, handleClose }) => {
                 <CModalHeader>
                     <CModalTitle>{id !== null ? 'Cập nhật' : 'Thêm mới'} thể loại phim</CModalTitle>
                 </CModalHeader>
-                <CModalBody>
+                <CModalBody style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                     <CRow>
                         <CCol>
                             <CFormLabel className="fw-bold" htmlFor="avatar">

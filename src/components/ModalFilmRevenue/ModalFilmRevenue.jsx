@@ -25,7 +25,7 @@ const ModalFilmRevenue = ({ show, handleClose }) => {
             <Modal.Header>
                 <h5>DOANH THU THEO PHIM</h5>
             </Modal.Header>
-            <Modal.Body style={{ maxHeight: '80vh', overflowY: 'auto' }}>
+            <Modal.Body style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                 <SearchBar handleSubmit={handleSearch} />
                 <Table className="mt-5">
                     <thead>
