@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
 import { setInformation } from '~/features/information/informationSlide';
+import { axiosJWT } from './StaffService';
 
 export const addInfomation = async (formData, token, dispatch) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/information`, formData, {
+        const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/information`, formData, {
             headers: { 'content-type': 'multipart/form-data', authorization: `Bearer ${token}` },
         });
         showToast('Cập nhật thành công', 'success');

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
+import { axiosJWT } from './StaffService';
 
 export const allDirector = async (search, number, show) => {
     try {
@@ -14,7 +15,7 @@ export const allDirector = async (search, number, show) => {
 
 export const addDirector = async (formData, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/director/`, formData, {
+        const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/director/`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
                 authorization: `Bearer ${token}`,
@@ -39,7 +40,7 @@ export const detailDirector = async (id) => {
 
 export const updateDirector = async (id, formData, token) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/director/${id}`, formData, {
+        const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/director/${id}`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
                 authorization: `Bearer ${token}`,
@@ -55,7 +56,7 @@ export const updateDirector = async (id, formData, token) => {
 
 export const deleteDirector = async (id, token) => {
     try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/api/director/${id}`, {
+        await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/api/director/${id}`, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Xóa thành công', 'success');

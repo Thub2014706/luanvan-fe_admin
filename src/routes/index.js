@@ -30,6 +30,7 @@ import NewsPage from '~/pages/NewsPage/NewsPage';
 import ChatPage from '~/pages/ChatPage/ChatPage';
 import InformationPage from '~/pages/InformationPage/InformationPage';
 import ScanTicketPage from '~/pages/ScanTicketPage/ScanTicketPage';
+import PopupPage from '~/pages/PopupPage/PopupPage';
 
 const routes = [
     {
@@ -174,6 +175,10 @@ const routes = [
     {
         path: '/scan-ticket',
         component: ScanTicketPage,
+    },
+    {
+        path: '/popup',
+        component: PopupPage,
     },
 
     {

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
+import { axiosJWT } from './StaffService';
 
 export const allRoom = async (idCinema) => {
     try {
@@ -12,7 +13,7 @@ export const allRoom = async (idCinema) => {
 
 export const statusRoom = async (id, token) => {
     try {
-        const response = await axios.patch(
+        const response = await axiosJWT.patch(
             `${process.env.REACT_APP_API_URL}/api/room/status/${id}`,
             {},
             {
@@ -27,7 +28,7 @@ export const statusRoom = async (id, token) => {
 
 export const deleteRoom = async (id, token) => {
     try {
-        await axios.patch(`${process.env.REACT_APP_API_URL}/api/room/delete/${id}`, {}, {
+        await axiosJWT.patch(`${process.env.REACT_APP_API_URL}/api/room/delete/${id}`, {}, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Xóa thành công', 'success');
@@ -39,7 +40,7 @@ export const deleteRoom = async (id, token) => {
 
 export const addRoom = async (data, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/room/`, data, {
+        const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/room/`, data, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Thêm mới thành công', 'success');
@@ -52,7 +53,7 @@ export const addRoom = async (data, token) => {
 
 export const updateRoom = async (id, data, token) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/room/update/${id}`, data, {
+        const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/room/update/${id}`, data, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Cập nhật thành công', 'success');

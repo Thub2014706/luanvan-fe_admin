@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
+import { axiosJWT } from './StaffService';
 
 export const allEvent = async (number, show) => {
     try {
@@ -14,7 +15,7 @@ export const allEvent = async (number, show) => {
 
 export const statusEvent = async (id, token) => {
     try {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/event/status/${id}`, {}, {
+        const response = await axiosJWT.patch(`${process.env.REACT_APP_API_URL}/api/event/status/${id}`, {}, {
             headers: { authorization: `Bearer ${token}` },
         });
         return response.data;
@@ -25,7 +26,7 @@ export const statusEvent = async (id, token) => {
 
 export const addEvent = async (formData, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/event/`, formData, {
+        const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/event/`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
                 authorization: `Bearer ${token}`
@@ -50,7 +51,7 @@ export const detailEvent = async (id) => {
 
 export const updateEvent = async (id, formData, token) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/event/update/${id}`, formData, {
+        const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/event/update/${id}`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
                 authorization: `Bearer ${token}`
@@ -66,7 +67,7 @@ export const updateEvent = async (id, formData, token) => {
 
 export const deleteEvent = async (id, token) => {
     try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/api/event/delete/${id}`, {
+        await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/api/event/delete/${id}`, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Xóa thành công', 'success');

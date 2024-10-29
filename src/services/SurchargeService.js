@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
+import { axiosJWT } from './StaffService';
 
 export const addSurcharge = async (data, token) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/surcharge/`, data, {
+        const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/surcharge/`, data, {
             headers: { authorization: `Bearer ${token}` },
         });
         // showToast('Đã lưu', 'success');

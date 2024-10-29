@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
+import { axiosJWT } from './StaffService';
 
 export const allDiscount = async (search, number, show) => {
     try {
@@ -29,7 +30,7 @@ export const allDiscount = async (search, number, show) => {
 
 export const deleteDiscount = async (id, token) => {
     try {
-        await axios.patch(
+        await axiosJWT.patch(
             `${process.env.REACT_APP_API_URL}/api/discount/${id}`,
             {},
             {
@@ -45,7 +46,7 @@ export const deleteDiscount = async (id, token) => {
 
 export const addDiscount = async (data, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/discount/`, data, {
+        const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/discount/`, data, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Thêm mới thành công', 'success');
@@ -58,7 +59,7 @@ export const addDiscount = async (data, token) => {
 
 export const updateDiscount = async (id, data, token) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/discount/update/${id}`, data, {
+        const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/discount/update/${id}`, data, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Cập nhật thành công', 'success');

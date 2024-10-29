@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
+import { axiosJWT } from './StaffService';
 
 export const allPerformer = async (search, number, show) => {
     try {
@@ -14,7 +15,7 @@ export const allPerformer = async (search, number, show) => {
 
 export const addPerformer = async (formData, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/performer/`, formData, {
+        const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/performer/`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
                 authorization: `Bearer ${token}`,
@@ -39,7 +40,7 @@ export const detailPerformer = async (id) => {
 
 export const updatePerformer = async (id, formData, token) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/performer/${id}`, formData, {
+        const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/performer/${id}`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
                 authorization: `Bearer ${token}`,
@@ -55,7 +56,7 @@ export const updatePerformer = async (id, formData, token) => {
 
 export const deletePerformer = async (id, token) => {
     try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/api/performer/${id}`, {
+        await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/api/performer/${id}`, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Xóa thành công', 'success');

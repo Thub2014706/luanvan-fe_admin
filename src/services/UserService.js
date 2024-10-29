@@ -1,26 +1,5 @@
+import { axiosJWT } from './StaffService';
 import axios from 'axios';
-import { showToast } from '~/constants';
-import {
-    loginFailed,
-    loginStart,
-    loginSuccess,
-    logoutFailed,
-    logoutStart,
-    logoutSuccess,
-} from '~/features/auth/authSlice';
-
-axios.defaults.withCredentials = true;
-
-export const axiosJWT = axios.create();
-
-export const refreshToken = async () => {
-    try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/refresh-token`);
-        return response.data;
-    } catch (error) {
-        console.log('loi', error);
-    }
-};
 
 export const allUser = async (search, number, show) => {
     try {
@@ -35,7 +14,7 @@ export const allUser = async (search, number, show) => {
 
 export const statusUser = async (id, token) => {
     try {
-        const response = await axios.patch(
+        const response = await axiosJWT.patch(
             `${process.env.REACT_APP_API_URL}/api/user/status/${id}`,
             {},
             {

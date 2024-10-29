@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
+import { axiosJWT } from './StaffService';
 
 export const updateRowSeat = async (data, token) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/seat/update-row`, data, {
+        const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/seat/update-row`, data, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Cập nhật thành công', 'success');
@@ -26,7 +27,7 @@ export const allSeatRoom = async (room) => {
 
 export const updateSeat = async (id, data, token) => {
     try {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/seat/${id}`, data, {
+        const response = await axiosJWT.patch(`${process.env.REACT_APP_API_URL}/api/seat/${id}`, data, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Cập nhật thành công', 'success');
@@ -39,7 +40,7 @@ export const updateSeat = async (id, data, token) => {
 
 export const deleteSeat = async (id, token) => {
     try {
-        const response = await axios.patch(
+        const response = await axiosJWT.patch(
             `${process.env.REACT_APP_API_URL}/api/seat/delete-seat/${id}`,
             {},
             {

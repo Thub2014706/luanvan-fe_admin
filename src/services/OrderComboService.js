@@ -1,9 +1,10 @@
 import axios from "axios";
 import { showToast } from "~/constants";
+import { axiosJWT } from "./StaffService";
 
 export const addOrderCombo = async (data, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/order-combo`, data, {
+        const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/order-combo`, data, {
             headers: { authorization: `Bearer ${token}` },
         });
         return response.data;

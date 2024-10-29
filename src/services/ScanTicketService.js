@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
+import { axiosJWT } from './StaffService';
 
 export const addScanTicket = async (order, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/scan-ticket/`, order, {
+        const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/scan-ticket/`, order, {
             headers: { authorization: `Bearer ${token}` },
         });
         return response.data;
@@ -15,7 +16,7 @@ export const addScanTicket = async (order, token) => {
 
 export const testScanTicket = async (order, token) => {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/scan-ticket/test/${order}`, {
+        const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/scan-ticket/test/${order}`, {
             headers: { authorization: `Bearer ${token}` },
         });
         return response.data;

@@ -74,8 +74,10 @@ const PaymentStaff = () => {
                     ),
                 );
                 const sum = data.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-                setCopyPrice(sum);
-                dispatch(priceValue(sum));
+                const total = combo.length > 0 ? combo.reduce((a, b) => a + b.price, sum) : sum
+                setCopyPrice(total);
+                dispatch(priceValue(total));
+                console.log(total);
             } else {
                 let data = await Promise.all(
                     [typeUserPrice[0], typeUserPrice[1], typeUserPrice[2]].map(
@@ -86,14 +88,14 @@ const PaymentStaff = () => {
                     (accumulator, currentValue, currentIndex) => accumulator + currentValue * numUser[currentIndex],
                     0,
                 );
-                setCopyPrice(sum);
-                dispatch(priceValue(sum));
+                const total = combo.length > 0 ? combo.reduce((a, b) => a + b.price, sum) : sum
+                setCopyPrice(total);
+                dispatch(priceValue(total));
             }
         };
         fetch();
-    }, [numUser, seat, room, selectUser, dispatch, time]);
+    }, [numUser, seat, room, selectUser, dispatch, time, combo]);
 
-    // console.log(price);
 
     const handlePre = () => {
         dispatch(preStep3());

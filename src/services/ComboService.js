@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
+import { axiosJWT } from './StaffService';
 
 export const allCombo = async (search, number, show) => {
     try {
@@ -29,7 +30,7 @@ export const allCombo = async (search, number, show) => {
 
 export const deleteCombo = async (id, token) => {
     try {
-        await axios.patch(
+        await axiosJWT.patch(
             `${process.env.REACT_APP_API_URL}/api/combo/${id}`,
             {},
             {
@@ -45,7 +46,7 @@ export const deleteCombo = async (id, token) => {
 
 export const addCombo = async (formData, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/combo/`, formData, {
+        const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/combo/`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
                 authorization: `Bearer ${token}`,
@@ -61,7 +62,7 @@ export const addCombo = async (formData, token) => {
 
 export const updateCombo = async (id, formData, token) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/combo/update/${id}`, formData, {
+        const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/combo/update/${id}`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
                 authorization: `Bearer ${token}`,

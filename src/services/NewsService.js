@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
+import { axiosJWT } from './StaffService';
 
 export const allNews = async (number, show) => {
     try {
@@ -14,7 +15,7 @@ export const allNews = async (number, show) => {
 
 export const statusNews = async (id, token) => {
     try {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/news/status/${id}`, {}, {
+        const response = await axiosJWT.patch(`${process.env.REACT_APP_API_URL}/api/news/status/${id}`, {}, {
             headers: { authorization: `Bearer ${token}` },
         });
         return response.data;
@@ -25,7 +26,7 @@ export const statusNews = async (id, token) => {
 
 export const addNews = async (formData, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/news/`, formData, {
+        const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/news/`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
                 authorization: `Bearer ${token}`
@@ -50,7 +51,7 @@ export const detailNews = async (id) => {
 
 export const updateNews = async (id, formData, token) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/news/update/${id}`, formData, {
+        const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/news/update/${id}`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
                 authorization: `Bearer ${token}`
@@ -66,7 +67,7 @@ export const updateNews = async (id, formData, token) => {
 
 export const deleteNews = async (id, token) => {
     try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/api/news/delete/${id}`, {
+        await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/api/news/delete/${id}`, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Xóa thành công', 'success');

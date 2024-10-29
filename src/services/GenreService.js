@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
+import { axiosJWT } from './StaffService';
 
 export const allGenre = async (search, number, show) => {
     try {
@@ -14,7 +15,7 @@ export const allGenre = async (search, number, show) => {
 
 export const updateGenre = async (id, data, token) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/genre/${id}`, data, {
+        const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/genre/${id}`, data, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Cập nhật thành công', 'success');
@@ -27,7 +28,7 @@ export const updateGenre = async (id, data, token) => {
 
 export const deleteGenre = async (id, token) => {
     try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/api/genre/${id}`, {
+        await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/api/genre/${id}`, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Xóa thành công', 'success');
@@ -48,7 +49,7 @@ export const detailGenre = async (id) => {
 
 export const addGenre = async (data, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/genre`, data, {
+        const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/genre`, data, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Thêm mới thành công', 'success');

@@ -7,13 +7,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { itemMenu } from './constants';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import { detailInfomation } from './services/InformationService';
+import { loginSuccess } from './features/auth/authSlice';
+import { axiosJWT, refreshToken, logout } from './services/StaffService';
+import { jwtDecode } from 'jwt-decode';
 
 function App() {
     // const isAuthenticated = false;
     const user = useSelector((state) => state.auth.login.currentUser);
     const idOrder = useSelector((state) => state.showTime.idOrder);
     console.log('aaa', user);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetch = async () => {
@@ -21,6 +24,39 @@ function App() {
         };
         fetch();
     }, [dispatch]);
+
+    axiosJWT.interceptors.request.use(
+        //trước khi gửi request nào đó thì interceptors sẽ check này trước khi gọi api nào đó
+        async (config) => {
+            let decodedToken = jwtDecode(user?.accessToken);
+            if (decodedToken.exp - 3000 < new Date().getTime() / 1000) {
+                try {
+                    const newToken = await refreshToken();
+                    // console.log(newToken.accessToken)
+                    if (newToken) {
+                        const newData = user?.data;
+
+                        const refreshUser = {
+                            data: newData,
+                            accessToken: newToken.accessToken,
+                        };
+                        // console.log("thu nghiem", refreshUser)
+                        dispatch(loginSuccess(refreshUser));
+                        config.headers.Authorization = 'Bearer ' + newToken.accessToken;
+                    }
+                    //  else {
+                    //     logout(dispatch, user?.accessToken);
+                    // }
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+            return config;
+        },
+        (err) => {
+            return Promise.reject(err);
+        },
+    );
 
     return (
         <Router>

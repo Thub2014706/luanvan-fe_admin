@@ -43,7 +43,7 @@ export const loginStaff = async (user, navigate, dispatch) => {
 export const createStaff = async (data, token) => {
     // dispatch(createStart)
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/staff/create`, data, {
+        const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/staff/create`, data, {
             headers: {
                 'content-type': 'multipart/form-data',
                 authorization: `Bearer ${token}`,
@@ -88,7 +88,7 @@ export const allStaff = async (search, number, show) => {
 
 export const statusStaff = async (id, token) => {
     try {
-        const response = await axios.patch(
+        const response = await axiosJWT.patch(
             `${process.env.REACT_APP_API_URL}/api/staff/status/${id}`,
             {},
             {
@@ -103,7 +103,7 @@ export const statusStaff = async (id, token) => {
 
 export const deleteStaff = async (id, token) => {
     try {
-        await axios.patch(`${process.env.REACT_APP_API_URL}/api/staff/delete/${id}`, {}, {
+        await axiosJWT.patch(`${process.env.REACT_APP_API_URL}/api/staff/delete/${id}`, {}, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Xóa thành công', 'success');
@@ -124,7 +124,7 @@ export const detailStaff = async (id) => {
 
 export const accessStaff = async (id, access, token) => {
     try {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/staff/access/${id}`, access, {
+        const response = await axiosJWT.patch(`${process.env.REACT_APP_API_URL}/api/staff/access/${id}`, access, {
             headers: { authorization: `Bearer ${token}` },
         });
         showToast('Thêm quyền truy cập thành công', 'success');

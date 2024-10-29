@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
+import { axiosJWT } from './StaffService';
 
 export const allFilm = async (search, number, show) => {
     try {
@@ -14,7 +15,7 @@ export const allFilm = async (search, number, show) => {
 
 export const statusFilm = async (id, token) => {
     try {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/api/film/status/${id}`, {}, {
+        const response = await axiosJWT.patch(`${process.env.REACT_APP_API_URL}/api/film/status/${id}`, {}, {
             headers: { authorization: `Bearer ${token}` },
         });
         return response.data;
@@ -34,7 +35,7 @@ export const getImage = async (name) => {
 
 export const addFilm = async (formData, token) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/film/`, formData, {
+        const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/film/`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
                 authorization: `Bearer ${token}`
@@ -68,7 +69,7 @@ export const detailFilmBySchedule = async (id) => {
 
 export const updateFilm = async (id, formData, token) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/film/update/${id}`, formData, {
+        const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/film/update/${id}`, formData, {
             headers: {
                 'content-type': 'multipart/form-data',
                 authorization: `Bearer ${token}`
