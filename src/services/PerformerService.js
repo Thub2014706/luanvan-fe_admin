@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
-import { axiosJWT } from './StaffService';
+//import { axios } from './StaffService';
 
 export const allPerformer = async (search, number, show) => {
     try {
@@ -13,7 +13,7 @@ export const allPerformer = async (search, number, show) => {
     }
 };
 
-export const addPerformer = async (formData, token) => {
+export const addPerformer = async (formData, token, axiosJWT) => {
     try {
         const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/performer/`, formData, {
             headers: {
@@ -38,7 +38,7 @@ export const detailPerformer = async (id) => {
     }
 };
 
-export const updatePerformer = async (id, formData, token) => {
+export const updatePerformer = async (id, formData, token, axiosJWT) => {
     try {
         const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/performer/${id}`, formData, {
             headers: {
@@ -54,7 +54,7 @@ export const updatePerformer = async (id, formData, token) => {
     }
 };
 
-export const deletePerformer = async (id, token) => {
+export const deletePerformer = async (id, token, axiosJWT) => {
     try {
         await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/api/performer/${id}`, {
             headers: { authorization: `Bearer ${token}` },

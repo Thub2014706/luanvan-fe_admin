@@ -17,8 +17,10 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 // import { Button, CCol, Form, CRow } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ImageBase from '~/components/ImageBase/ImageBase';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 import { addCombo, detailCombo, updateCombo } from '~/services/ComboService';
 import { listFood } from '~/services/FoodService';
 
@@ -32,6 +34,8 @@ const AddCombo = ({ id, show, handleClose }) => {
     const [image, setImage] = useState();
     const [imageId, setImageId] = useState();
     const [imageEncode, setImageEncode] = useState();
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleImage = (e) => {
         const newImg = e.target.files[0];
@@ -111,11 +115,11 @@ const AddCombo = ({ id, show, handleClose }) => {
         }
         formData.append('variants', JSON.stringify(variants));
         if (id) {
-            if (await updateCombo(id, formData, user?.accessToken)) {
+            if (await updateCombo(id, formData, user?.accessToken, axiosJWT)) {
                 handleClose();
             }
         } else {
-            if (await addCombo(formData, user?.accessToken)) {
+            if (await addCombo(formData, user?.accessToken, axiosJWT)) {
                 handleClose();
             }
         }

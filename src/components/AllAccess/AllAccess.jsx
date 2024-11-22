@@ -1,14 +1,18 @@
 import { CFormCheck, CModal } from '@coreui/react-pro';
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { itemMenu } from '~/constants';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 import { accessStaff, detailStaff } from '~/services/StaffService';
 
 const AllAccess = ({ show, handleClose, id }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
     const [array, setArray] = useState([]);
     const [all, setAll] = useState(false);
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     useEffect(() => {
         const fetch = async () => {
@@ -39,7 +43,7 @@ const AllAccess = ({ show, handleClose, id }) => {
 
     const handleSave = async (e) => {
         e.preventDefault();
-        if (await accessStaff(id, { access: array }, user?.accessToken)) {
+        if (await accessStaff(id, { access: array }, user?.accessToken, axiosJWT)) {
             handleClose();
         }
     };

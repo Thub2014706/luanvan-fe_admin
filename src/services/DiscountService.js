@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
-import { axiosJWT } from './StaffService';
+//import { axios } from './StaffService';
 
 export const allDiscount = async (search, number, show) => {
     try {
@@ -28,7 +28,7 @@ export const allDiscount = async (search, number, show) => {
 //     }
 // };
 
-export const deleteDiscount = async (id, token) => {
+export const deleteDiscount = async (id, token, axiosJWT) => {
     try {
         await axiosJWT.patch(
             `${process.env.REACT_APP_API_URL}/api/discount/${id}`,
@@ -44,7 +44,9 @@ export const deleteDiscount = async (id, token) => {
     }
 };
 
-export const addDiscount = async (data, token) => {
+export const addDiscount = async (data, token, axiosJWT) => {
+    console.log(token);
+    
     try {
         const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/discount/`, data, {
             headers: { authorization: `Bearer ${token}` },
@@ -57,7 +59,7 @@ export const addDiscount = async (data, token) => {
     }
 };
 
-export const updateDiscount = async (id, data, token) => {
+export const updateDiscount = async (id, data, token, axiosJWT) => {
     try {
         const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/discount/update/${id}`, data, {
             headers: { authorization: `Bearer ${token}` },

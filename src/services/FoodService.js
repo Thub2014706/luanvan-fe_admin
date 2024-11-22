@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
-import { axiosJWT } from './StaffService';
+//import { axios } from './StaffService';
 
 export const allFood = async (search, number, show) => {
     try {
@@ -28,7 +28,7 @@ export const allFood = async (search, number, show) => {
 //     }
 // };
 
-export const deleteFood = async (id, token) => {
+export const deleteFood = async (id, token, axiosJWT) => {
     try {
         await axiosJWT.patch(
             `${process.env.REACT_APP_API_URL}/api/food/${id}`,
@@ -44,7 +44,7 @@ export const deleteFood = async (id, token) => {
     }
 };
 
-export const addFood = async (formData, token) => {
+export const addFood = async (formData, token, axiosJWT) => {
     try {
         const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/food/`, formData, {
             headers: {
@@ -60,7 +60,7 @@ export const addFood = async (formData, token) => {
     }
 };
 
-export const updateFood = async (id, formData, token) => {
+export const updateFood = async (id, formData, token, axiosJWT) => {
     try {
         const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/food/update/${id}`, formData, {
             headers: {

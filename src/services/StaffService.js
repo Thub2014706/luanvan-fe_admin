@@ -9,18 +9,18 @@ import {
     logoutSuccess,
 } from '~/features/auth/authSlice';
 
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 
-export const axiosJWT = axios.create();
+// export const axiosJWT = axios.create();
 
-export const refreshToken = async () => {
-    try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/staff/refresh-token`);
-        return response.data;
-    } catch (error) {
-        console.log('loi', error);
-    }
-};
+// export const refreshToken = async () => {
+//     try {
+//         const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/staff/refresh-token`);
+//         return response.data;
+//     } catch (error) {
+//         console.log('loi', error);
+//     }
+// };
 
 export const loginStaff = async (user, navigate, dispatch) => {
     dispatch(loginStart());
@@ -40,7 +40,7 @@ export const loginStaff = async (user, navigate, dispatch) => {
     }
 };
 
-export const createStaff = async (data, token) => {
+export const createStaff = async (data, token, axiosJWT) => {
     // dispatch(createStart)
     try {
         const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/staff/create`, data, {
@@ -59,7 +59,7 @@ export const createStaff = async (data, token) => {
     }
 };
 
-export const logout = async (dispatch, token) => {
+export const logout = async (dispatch, token, axiosJWT) => {
     dispatch(logoutStart());
     try {
         await axiosJWT.post(
@@ -86,7 +86,7 @@ export const allStaff = async (search, number, show) => {
     }
 };
 
-export const statusStaff = async (id, token) => {
+export const statusStaff = async (id, token, axiosJWT) => {
     try {
         const response = await axiosJWT.patch(
             `${process.env.REACT_APP_API_URL}/api/staff/status/${id}`,
@@ -101,7 +101,7 @@ export const statusStaff = async (id, token) => {
     }
 };
 
-export const deleteStaff = async (id, token) => {
+export const deleteStaff = async (id, token, axiosJWT) => {
     try {
         await axiosJWT.patch(`${process.env.REACT_APP_API_URL}/api/staff/delete/${id}`, {}, {
             headers: { authorization: `Bearer ${token}` },
@@ -122,7 +122,7 @@ export const detailStaff = async (id) => {
     }
 };
 
-export const accessStaff = async (id, access, token) => {
+export const accessStaff = async (id, access, token, axiosJWT) => {
     try {
         const response = await axiosJWT.patch(`${process.env.REACT_APP_API_URL}/api/staff/access/${id}`, access, {
             headers: { authorization: `Bearer ${token}` },

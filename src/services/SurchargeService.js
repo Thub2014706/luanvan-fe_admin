@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
-import { axiosJWT } from './StaffService';
+//import { axios } from './StaffService';
 
-export const addSurcharge = async (data, token) => {
+export const addSurcharge = async (data, token, axiosJWT) => {
     try {
         const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/surcharge/`, data, {
             headers: { authorization: `Bearer ${token}` },
@@ -17,9 +17,7 @@ export const addSurcharge = async (data, token) => {
 
 export const detailSurcharge = async (type) => {
     try {
-        const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/api/surcharge/detail?type=${type}`,
-        );
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/surcharge/detail?type=${type}`);
         return response.data;
     } catch (error) {
         console.log('loi', error);
@@ -28,9 +26,7 @@ export const detailSurcharge = async (type) => {
 
 export const detailSurchargeByType = async (type) => {
     try {
-        const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/api/surcharge/detail-by-type?type=${type}`,
-        );
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/surcharge/detail-by-type?type=${type}`);
         return response.data;
     } catch (error) {
         console.log('loi', error);

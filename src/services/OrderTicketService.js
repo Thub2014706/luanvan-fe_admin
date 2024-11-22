@@ -1,9 +1,9 @@
 import axios from 'axios';
 import FileSaver from 'file-saver';
 import { showToast } from '~/constants';
-import { axiosJWT } from './StaffService';
+//import { axios } from './StaffService';
 
-export const addOrderTicket = async (data, token) => {
+export const addOrderTicket = async (data, token, axiosJWT) => {
     try {
         const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/order-ticket`, data, {
             headers: { authorization: `Bearer ${token}` },
@@ -51,9 +51,12 @@ export const allOrderTicket = async (theater, number, show) => {
 
 export const exportOrderTicket = async (theater) => {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/order-ticket/export?theater=${theater}`, {
-            responseType: 'blob',
-        });
+        const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/order-ticket/export?theater=${theater}`,
+            {
+                responseType: 'blob',
+            },
+        );
 
         const blob = new Blob([response.data], {
             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

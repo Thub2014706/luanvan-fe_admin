@@ -10,9 +10,11 @@ import {
     CModalTitle,
 } from '@coreui/react-pro';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addAdvertisement, detailAdvertisement, updateAdvertisement } from '~/services/AdvertisementService';
 import ImageBase from '../ImageBase/ImageBase';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 
 const AddAdvertisement = ({ show, handleClose, id }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -20,6 +22,8 @@ const AddAdvertisement = ({ show, handleClose, id }) => {
     const [image, setImage] = useState();
     const [imageId, setImageId] = useState();
     const [imageEncode, setImageEncode] = useState();
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleImage = (e) => {
         const newImg = e.target.files[0];
@@ -52,11 +56,11 @@ const AddAdvertisement = ({ show, handleClose, id }) => {
             formData.append('image', image);
         }
         if (id) {
-            if (await updateAdvertisement(id, formData, user?.accessToken)) {
+            if (await updateAdvertisement(id, formData, user?.accessToken, axiosJWT)) {
                 handleClose();
             }
         } else {
-            if (await addAdvertisement(formData, user?.accessToken)) {
+            if (await addAdvertisement(formData, user?.accessToken, axiosJWT)) {
                 handleClose();
             }
         }

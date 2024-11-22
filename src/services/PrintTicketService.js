@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
-import { axiosJWT } from './StaffService';
+//import { axios } from './StaffService';
 
-export const addPrintTicket = async (order, token) => {
+export const addPrintTicket = async (order, token, axiosJWT) => {
     try {
         const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/print-ticket/`, order, {
             headers: { authorization: `Bearer ${token}` },
@@ -14,7 +14,7 @@ export const addPrintTicket = async (order, token) => {
     }
 };
 
-export const testPrintTicket = async (order, token) => {
+export const testPrintTicket = async (order, token, axiosJWT) => {
     try {
         const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/print-ticket/test/${order}`, {
             headers: { authorization: `Bearer ${token}` },

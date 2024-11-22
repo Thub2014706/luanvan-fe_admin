@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import Avatar from 'react-avatar';
 import { Col, Row, Table } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AddStaff from '~/components/AddStaff/AddStaff';
 import AllAccess from '~/components/AllAccess/AllAccess';
 import ImageBase from '~/components/ImageBase/ImageBase';
@@ -12,6 +12,8 @@ import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
 import ToggleSwitch from '~/components/ToggleSwitch/ToggleSwitch';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 import { allStaff, deleteStaff, statusStaff } from '~/services/StaffService';
 
 const StaffPage = () => {
@@ -28,13 +30,15 @@ const StaffPage = () => {
     const [showAdd, setShowAdd] = useState(false);
     const [showAccess, setShowAccess] = useState(false);
     const [idAccess, setIdAccess] = useState(null);
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleNumber = (num) => {
         setNumber(num);
     };
 
     const handleStatus = async (id) => {
-        await statusStaff(id, user?.accessToken);
+        await statusStaff(id, user?.accessToken, axiosJWT);
         setAction(true);
     };
 
@@ -64,7 +68,7 @@ const StaffPage = () => {
     };
 
     const handleDelete = async () => {
-        await deleteStaff(idDelete, user?.accessToken);
+        await deleteStaff(idDelete, user?.accessToken, axiosJWT);
         handleCloseDelete();
     };
 

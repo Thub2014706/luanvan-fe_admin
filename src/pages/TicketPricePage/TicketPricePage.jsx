@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Form, InputGroup, Table } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { showToast, timePrice, typeSurcharge, typeUserPrice } from '~/constants';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 import { addPrice, detailPrice } from '~/services/PriceService';
 import { addSurcharge, detailSurcharge } from '~/services/SurchargeService';
 
 const TicketPricePage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     let array1 = [];
     for (let i = 0; i <= 3; i++) {
@@ -64,7 +68,7 @@ const TicketPricePage = () => {
     };
 
     const handleSubmit = async () => {
-        if ((await addPrice(price, user?.accessToken)) && (await addSurcharge(sur, user?.accessToken))) {
+        if ((await addPrice(price, user?.accessToken, axiosJWT)) && (await addSurcharge(sur, user?.accessToken, axiosJWT))) {
             showToast('Đã lưu', 'success');
         }
     };

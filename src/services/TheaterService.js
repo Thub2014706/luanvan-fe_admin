@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
-import { axiosJWT } from './StaffService';
+//import { axios } from './StaffService';
 
 export const allTheater = async (search, number, show) => {
     try {
@@ -13,7 +13,7 @@ export const allTheater = async (search, number, show) => {
     }
 };
 
-export const statusTheater = async (id, token) => {
+export const statusTheater = async (id, token, axiosJWT) => {
     try {
         const response = await axiosJWT.patch(
             `${process.env.REACT_APP_API_URL}/api/theater/status/${id}`,
@@ -28,7 +28,7 @@ export const statusTheater = async (id, token) => {
     }
 };
 
-export const deleteTheater = async (id, token) => {
+export const deleteTheater = async (id, token, axiosJWT) => {
     try {
         await axiosJWT.patch(
             `${process.env.REACT_APP_API_URL}/api/theater/delete/${id}`,
@@ -44,7 +44,7 @@ export const deleteTheater = async (id, token) => {
     }
 };
 
-export const addTheater = async (formData, token) => {
+export const addTheater = async (formData, token, axiosJWT) => {
     try {
         const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/theater/`, formData, {
             headers: { 'content-type': 'multipart/form-data', authorization: `Bearer ${token}` },
@@ -57,7 +57,7 @@ export const addTheater = async (formData, token) => {
     }
 };
 
-export const updateTheater = async (id, formData, token) => {
+export const updateTheater = async (id, formData, token, axiosJWT) => {
     try {
         const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/theater/update/${id}`, formData, {
             headers: { 'content-type': 'multipart/form-data', authorization: `Bearer ${token}` },

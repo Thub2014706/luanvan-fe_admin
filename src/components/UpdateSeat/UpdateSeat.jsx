@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { typeSeat } from '~/constants';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 import { deleteSeat, detailSeat, updateSeat } from '~/services/SeatService';
 
 const UpdateSeat = ({ show, handleClose, id }) => {
@@ -12,6 +14,8 @@ const UpdateSeat = ({ show, handleClose, id }) => {
     const [row, setRow] = useState();
     const [left, setLeft] = useState(0);
     const [right, setRight] = useState(0);
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     useEffect(() => {
         const fetch = async () => {
@@ -28,7 +32,7 @@ const UpdateSeat = ({ show, handleClose, id }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await updateSeat(id, { type, status, left, right }, user?.accessToken);
+        await updateSeat(id, { type, status, left, right }, user?.accessToken, axiosJWT);
         handleClose();
         // console.log({numRow: row, room, type, status})
     };

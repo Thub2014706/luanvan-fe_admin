@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { createStaff } from '~/services/StaffService';
 import ImageBase from '../ImageBase/ImageBase';
 import Avatar from 'react-avatar';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     CButton,
     CForm,
@@ -17,6 +17,8 @@ import {
     CFormSelect,
 } from '@coreui/react-pro';
 import { listTheater } from '~/services/TheaterService';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 
 const AddStaff = ({ show, handleClose }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -29,6 +31,8 @@ const AddStaff = ({ show, handleClose }) => {
     const [theater, setTheater] = useState('');
     const [avatar, setAvatar] = useState();
     const [avatarCode, setAvatarCode] = useState();
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleAvatar = (e) => {
         const avar = e.target.files[0];
@@ -55,7 +59,7 @@ const AddStaff = ({ show, handleClose }) => {
         formData.append('confirmPassword', confirmPassword);
         formData.append('avatar', avatar);
         formData.append('theater', theater);
-        if (await createStaff(formData, user?.accessToken)) {
+        if (await createStaff(formData, user?.accessToken, axiosJWT)) {
             console.log('sao z')
             handleClose();
         }

@@ -10,8 +10,10 @@ import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
 import { allDirector, deleteDirector } from '~/services/DirectorService';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AddDirector from '~/components/AddDirector/AddDirector';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 
 const DirectorPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -25,6 +27,8 @@ const DirectorPage = () => {
     const [nameDelete, setNameDelete] = useState(null);
     const [showAdd, setShowAdd] = useState(false);
     const [idUpdate, setIdUpdate] = useState(null);
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     useEffect(() => {
         const fetch = async () => {
@@ -58,7 +62,7 @@ const DirectorPage = () => {
     };
 
     const handleDelete = async () => {
-        await deleteDirector(idDelete, user?.accessToken);
+        await deleteDirector(idDelete, user?.accessToken, axiosJWT);
         handleCloseDelete();
     };
 

@@ -12,6 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import { addOrderTicket } from '~/services/OrderTicketService';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { Button } from 'react-bootstrap';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 
 const PaymentStaff = () => {
     const navigate = useNavigate();
@@ -38,6 +40,7 @@ const PaymentStaff = () => {
     const timeoutRef = useRef(null);
     const [copyPrice, setCopyPrice] = useState(price);
     const [selectPay, setSelectPay] = useState('cash');
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     useEffect(() => {
         const fetch = async () => {
@@ -165,6 +168,7 @@ const PaymentStaff = () => {
                         usePoint: point,
                     },
                     user?.accessToken,
+                    axiosJWT
                 );
                 dispatch(idOrderValue(data.orderId));
                 window.location.href = data.payUrl;
@@ -182,6 +186,7 @@ const PaymentStaff = () => {
                         usePoint: point,
                     },
                     user?.accessToken,
+                    axiosJWT
                 );
                 if (data) {
                     dispatch(idOrderValue(data.idOrder));

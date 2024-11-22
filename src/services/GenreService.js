@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
-import { axiosJWT } from './StaffService';
+//import { axios } from './StaffService';
 
 export const allGenre = async (search, number, show) => {
     try {
@@ -13,7 +13,7 @@ export const allGenre = async (search, number, show) => {
     }
 };
 
-export const updateGenre = async (id, data, token) => {
+export const updateGenre = async (id, data, token, axiosJWT) => {
     try {
         const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/genre/${id}`, data, {
             headers: { authorization: `Bearer ${token}` },
@@ -26,7 +26,7 @@ export const updateGenre = async (id, data, token) => {
     }
 };
 
-export const deleteGenre = async (id, token) => {
+export const deleteGenre = async (id, token, axiosJWT) => {
     try {
         await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/api/genre/${id}`, {
             headers: { authorization: `Bearer ${token}` },
@@ -47,7 +47,7 @@ export const detailGenre = async (id) => {
     }
 };
 
-export const addGenre = async (data, token) => {
+export const addGenre = async (data, token, axiosJWT) => {
     try {
         const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/genre`, data, {
             headers: { authorization: `Bearer ${token}` },

@@ -2,13 +2,15 @@ import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AddFood from '~/components/AddFood/AddFood';
 import ImageBase from '~/components/ImageBase/ImageBase';
 import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 import { allFood, deleteFood } from '~/services/FoodService';
 
 const FoodPage = () => {
@@ -24,6 +26,8 @@ const FoodPage = () => {
     const [action, setAction] = useState(false);
     const [showAdd, setShowAdd] = useState(false);
     const [idUpdate, setIdUpdate] = useState(null);
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleNumber = (num) => {
         setNumber(num);
@@ -60,7 +64,7 @@ const FoodPage = () => {
     };
 
     const handleDelete = async () => {
-        await deleteFood(idDelete, user?.accessToken);
+        await deleteFood(idDelete, user?.accessToken, axiosJWT);
         handleCloseDelete();
     };
 

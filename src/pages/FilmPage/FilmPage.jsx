@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import ImageBase from '~/components/ImageBase/ImageBase';
 import Name from '~/components/Name/Name';
@@ -11,6 +11,8 @@ import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
 import ToggleSwitch from '~/components/ToggleSwitch/ToggleSwitch';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 import { allFilm, statusFilm } from '~/services/FilmService';
 import { detailGenre } from '~/services/GenreService';
 
@@ -23,9 +25,11 @@ const FilmPage = () => {
     const [sumPage, setSumPage] = useState(0);
     const [numberPage, setNumberPage] = useState(5);
     const [action, setAction] = useState(false);
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleStatus = async (id) => {
-        await statusFilm(id, user?.accessToken);
+        await statusFilm(id, user?.accessToken, axiosJWT);
         setAction(true);
     };
 

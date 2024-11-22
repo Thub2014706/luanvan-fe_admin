@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
-import { axiosJWT } from './StaffService';
+//import { axios } from './StaffService';
 
 export const allDirector = async (search, number, show) => {
     try {
@@ -13,7 +13,7 @@ export const allDirector = async (search, number, show) => {
     }
 };
 
-export const addDirector = async (formData, token) => {
+export const addDirector = async (formData, token, axiosJWT) => {
     try {
         const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/director/`, formData, {
             headers: {
@@ -38,7 +38,7 @@ export const detailDirector = async (id) => {
     }
 };
 
-export const updateDirector = async (id, formData, token) => {
+export const updateDirector = async (id, formData, token, axiosJWT) => {
     try {
         const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/director/${id}`, formData, {
             headers: {
@@ -54,7 +54,7 @@ export const updateDirector = async (id, formData, token) => {
     }
 };
 
-export const deleteDirector = async (id, token) => {
+export const deleteDirector = async (id, token, axiosJWT) => {
     try {
         await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/api/director/${id}`, {
             headers: { authorization: `Bearer ${token}` },

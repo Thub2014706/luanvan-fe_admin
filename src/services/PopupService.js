@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
-import { axiosJWT } from './StaffService';
+//import { axios } from './StaffService';
 
-export const addPopup = async (formData, token) => {
+export const addPopup = async (formData, token, axiosJWT) => {
     try {
         const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/popup`, formData, {
             headers: { 'content-type': 'multipart/form-data', authorization: `Bearer ${token}` },
@@ -15,7 +15,7 @@ export const addPopup = async (formData, token) => {
     }
 };
 
-export const deletePopup = async (token) => {
+export const deletePopup = async (token, axiosJWT) => {
     try {
         const response = await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/api/popup/delete`, {
             headers: { 'content-type': 'multipart/form-data', authorization: `Bearer ${token}` },

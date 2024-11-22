@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
-import { axiosJWT } from './StaffService';
+//import { axios } from './StaffService';
 
 export const allSchedule = async (search, number, show) => {
     try {
@@ -13,7 +13,7 @@ export const allSchedule = async (search, number, show) => {
     }
 };
 
-export const addSchedule = async (data, token) => {
+export const addSchedule = async (data, token, axiosJWT) => {
     try {
         const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/schedule/`, data, {
             headers: { authorization: `Bearer ${token}` },
@@ -26,7 +26,7 @@ export const addSchedule = async (data, token) => {
     }
 };
 
-export const updateSchedule = async (id, data, token) => {
+export const updateSchedule = async (id, data, token, axiosJWT) => {
     try {
         const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/schedule/update/${id}`, data, {
             headers: { authorization: `Bearer ${token}` },

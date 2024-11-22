@@ -1,4 +1,4 @@
-import { axiosJWT } from './StaffService';
+//import { axios } from './StaffService';
 import axios from 'axios';
 
 export const allUser = async (search, number, show) => {
@@ -12,7 +12,7 @@ export const allUser = async (search, number, show) => {
     }
 };
 
-export const statusUser = async (id, token) => {
+export const statusUser = async (id, token, axiosJWT) => {
     try {
         const response = await axiosJWT.patch(
             `${process.env.REACT_APP_API_URL}/api/user/status/${id}`,
@@ -29,9 +29,7 @@ export const statusUser = async (id, token) => {
 
 export const detailUserByPhone = async (phone) => {
     try {
-        const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/api/user/detail-by-phone?phone=${phone}`,
-        );
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/user/detail-by-phone?phone=${phone}`);
         return response.data;
     } catch (error) {
         console.log('loi', error);
@@ -40,9 +38,7 @@ export const detailUserByPhone = async (phone) => {
 
 export const detailUserById = async (id) => {
     try {
-        const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/api/user/detail-by-id/${id}`,
-        );
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/user/detail-by-id/${id}`);
         return response.data;
     } catch (error) {
         console.log('loi', error);

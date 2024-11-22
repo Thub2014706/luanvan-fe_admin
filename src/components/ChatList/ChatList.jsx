@@ -134,11 +134,16 @@ const ChatList = ({ chats, receiver }) => {
                                     <p className="ms-2 mb-0">
                                         {item.message}
                                         {((chats[index + 1] &&
-                                            (!chats[index + 1].senderType ||
+                                            (chats[index + 1].senderType === false ||
                                                 momentTimezone
-                                                    .tz(chats[index - 1].createdAt, 'Asia/Ho_Chi_Minh')
+                                                    .tz(item.createdAt, 'Asia/Ho_Chi_Minh')
                                                     .add(30, 'minutes')
-                                                    .isAfter(momentTimezone.tz(item.createdAt, 'Asia/Ho_Chi_Minh')))) ||
+                                                    .isBefore(
+                                                        momentTimezone.tz(
+                                                            chats[index + 1].createdAt,
+                                                            'Asia/Ho_Chi_Minh',
+                                                        ),
+                                                    ))) ||
                                             !chats[index + 1]) && (
                                             <>
                                                 <br />

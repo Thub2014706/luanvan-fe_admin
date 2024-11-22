@@ -6,7 +6,7 @@ import { addDirector, detailDirector, updateDirector } from '~/services/Director
 import ImageBase from '../ImageBase/ImageBase';
 import Avatar from 'react-avatar';
 import moment from 'moment';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     CButton,
     CCol,
@@ -21,6 +21,8 @@ import {
     CModalTitle,
     CRow,
 } from '@coreui/react-pro';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 
 const AddDirector = ({ id, show, handleClose }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -30,6 +32,8 @@ const AddDirector = ({ id, show, handleClose }) => {
     const [avatar, setAvatar] = useState();
     const [avatarBase, setAvatarBase] = useState();
     const [avatarId, setAvatarId] = useState();
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     // console.log('dd', id);
     const handleSubmit = async (e) => {
@@ -48,11 +52,11 @@ const AddDirector = ({ id, show, handleClose }) => {
             formData.append('avatar', avatar);
         }
         if (id) {
-            if (await updateDirector(id, formData, user?.accessToken)) {
+            if (await updateDirector(id, formData, user?.accessToken, axiosJWT)) {
                 handleClose();
             }
         } else {
-            if (await addDirector(formData, user?.accessToken)) {
+            if (await addDirector(formData, user?.accessToken, axiosJWT)) {
                 handleClose();
             }
         }

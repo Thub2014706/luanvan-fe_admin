@@ -2,8 +2,10 @@ import { CCol, CFormInput, CFormLabel, CRow } from '@coreui/react-pro';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ImageBase from '~/components/ImageBase/ImageBase';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 import { addPopup, deletePopup, detailPopup } from '~/services/PopupService';
 
 const PopupPage = () => {
@@ -12,6 +14,8 @@ const PopupPage = () => {
     const [imageId, setImageId] = useState();
     const [imageEncode, setImageEncode] = useState();
     const [action, setAction] = useState(false);
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     useEffect(() => {
         const fetch = async () => {
@@ -41,9 +45,9 @@ const PopupPage = () => {
             formData.append('image', image);
         }
         if (image || imageId) {
-            await addPopup(formData, user?.accessToken);
+            await addPopup(formData, user?.accessToken, axiosJWT);
         } else {
-            await deletePopup(user?.accessToken);
+            await deletePopup(user?.accessToken, axiosJWT);
             setAction(true);
         }
     };

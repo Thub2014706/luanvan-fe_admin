@@ -1,8 +1,8 @@
 import { showToast } from '~/constants';
-import { axiosJWT } from './StaffService';
+//import { axios } from './StaffService';
 import axios from 'axios';
 
-export const addPrice = async (data, token) => {
+export const addPrice = async (data, token, axiosJWT) => {
     try {
         const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/price/`, data, {
             headers: { authorization: `Bearer ${token}` },

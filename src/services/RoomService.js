@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
-import { axiosJWT } from './StaffService';
+//import { axios } from './StaffService';
 
 export const allRoom = async (idCinema) => {
     try {
@@ -11,7 +11,7 @@ export const allRoom = async (idCinema) => {
     }
 };
 
-export const statusRoom = async (id, token) => {
+export const statusRoom = async (id, token, axiosJWT) => {
     try {
         const response = await axiosJWT.patch(
             `${process.env.REACT_APP_API_URL}/api/room/status/${id}`,
@@ -26,11 +26,15 @@ export const statusRoom = async (id, token) => {
     }
 };
 
-export const deleteRoom = async (id, token) => {
+export const deleteRoom = async (id, token, axiosJWT) => {
     try {
-        await axiosJWT.patch(`${process.env.REACT_APP_API_URL}/api/room/delete/${id}`, {}, {
-            headers: { authorization: `Bearer ${token}` },
-        });
+        await axiosJWT.patch(
+            `${process.env.REACT_APP_API_URL}/api/room/delete/${id}`,
+            {},
+            {
+                headers: { authorization: `Bearer ${token}` },
+            },
+        );
         showToast('Xóa thành công', 'success');
     } catch (error) {
         showToast('Xóa không thành công', 'error');
@@ -38,7 +42,7 @@ export const deleteRoom = async (id, token) => {
     }
 };
 
-export const addRoom = async (data, token) => {
+export const addRoom = async (data, token, axiosJWT) => {
     try {
         const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/room/`, data, {
             headers: { authorization: `Bearer ${token}` },
@@ -51,7 +55,7 @@ export const addRoom = async (data, token) => {
     }
 };
 
-export const updateRoom = async (id, data, token) => {
+export const updateRoom = async (id, data, token, axiosJWT) => {
     try {
         const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/room/update/${id}`, data, {
             headers: { authorization: `Bearer ${token}` },

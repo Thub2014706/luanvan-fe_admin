@@ -2,7 +2,7 @@ import { CCol, CDatePicker, CForm, CFormLabel, CFormSelect, CMultiSelect, CRow, 
 import moment from 'moment-timezone';
 import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { allTranslate } from '~/constants';
 import { detailFilm } from '~/services/FilmService';
 import { detailSchedule, listSchedule } from '~/services/ScheduleService';
@@ -10,6 +10,8 @@ import { addShowTime } from '~/services/ShowTimeService';
 import Name from '../Name/Name';
 import { detailTheater } from '~/services/TheaterService';
 import { detailRoom } from '~/services/RoomService';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 
 const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -18,6 +20,8 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
     const [translate, setTranslate] = useState('');
     const [timeStart, setTimeStart] = useState('');
     const [timeEnd, setTimeEnd] = useState('');
+    const dispatch = useDispatch();
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     useEffect(() => {
         const fetch = async () => {
@@ -33,6 +37,7 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
             await addShowTime(
                 { theater, room, schedule: film[0].value, date: dateAdd, translate, timeStart, timeEnd },
                 user?.accessToken,
+                axiosJWT,
             )
         ) {
             handleClose();
@@ -53,7 +58,7 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
     useEffect(() => {
         const fetch = async () => {
             if (timeStart !== '' && film.length > 0) {
-                const schedule = await detailSchedule(film[0].value)
+                const schedule = await detailSchedule(film[0].value);
                 console.log(schedule);
                 const data = await detailFilm(schedule.film);
                 const initialTime = moment.tz(timeStart, 'HH:mm', 'Asia/Ho_Chi_Minh');
@@ -67,7 +72,6 @@ const AddShowTime = ({ show, handleClose, dateAdd, room, theater, onAddSuccess }
         };
         fetch();
     }, [timeStart, film]);
-
 
     useEffect(() => {
         const fetch = () => {

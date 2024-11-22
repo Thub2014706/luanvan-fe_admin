@@ -2,7 +2,7 @@ import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AddNews from '~/components/AddNews/AddNews';
 import ImageBase from '~/components/ImageBase/ImageBase';
 import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
@@ -11,6 +11,8 @@ import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
 import ToggleSwitch from '~/components/ToggleSwitch/ToggleSwitch';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 import { allNews, deleteNews, statusNews } from '~/services/NewsService';
 import { detailStaff } from '~/services/StaffService';
 
@@ -26,13 +28,15 @@ const NewsPage = () => {
     const [action, setAction] = useState(false);
     const [showAdd, setShowAdd] = useState(false);
     const [idUpdate, setIdUpdate] = useState(null);
+    const dispatch = useDispatch();
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleNumber = (num) => {
         setNumber(num);
     };
 
     const handleStatus = async (id) => {
-        await statusNews(id, user?.accessToken);
+        await statusNews(id, user?.accessToken, axiosJWT);
         setAction(true);
     };
 
@@ -62,7 +66,7 @@ const NewsPage = () => {
     };
 
     const handleDelete = async () => {
-        await deleteNews(idDelete, user?.accessToken);
+        await deleteNews(idDelete, user?.accessToken, axiosJWT);
         handleCloseDelete();
     };
 
@@ -135,7 +139,7 @@ const NewsPage = () => {
                                         style={{ width: '80px', height: '100px', objectFit: 'cover' }}
                                     />
                                 </td>
-                                <td className="text-center align-middle" style={{maxWidth: '400px'}}>
+                                <td className="text-center align-middle" style={{ maxWidth: '400px' }}>
                                     <p
                                         dangerouslySetInnerHTML={{
                                             __html: convertToPlainText(truncateText(item.content, 200)),

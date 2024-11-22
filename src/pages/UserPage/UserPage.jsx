@@ -4,13 +4,15 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import Avatar from 'react-avatar';
 import { Col, Row, Table } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ImageBase from '~/components/ImageBase/ImageBase';
 import Pagination from '~/components/Pagination/Pagination';
 import QrUser from '~/components/QrUser/QrUser';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
 import ToggleSwitch from '~/components/ToggleSwitch/ToggleSwitch';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 import { allUser, statusUser } from '~/services/UserService';
 
 const UserPage = () => {
@@ -23,13 +25,15 @@ const UserPage = () => {
     const [action, setAction] = useState(false);
     const [showQr, setShowQr] = useState(false);
     const [qrCode, setQrCode] = useState(null);
+    const dispatch = useDispatch();
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleNumber = (num) => {
         setNumber(num);
     };
 
     const handleStatus = async (id) => {
-        await statusUser(id, user?.accessToken);
+        await statusUser(id, user?.accessToken, axiosJWT);
         setAction(true);
     };
 

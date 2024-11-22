@@ -5,7 +5,7 @@ import ReactPlayer from 'react-player';
 import 'react-quill/dist/quill.snow.css';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import ReactQuill from 'react-quill';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fomarts, modules, standardAge } from '~/constants';
 import { detailDirector, listDirector } from '~/services/DirectorService';
@@ -13,8 +13,10 @@ import { addFilm, detailFilm, updateFilm } from '~/services/FilmService';
 import { detailGenre, listGenre } from '~/services/GenreService';
 import { detailPerformer, listPerformer } from '~/services/PerformerService';
 import ImageBase from '../ImageBase/ImageBase';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 
-const AddFilm = ({id}) => {
+const AddFilm = ({ id }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
     const navigate = useNavigate();
     const [name, setName] = useState('');
@@ -34,6 +36,8 @@ const AddFilm = ({id}) => {
     const [imageId, setImageId] = useState();
     const [trailer, setTrailer] = useState('');
     const [description, setDescription] = useState('');
+    const dispatch = useDispatch();
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     useEffect(() => {
         const fetch = async () => {
@@ -103,11 +107,11 @@ const AddFilm = ({id}) => {
         formData.append('description', description);
 
         if (id) {
-            if (await updateFilm(id, formData, user?.accessToken)) {
+            if (await updateFilm(id, formData, user?.accessToken, axiosJWT)) {
                 navigate('/film');
             }
         } else {
-            if (await addFilm(formData, user?.accessToken)) {
+            if (await addFilm(formData, user?.accessToken, axiosJWT)) {
                 navigate('/film');
             }
         }
@@ -117,7 +121,7 @@ const AddFilm = ({id}) => {
             <CForm>
                 <CRow className="mb-3 mt-5">
                     <CCol>
-                        <h5 className='fw-bold'>{id ? 'Cập nhật' : 'Thêm'} phim</h5>
+                        <h5 className="fw-bold">{id ? 'Cập nhật' : 'Thêm'} phim</h5>
                     </CCol>
                     <CCol>
                         <div className="button add float-end" onClick={handleAdd}>

@@ -2,7 +2,9 @@ import { CCol, CDatePicker, CForm, CFormLabel, CMultiSelect, CRow } from '@coreu
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 import { listFilm } from '~/services/FilmService';
 import { addSchedule, detailSchedule } from '~/services/ScheduleService';
 
@@ -12,6 +14,8 @@ const AddSchedule = ({ show, handleClose, id }) => {
     const [film, setFilm] = useState([]);
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     useEffect(() => {
         const fetch = async () => {
@@ -36,7 +40,7 @@ const AddSchedule = ({ show, handleClose, id }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (id === null) {
-            if (await addSchedule({ film: film[0].value, startDate, endDate }, user?.accessToken)) {
+            if (await addSchedule({ film: film[0].value, startDate, endDate }, user?.accessToken, axiosJWT)) {
                 handleClose()
             }
         }
@@ -49,7 +53,7 @@ const AddSchedule = ({ show, handleClose, id }) => {
                 <Modal.Header>
                     <Modal.Title>{id !== null ? 'Cập nhật' : 'Thêm mới'}</Modal.Title>
                 </Modal.Header>
-                <Modal.Body style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+                <Modal.Body>
                     <div>
                         <CFormLabel className="fw-bold" htmlFor="film">
                             Phim chiếu <span style={{ color: 'red' }}>*</span>

@@ -14,14 +14,16 @@ const Menu = () => {
     const info = useSelector((state) => state.information.data);
 
     useEffect(() => {
-        setSelect(location.pathname); 
+        setSelect(location.pathname);
     }, [location.pathname]);
 
     return (
         <div className="col-menu mt-3" style={{ height: '94vh' }}>
             <div className="my-2" style={{ backgroundColor: 'white', position: 'sticky', top: '15px' }}>
                 {/* <img src={info?.image} className="mx-auto d-block" alt="" style={{ height: '40px' }} /> */}
-                {info && <ImageBase pathImg={info.image} style={{ height: '40px', margin: 'auto', display: 'block' }} />}
+                {info && (
+                    <ImageBase pathImg={info.image} style={{ height: '40px', margin: 'auto', display: 'block' }} />
+                )}
 
                 <hr style={{ width: '80%' }} className="mx-auto" />
             </div>

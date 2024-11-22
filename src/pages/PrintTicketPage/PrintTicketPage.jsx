@@ -2,10 +2,12 @@ import { Html5QrcodeScanner } from 'html5-qrcode';
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useReactToPrint } from 'react-to-print';
 import BillTicket from '~/components/BillTicket/BillTicket';
 import { statusTicket } from '~/constants';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 import { detailFilmBySchedule } from '~/services/FilmService';
 import { detailOrderTicket } from '~/services/OrderTicketService';
 import { addPrintTicket, testPrintTicket } from '~/services/PrintTicketService';
@@ -21,6 +23,8 @@ const PrintTicketPage = () => {
     const [showReader, setShowReader] = useState(false);
     const [idOrder, setIdOrder] = useState('');
     const [order, setOrder] = useState();
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     useEffect(() => {
         if (showReader) {
@@ -56,7 +60,7 @@ const PrintTicketPage = () => {
                     const seats = await Promise.all(data.seat.map(async (item) => await detailSeat(item)));
                     const test = await testPrintTicket(data._id, user?.accessToken);
                     if (test.message === statusTicket[1]) {
-                        await addPrintTicket({ order: data._id }, user?.accessToken);
+                        await addPrintTicket({ order: data._id }, user?.accessToken, axiosJWT);
                     }
                     // console.log(test);
                     setOrder({ data, showTime, film, theater, room, seats, test });

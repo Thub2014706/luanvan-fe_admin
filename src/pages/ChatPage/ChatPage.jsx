@@ -119,8 +119,9 @@ const ChatPage = () => {
                                 backgroundColor: selectUser === item.user._id ? '#d7d7d7' : 'transparent',
                                 padding: '10px',
                             }}
+                            onClick={() => setSelectUser(item.user._id)}
                         >
-                            <div onClick={() => setSelectUser(item.user._id)}>
+                            <div>
                                 <div className="d-flex align-items-center ">
                                     {item.user.avatar ? (
                                         <ImageBase

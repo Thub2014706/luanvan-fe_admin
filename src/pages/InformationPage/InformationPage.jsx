@@ -4,6 +4,8 @@ import ImageBase from '~/components/ImageBase/ImageBase';
 import moment from 'moment-timezone';
 import { addInfomation, detailInfomation } from '~/services/InformationService';
 import { useDispatch, useSelector } from 'react-redux';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 
 const InformationPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -22,6 +24,7 @@ const InformationPage = () => {
     const [imageEncode, setImageEncode] = useState();
     const info = useSelector((state) => state.information.data);
     const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     useEffect(() => {
         const fetch = async () => {
@@ -78,7 +81,7 @@ const InformationPage = () => {
         } else {
             formData.append('image', image);
         }
-        if (await addInfomation(formData, user?.accessToken, dispatch)) {
+        if (await addInfomation(formData, user?.accessToken, dispatch, axiosJWT)) {
             setImage()
         }
     };

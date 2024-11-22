@@ -3,13 +3,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AddDiscount from '~/components/AddDiscount/AddDiscount';
 import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
 import ToggleSwitch from '~/components/ToggleSwitch/ToggleSwitch';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 import { allDiscount, deleteDiscount, statusDiscount } from '~/services/DiscountService';
 
 const DiscountPage = () => {
@@ -25,6 +27,8 @@ const DiscountPage = () => {
     const [action, setAction] = useState(false);
     const [showAdd, setShowAdd] = useState(false);
     const [idUpdate, setIdUpdate] = useState(null);
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleNumber = (num) => {
         setNumber(num);
@@ -61,7 +65,7 @@ const DiscountPage = () => {
     };
 
     const handleDelete = async () => {
-        await deleteDiscount(idDelete, user?.accessToken);
+        await deleteDiscount(idDelete, user?.accessToken, axiosJWT);
         handleCloseDelete();
     };
 
@@ -113,6 +117,8 @@ const DiscountPage = () => {
                             <th>Tên</th>
                             <th>Mã</th>
                             <th>Phần trăm</th>
+                            <th>Tổng đơn tối thiểu</th>
+                            <th>Cấp độ ưu đãi</th>
                             <th>Số lượng</th>
                             <th>Ngày bắt đầu</th>
                             <th>Ngày kết thúc</th>
@@ -127,9 +133,17 @@ const DiscountPage = () => {
                                 <td className="text-center align-middle">{item.name}</td>
                                 <td className="text-center align-middle">{item.code}</td>
                                 <td className="text-center align-middle">{item.percent}%</td>
+                                <td className="text-center align-middle">{item.minium.toLocaleString('it-IT')}đ</td>
+                                <td className="text-center align-middle">
+                                    {item.level === 2 ? 'Cả hai' : item.level === 0 ? 'Member' : 'VIP'}
+                                </td>
                                 <td className="text-center align-middle">{item.quantity}</td>
-                                <td className="text-center align-middle">{moment(item.startDate).format('DD-MM-YYYY')}</td>
-                                <td className="text-center align-middle">{moment(item.endDate).format('DD-MM-YYYY')}</td>
+                                <td className="text-center align-middle">
+                                    {moment(item.startDate).format('DD-MM-YYYY')}
+                                </td>
+                                <td className="text-center align-middle">
+                                    {moment(item.endDate).format('DD-MM-YYYY')}
+                                </td>
                                 {/* <td className="align-content-center">
                                     <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
                                 </td> */}

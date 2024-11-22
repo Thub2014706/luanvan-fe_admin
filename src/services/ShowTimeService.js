@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
-import { axiosJWT } from './StaffService';
+//import { axios } from './StaffService';
 
 export const allShowTime = async (theater, room, date) => {
     try {
@@ -13,7 +13,7 @@ export const allShowTime = async (theater, room, date) => {
     }
 };
 
-export const addShowTime = async (data, token) => {
+export const addShowTime = async (data, token, axiosJWT) => {
     try {
         const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/showtime`, data, {
             headers: {

@@ -10,11 +10,13 @@ import {
     CModalTitle,
 } from '@coreui/react-pro';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addNews, detailNews, updateNews } from '~/services/NewsService';
 import ImageBase from '../ImageBase/ImageBase';
 import ReactQuill from 'react-quill';
 import { fomarts, modules } from '~/constants';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 
 const AddNews = ({ show, handleClose, id }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -24,6 +26,8 @@ const AddNews = ({ show, handleClose, id }) => {
     const [image, setImage] = useState();
     const [imageId, setImageId] = useState();
     const [imageEncode, setImageEncode] = useState();
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleImage = (e) => {
         const newImg = e.target.files[0];
@@ -62,11 +66,11 @@ const AddNews = ({ show, handleClose, id }) => {
             formData.append('image', image);
         }
         if (id) {
-            if (await updateNews(id, formData, user?.accessToken)) {
+            if (await updateNews(id, formData, user?.accessToken, axiosJWT)) {
                 handleClose();
             }
         } else {
-            if (await addNews(formData, user?.accessToken)) {
+            if (await addNews(formData, user?.accessToken, axiosJWT)) {
                 handleClose();
             }
         }

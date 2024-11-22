@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { showToast } from '~/constants';
-import { axiosJWT } from './StaffService';
+//import { axios } from './StaffService';
 
-export const updateRowSeat = async (data, token) => {
+export const updateRowSeat = async (data, token, axiosJWT) => {
     try {
         const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/seat/update-row`, data, {
             headers: { authorization: `Bearer ${token}` },
@@ -25,7 +25,7 @@ export const allSeatRoom = async (room) => {
     }
 };
 
-export const updateSeat = async (id, data, token) => {
+export const updateSeat = async (id, data, token, axiosJWT) => {
     try {
         const response = await axiosJWT.patch(`${process.env.REACT_APP_API_URL}/api/seat/${id}`, data, {
             headers: { authorization: `Bearer ${token}` },
@@ -38,7 +38,7 @@ export const updateSeat = async (id, data, token) => {
     }
 };
 
-export const deleteSeat = async (id, token) => {
+export const deleteSeat = async (id, token, axiosJWT) => {
     try {
         const response = await axiosJWT.patch(
             `${process.env.REACT_APP_API_URL}/api/seat/delete-seat/${id}`,
@@ -75,7 +75,9 @@ export const allHold = async (showTime) => {
 
 export const testHold = async (showTime, seatId) => {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/redis/test-hold?showTime=${showTime}&seatId=${seatId}`);
+        const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/redis/test-hold?showTime=${showTime}&seatId=${seatId}`,
+        );
         return response.data;
     } catch (error) {
         showToast(error.response.data.message, 'error');

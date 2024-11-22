@@ -10,8 +10,10 @@ import {
     CModalTitle,
 } from '@coreui/react-pro';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ImageBase from '~/components/ImageBase/ImageBase';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 import { addFood, detailFood, updateFood } from '~/services/FoodService';
 
 const AddFood = ({ id, show, handleClose }) => {
@@ -21,6 +23,8 @@ const AddFood = ({ id, show, handleClose }) => {
     const [image, setImage] = useState();
     const [imageId, setImageId] = useState();
     const [imageEncode, setImageEncode] = useState();
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleImage = (e) => {
         e.preventDefault();
@@ -57,11 +61,11 @@ const AddFood = ({ id, show, handleClose }) => {
             formData.append('image', image);
         }
         if (id) {
-            if (await updateFood(id, formData, user?.accessToken)) {
+            if (await updateFood(id, formData, user?.accessToken, axiosJWT)) {
                 handleClose();
             }
         } else {
-            if (await addFood(formData, user?.accessToken)) {
+            if (await addFood(formData, user?.accessToken, axiosJWT)) {
                 handleClose();
             }
         }

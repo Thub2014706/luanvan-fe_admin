@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { typeRoom } from '~/constants';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 import { addRoom, detailRoom, updateRoom } from '~/services/RoomService';
 
 const AddRoom = ({ show, handleClose, id, idTheater }) => {
@@ -10,12 +12,14 @@ const AddRoom = ({ show, handleClose, id, idTheater }) => {
     const [numRow, setNumRow] = useState();
     const [numCol, setNumCol] = useState();
     const [type, setType] = useState('');
+    const dispatch = useDispatch();
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     useEffect(() => {
         const fetch = async () => {
             if (id !== null) {
                 console.log(id);
-                
+
                 const data = await detailRoom(id);
                 setName(data.name);
                 setType(data.type);
@@ -34,10 +38,10 @@ const AddRoom = ({ show, handleClose, id, idTheater }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (id !== null) {
-            await updateRoom(id, { name, type, numRow, numCol, theater: idTheater }, user?.accessToken);
+            await updateRoom(id, { name, type, numRow, numCol, theater: idTheater }, user?.accessToken, axiosJWT);
             handleClose();
         } else {
-            await addRoom({ name, type, numRow, numCol, theater: idTheater }, user?.accessToken);
+            await addRoom({ name, type, numRow, numCol, theater: idTheater }, user?.accessToken, axiosJWT);
             handleClose();
         }
     };

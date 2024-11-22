@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import { detailUserByPhone } from '~/services/UserService';
 import { Button } from 'react-bootstrap';
 import { Html5QrcodeScanner } from 'html5-qrcode';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 
 const PayCombo = () => {
     const navigate = useNavigate();
@@ -31,6 +33,7 @@ const PayCombo = () => {
     const timeoutRef = useRef(null);
     const [copyPrice, setCopyPrice] = useState(price);
     const [selectPay, setSelectPay] = useState('cash');
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     useEffect(() => {
         const fetch = async () => {
@@ -98,7 +101,7 @@ const PayCombo = () => {
             if (selectPay === 'momo') {
                 const data = await momoPaymentCombo({ amount: price });
                 console.log(data);
-                
+
                 await addOrderCombo(
                     {
                         idOrder: data.orderId,
@@ -108,9 +111,10 @@ const PayCombo = () => {
                         member: userInfo._id,
                         combo,
                         usePoint: point,
-                        theater: user?.data.theater
+                        theater: user?.data.theater,
                     },
                     user?.accessToken,
+                    axiosJWT,
                 );
                 dispatch(idOrderValue(data.orderId));
                 window.location.href = data.payUrl;
@@ -124,9 +128,10 @@ const PayCombo = () => {
                         member: userInfo._id,
                         combo,
                         usePoint: point,
-                        theater: user?.data.theater
+                        theater: user?.data.theater,
                     },
                     user?.accessToken,
+                    axiosJWT,
                 );
                 if (data) {
                     dispatch(idOrderValue(data.idOrder));

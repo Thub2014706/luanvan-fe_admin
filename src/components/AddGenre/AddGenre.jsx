@@ -10,21 +10,25 @@ import {
     CModalTitle,
 } from '@coreui/react-pro';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 import { addGenre, detailGenre, updateGenre } from '~/services/GenreService';
 
 const AddGenre = ({ show, handleClose, id }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
     const [name, setName] = useState('');
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     // console.log('dd', id);
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (id !== null) {
-            await updateGenre(id, { name }, user?.accessToken);
+            await updateGenre(id, { name }, user?.accessToken, axiosJWT);
             handleClose();
         } else {
-            await addGenre({ name }, user?.accessToken);
+            await addGenre({ name }, user?.accessToken, axiosJWT);
             handleClose();
         }
     };
