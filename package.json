@@ -25,6 +25,7 @@
     "dotenv": "^16.4.5",
     "draft-js": "^0.11.7",
     "file-saver": "^2.0.5",
+    "google-map-react": "^2.2.1",
     "html5-qrcode": "^2.2.7",
     "install": "^0.13.0",
     "isomorphic-unfetch": "^4.0.2",

@@ -8,7 +8,9 @@ import { allGenre, deleteGenre } from '~/services/GenreService';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 
 const GenrePage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -22,6 +24,8 @@ const GenrePage = () => {
     const [idUpdate, setIdUpdate] = useState(null);
     const [nameDelete, setNameDelete] = useState(null);
     const [numberPage, setNumberPage] = useState(5);
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleNumber = (num) => {
         setNumber(num);
@@ -54,7 +58,7 @@ const GenrePage = () => {
     };
 
     const handleDelete = async () => {
-        await deleteGenre(idDelete, user?.accessToken);
+        await deleteGenre(idDelete, user?.accessToken, axiosJWT);
         handleCloseDelete();
     };
 

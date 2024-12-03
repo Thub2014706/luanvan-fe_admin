@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AddSchedule from '~/components/AddSchedule/AddSchedule';
 import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
 import Name from '~/components/Name/Name';
@@ -11,8 +11,10 @@ import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
 import { statusShowTime } from '~/constants';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 import { detailFilm } from '~/services/FilmService';
-import { allSchedule } from '~/services/ScheduleService';
+import { allSchedule, deleteSchedule } from '~/services/ScheduleService';
 
 const SchedulePage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -26,6 +28,8 @@ const SchedulePage = () => {
     const [numberPage, setNumberPage] = useState(5);
     const [showAdd, setShowAdd] = useState(false);
     const [idAdd, setIdAdd] = useState(null);
+    const dispatch = useDispatch();
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleNumber = (num) => {
         setNumber(num);
@@ -55,8 +59,8 @@ const SchedulePage = () => {
     };
 
     const handleDelete = async () => {
-        // await de(idDelete, user?.accessToken);
-        // handleCloseDelete();
+        await deleteSchedule(idDelete, user?.accessToken, axiosJWT);
+        handleCloseDelete();
     };
 
     const handleShowAdd = (id) => {

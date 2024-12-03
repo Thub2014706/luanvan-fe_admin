@@ -37,7 +37,7 @@ export const deleteRoom = async (id, token, axiosJWT) => {
         );
         showToast('Xóa thành công', 'success');
     } catch (error) {
-        showToast('Xóa không thành công', 'error');
+        showToast(error.response.data.message, 'error');
         console.log(error);
     }
 };

@@ -108,6 +108,7 @@ body {
 
 .number-chair {
     background-color: aqua;
+    // background-color: rgb(255, 122, 122);
     border-radius: 5px;
     width: 50px;
 }
@@ -170,6 +171,10 @@ body {
 
     &.inactive {
         background: linear-gradient(#9ea2ac, #8b91a4);
+    }
+
+    &.none {
+        background: linear-gradient(#ac95d2, #94acdc);
     }
 }
 

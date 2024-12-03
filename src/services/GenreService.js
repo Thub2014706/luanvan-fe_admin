@@ -34,7 +34,7 @@ export const deleteGenre = async (id, token, axiosJWT) => {
         showToast('Xóa thành công', 'success');
     } catch (error) {
         showToast('Xóa không thành công', 'error');
-        console.log(error);
+        console.log(error, id, token);
     }
 };
 

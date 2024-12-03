@@ -11,12 +11,13 @@ import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
 import { Link, useNavigate } from 'react-router-dom';
 import { allPerformer, deletePerformer } from '~/services/PerformerService';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AddPerformer from '~/components/AddPerformer/AddPerformer';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 
 const PerformerPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
-    const navigate = useNavigate();
     const [performers, setPerformers] = useState([]);
     const [search, setSearch] = useState('');
     const [number, setNumber] = useState(1);
@@ -27,6 +28,8 @@ const PerformerPage = () => {
     const [nameDelete, setNameDelete] = useState(null);
     const [showAdd, setShowAdd] = useState(false);
     const [idUpdate, setIdUpdate] = useState(null);
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     useEffect(() => {
         const fetch = async () => {
@@ -60,7 +63,7 @@ const PerformerPage = () => {
     };
 
     const handleDelete = async () => {
-        await deletePerformer(idDelete, user?.accessToken);
+        await deletePerformer(idDelete, user?.accessToken, axiosJWT);
         handleCloseDelete();
     };
 

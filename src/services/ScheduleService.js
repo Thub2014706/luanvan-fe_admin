@@ -67,3 +67,20 @@ export const listScheduleNotScreened = async (search) => {
         console.log('loi', error);
     }
 };
+
+export const deleteSchedule = async (id, token, axiosJWT) => {
+    try {
+        const response = await axiosJWT.patch(
+            `${process.env.REACT_APP_API_URL}/api/schedule/delete-schedule/${id}`,
+            {},
+            {
+                headers: { authorization: `Bearer ${token}` },
+            },
+        );
+        showToast('Xóa thành công', 'success');
+        return response.data;
+    } catch (error) {
+        showToast(error.response.data.message, 'error');
+        console.log('loi', error);
+    }
+};

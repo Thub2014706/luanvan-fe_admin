@@ -178,11 +178,12 @@ const StaffPage = () => {
                                     <ToggleSwitch
                                         status={item.status}
                                         handleClick={() => item.role !== 0 && handleStatus(item._id)}
+                                        none={item.role === 0}
                                     />
                                 </td>
                                 <td className="text-center align-middle">
                                     <FontAwesomeIcon
-                                        color="red"
+                                        color={item.role !== 0 ? 'red' : 'rgb(255, 133, 133)'}
                                         onClick={() => handleShowDelete(item._id, item.username)}
                                         icon={faTrashCan}
                                         style={{ cursor: 'pointer' }}

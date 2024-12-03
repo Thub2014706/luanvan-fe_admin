@@ -70,3 +70,16 @@ export const soldOutSeat = async (showTime, room) => {
         console.log('loi', error);
     }
 };
+
+export const deleteShowTime = async (id, token, axiosJWT) => {
+    try {
+        const response = await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/api/showtime/delete-showtime/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+        });
+        showToast('Xóa thành công', 'success');
+        return response.data;
+    } catch (error) {
+        showToast(error.response.data.message, 'error');
+        console.log('loi', error);
+    }
+};

@@ -14,7 +14,7 @@ const UpdateSeat = ({ show, handleClose, id }) => {
     const [row, setRow] = useState();
     const [left, setLeft] = useState(0);
     const [right, setRight] = useState(0);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     useEffect(() => {
@@ -38,7 +38,7 @@ const UpdateSeat = ({ show, handleClose, id }) => {
     };
 
     const handleDelete = async () => {
-        await deleteSeat(id, user?.accessToken);
+        await deleteSeat(id, user?.accessToken, axiosJWT);
         handleClose();
     };
 

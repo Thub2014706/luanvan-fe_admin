@@ -7,8 +7,10 @@ import ModalQuestion from '../../components/ModalQuestion/ModalQuestion';
 import { allRoom, deleteRoom, statusRoom } from '~/services/RoomService';
 import AddRoom from '../../components/AddRoom/AddRoom';
 import SeatGrid from '../../components/SeatGrid/SeatGrid';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { createAxios } from '~/createInstance';
+import { loginSuccess } from '~/features/auth/authSlice';
 
 const RoomPage = () => {
     const { id } = useParams();
@@ -22,9 +24,11 @@ const RoomPage = () => {
     const [idUpdate, setIdUpdate] = useState(null);
     const [showSeat, setShowSeat] = useState(false);
     const [idRoomSeat, setIdRoomSeat] = useState(null);
+    const dispatch = useDispatch()
+    let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleStatus = async (id) => {
-        await statusRoom(id, user?.accessToken);
+        await statusRoom(id, user?.accessToken, axiosJWT);
         setAction(true);
     };
 
@@ -45,7 +49,7 @@ const RoomPage = () => {
     };
 
     const handleDelete = async () => {
-        await deleteRoom(idDelete, user?.accessToken);
+        await deleteRoom(idDelete, user?.accessToken, axiosJWT);
         handleCloseDelete();
     };
 
