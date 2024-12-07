@@ -4,13 +4,14 @@ import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
 import AddGenre from '~/components/AddGenre/AddGenre';
 import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
-import { allGenre, deleteGenre } from '~/services/GenreService';
+import { allGenre, deleteGenre, statusGenre } from '~/services/GenreService';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '~/createInstance';
 import { loginSuccess } from '~/features/auth/authSlice';
+import ToggleSwitch from '~/components/ToggleSwitch/ToggleSwitch';
 
 const GenrePage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -25,6 +26,7 @@ const GenrePage = () => {
     const [nameDelete, setNameDelete] = useState(null);
     const [numberPage, setNumberPage] = useState(5);
     const dispatch = useDispatch()
+    const [action, setAction] = useState(false);
     let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleNumber = (num) => {
@@ -36,6 +38,15 @@ const GenrePage = () => {
         setNumber(1);
     };
 
+    const handleStatus = async (id) => {
+        await statusGenre(id, user?.accessToken, axiosJWT);
+        setAction(true);
+    };
+
+    useEffect(() => {
+        setAction(false);
+    }, [action]);
+
     useEffect(() => {
         const fetch = async () => {
             const data = await allGenre(search, number, numberPage);
@@ -43,7 +54,7 @@ const GenrePage = () => {
             setLength(data.length);
         };
         fetch();
-    }, [idDelete, showAdd, search, number, numberPage]);
+    }, [idDelete, showAdd, action, search, number, numberPage]);
 
     const handleShowDelete = (id, name) => {
         setShowDelete(true);
@@ -103,6 +114,7 @@ const GenrePage = () => {
                         <tr className="text-center">
                             <th>STT</th>
                             <th>Thể loại</th>
+                            <th>Trạng thái</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
@@ -111,6 +123,9 @@ const GenrePage = () => {
                             <tr key={item._id}>
                                 <td className="text-center">{index + 1}</td>
                                 <td>{item.name}</td>
+                                <td className="align-content-center">
+                                    <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
+                                </td>
                                 <td className="text-center">
                                     <FontAwesomeIcon
                                         className="me-4"

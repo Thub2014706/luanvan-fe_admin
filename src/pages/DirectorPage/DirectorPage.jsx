@@ -9,16 +9,18 @@ import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
-import { allDirector, deleteDirector } from '~/services/DirectorService';
+import { allDirector, deleteDirector, statusDirector } from '~/services/DirectorService';
 import { useDispatch, useSelector } from 'react-redux';
 import AddDirector from '~/components/AddDirector/AddDirector';
 import { createAxios } from '~/createInstance';
 import { loginSuccess } from '~/features/auth/authSlice';
+import ToggleSwitch from '~/components/ToggleSwitch/ToggleSwitch';
 
 const DirectorPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
     const [directors, setDirectors] = useState([]);
     const [search, setSearch] = useState('');
+    const [action, setAction] = useState(false);
     const [number, setNumber] = useState(1);
     const [numberPage, setNumberPage] = useState(5);
     const [length, setLength] = useState(0);
@@ -27,7 +29,7 @@ const DirectorPage = () => {
     const [nameDelete, setNameDelete] = useState(null);
     const [showAdd, setShowAdd] = useState(false);
     const [idUpdate, setIdUpdate] = useState(null);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     useEffect(() => {
@@ -37,12 +39,21 @@ const DirectorPage = () => {
             setLength(data.sumPage);
         };
         fetch();
-    }, [number, idDelete, numberPage, search, showAdd]);
+    }, [number, idDelete, action, numberPage, search, showAdd]);
 
     const handleNumberPage = (value) => {
         setNumberPage(value);
         setNumber(1);
     };
+
+    const handleStatus = async (id) => {
+        await statusDirector(id, user?.accessToken, axiosJWT);
+        setAction(true);
+    };
+
+    useEffect(() => {
+        setAction(false);
+    }, [action]);
 
     const handleSearch = (value) => {
         setSearch(value);
@@ -108,6 +119,7 @@ const DirectorPage = () => {
                             <th>Avatar</th>
                             <th>Tên</th>
                             <th>Ngày sinh</th>
+                            <th>Trạng thái</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
@@ -133,6 +145,9 @@ const DirectorPage = () => {
                                 <td className="text-center align-middle">{item.name}</td>
                                 <td className="text-center align-middle">
                                     {item.birth && moment(item.birth).format('DD-MM-YYYY')}
+                                </td>
+                                <td className="align-content-center">
+                                    <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
                                 </td>
                                 <td className="text-center align-middle">
                                     <FontAwesomeIcon

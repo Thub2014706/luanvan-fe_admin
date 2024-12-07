@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row, Table } from 'react-bootstrap';
+import { Breadcrumb, Col, Row, Table } from 'react-bootstrap';
 import ToggleSwitch from '../../components/ToggleSwitch/ToggleSwitch';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faCouch, faPenToSquare, faTableCells, faTrashCan } from '@fortawesome/free-solid-svg-icons';
@@ -24,7 +24,7 @@ const RoomPage = () => {
     const [idUpdate, setIdUpdate] = useState(null);
     const [showSeat, setShowSeat] = useState(false);
     const [idRoomSeat, setIdRoomSeat] = useState(null);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleStatus = async (id) => {
@@ -83,6 +83,10 @@ const RoomPage = () => {
 
     return (
         <div className="p-4">
+            <Breadcrumb>
+                <Breadcrumb.Item onClick={() => window.history.back()}>Danh sách rạp</Breadcrumb.Item>
+                <Breadcrumb.Item active>Danh sách phòng chiếu</Breadcrumb.Item>
+            </Breadcrumb>
             <Row className="mb-4">
                 <Col>
                     <h5 className="fw-bold">Danh sách phòng chiếu</h5>

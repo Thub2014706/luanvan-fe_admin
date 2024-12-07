@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import AddFilm from '~/components/AddFilm/AddFilm';
 import AllComment from '~/components/AllComment/AllComment';
 import { listCommentByFilm } from '~/services/CommentService';
+import { Breadcrumb } from 'react-bootstrap';
 
 const AddFilmPage = () => {
     const { id } = useParams();
@@ -36,7 +37,11 @@ const AddFilmPage = () => {
 
     return (
         <div className="p-4">
-            <h5 className="mb-4 fw-bold">Phim</h5>
+            <h5 className="mb-3 fw-bold">Phim</h5>
+            <Breadcrumb>
+                <Breadcrumb.Item onClick={() => window.history.back()}>Danh sách phim</Breadcrumb.Item>
+                <Breadcrumb.Item active>{id ? 'Chi tiết phim' : 'Thêm phim'}</Breadcrumb.Item>
+            </Breadcrumb>
             {id ? (
                 <div>
                     <CRow>

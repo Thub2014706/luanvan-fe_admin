@@ -119,7 +119,7 @@ const AddFilm = ({ id }) => {
     return (
         <div>
             <CForm>
-                <CRow className="mb-3 mt-5">
+                <CRow className="mb-3 mt-4">
                     <CCol>
                         <h5 className="fw-bold">{id ? 'Cập nhật' : 'Thêm'} phim</h5>
                     </CCol>
@@ -230,6 +230,7 @@ const AddFilm = ({ id }) => {
                                 label: item.name,
                                 selected: genre.some((mini) => mini.value === item._id),
                             }))}
+                            virtualScroller
                         />
                     </CCol>
                     <CCol>
@@ -247,6 +248,7 @@ const AddFilm = ({ id }) => {
                                 label: item.name,
                                 selected: director.some((mini) => mini.value === item._id),
                             }))}
+                            virtualScroller
                         />
                     </CCol>
                     <CCol>
@@ -264,6 +266,7 @@ const AddFilm = ({ id }) => {
                                 label: item.name,
                                 selected: performer.some((mini) => mini.value === item._id),
                             }))}
+                            virtualScroller
                         />
                     </CCol>
                 </CRow>

@@ -33,7 +33,7 @@ export const deleteGenre = async (id, token, axiosJWT) => {
         });
         showToast('Xóa thành công', 'success');
     } catch (error) {
-        showToast('Xóa không thành công', 'error');
+        showToast(error.response.data.message, 'error');
         console.log(error, id, token);
     }
 };
@@ -63,6 +63,21 @@ export const addGenre = async (data, token, axiosJWT) => {
 export const listGenre = async () => {
     try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/genre/list`);
+        return response.data;
+    } catch (error) {
+        console.log('loi', error);
+    }
+};
+
+export const statusGenre = async (id, token, axiosJWT) => {
+    try {
+        const response = await axiosJWT.patch(
+            `${process.env.REACT_APP_API_URL}/api/genre/status/${id}`,
+            {},
+            {
+                headers: { authorization: `Bearer ${token}` },
+            },
+        );
         return response.data;
     } catch (error) {
         console.log('loi', error);

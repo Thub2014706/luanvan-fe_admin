@@ -71,6 +71,8 @@ const AddSchedule = ({ show, handleClose, id }) => {
                             // value={film}
                             onChange={(value) => setFilm(value)}
                             placeholder="Phim chiếu"
+                            virtualScroller
+                            // style={{height: '100px'}}
                         />
                     </div>
 

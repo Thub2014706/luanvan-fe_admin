@@ -10,11 +10,12 @@ import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
 import { Link, useNavigate } from 'react-router-dom';
-import { allPerformer, deletePerformer } from '~/services/PerformerService';
+import { allPerformer, deletePerformer, statusPerformer } from '~/services/PerformerService';
 import { useDispatch, useSelector } from 'react-redux';
 import AddPerformer from '~/components/AddPerformer/AddPerformer';
 import { createAxios } from '~/createInstance';
 import { loginSuccess } from '~/features/auth/authSlice';
+import ToggleSwitch from '~/components/ToggleSwitch/ToggleSwitch';
 
 const PerformerPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -28,8 +29,9 @@ const PerformerPage = () => {
     const [nameDelete, setNameDelete] = useState(null);
     const [showAdd, setShowAdd] = useState(false);
     const [idUpdate, setIdUpdate] = useState(null);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     let axiosJWT = createAxios(user, dispatch, loginSuccess);
+    const [action, setAction] = useState(false);
 
     useEffect(() => {
         const fetch = async () => {
@@ -38,7 +40,16 @@ const PerformerPage = () => {
             setLength(data.sumPage);
         };
         fetch();
-    }, [number, idDelete, numberPage, search, showAdd]);
+    }, [number, idDelete, action, numberPage, search, showAdd]);
+
+    const handleStatus = async (id) => {
+        await statusPerformer(id, user?.accessToken, axiosJWT);
+        setAction(true);
+    };
+
+    useEffect(() => {
+        setAction(false);
+    }, [action]);
 
     const handleNumberPage = (value) => {
         setNumberPage(value);
@@ -109,6 +120,7 @@ const PerformerPage = () => {
                             <th>Avatar</th>
                             <th>Tên</th>
                             <th>Ngày sinh</th>
+                            <th>Trạng thái</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
@@ -134,6 +146,9 @@ const PerformerPage = () => {
                                 <td className="text-center align-middle">{item.name}</td>
                                 <td className="text-center align-middle">
                                     {item.birth && moment(item.birth).format('DD-MM-YYYY')}
+                                </td>
+                                <td className="align-content-center">
+                                    <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
                                 </td>
                                 <td className="text-center align-middle">
                                     <FontAwesomeIcon

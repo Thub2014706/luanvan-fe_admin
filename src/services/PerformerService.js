@@ -61,7 +61,7 @@ export const deletePerformer = async (id, token, axiosJWT) => {
         });
         showToast('Xóa thành công', 'success');
     } catch (error) {
-        showToast('Xóa không thành công', 'error');
+        showToast(error.response.data.message, 'error');
         console.log(error);
     }
 };
@@ -72,5 +72,20 @@ export const listPerformer = async () => {
         return response.data;
     } catch (error) {
         console.log(error);
+    }
+};
+
+export const statusPerformer = async (id, token, axiosJWT) => {
+    try {
+        const response = await axiosJWT.patch(
+            `${process.env.REACT_APP_API_URL}/api/performer/status/${id}`,
+            {},
+            {
+                headers: { authorization: `Bearer ${token}` },
+            },
+        );
+        return response.data;
+    } catch (error) {
+        console.log('loi', error);
     }
 };

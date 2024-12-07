@@ -36,10 +36,10 @@ const ComboPage = () => {
         setNumber(num);
     };
 
-    // const handleStatus = async (id) => {
-    //     await statusCombo(id, user?.accessToken);
-    //     setAction(true);
-    // };
+    const handleStatus = async (id) => {
+        await statusCombo(id, user?.accessToken, axiosJWT);
+        setAction(true);
+    };
 
     useEffect(() => {
         setAction(false);
@@ -120,7 +120,7 @@ const ComboPage = () => {
                             <th>TênCombo</th>
                             <th>Chi tiết</th>
                             <th>Giá tiền</th>
-                            {/* <th>Trạng thái</th> */}
+                            <th>Trạng thái</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
@@ -145,9 +145,9 @@ const ComboPage = () => {
                                     {item.price.toLocaleString('it-IT')}
                                     <span>&#8363;</span>
                                 </td>
-                                {/* <td className="align-content-center">
+                                <td className="align-content-center">
                                     <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
-                                </td> */}
+                                </td>
                                 <td className="text-center align-middle">
                                     <FontAwesomeIcon
                                         className="me-4"

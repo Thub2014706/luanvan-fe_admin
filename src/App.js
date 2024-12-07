@@ -14,7 +14,8 @@ import { jwtDecode } from 'jwt-decode';
 function App() {
     // const isAuthenticated = false;
     const user = useSelector((state) => state.auth.login.currentUser);
-    const idOrder = useSelector((state) => state.showTime.idOrder);
+    const idOrderTicket = useSelector((state) => state.showTime.idOrder);
+    const idOrderCombo = useSelector((state) => state.comboCart.idOrder);
     console.log('aaa', user);
     const dispatch = useDispatch();
 
@@ -104,18 +105,23 @@ function App() {
                                     </Fragment>
                                 ) : user ? (
                                     (user.data.role === 0 &&
-                                        route.path !== '/book-tickets' &&
-                                        route.path !== '/order-food') ||
+                                        ![
+                                            '/book-tickets',
+                                            '/order-food',
+                                            '/print-ticket',
+                                            '/scan-ticket',
+                                            '/book-tickets/success',
+                                            '/order-food/success',
+                                        ].includes(route.path)) ||
                                     route.path === '/' ||
                                     itemMenu.some(
                                         (item) =>
-                                            (route.path.startsWith(item.link) &&
-                                                user.data.access.includes(item.name) &&
-                                                route.path !== '/book-tickets/success' &&
+                                            route.path.startsWith(item.link) &&
+                                            user.data.access.includes(item.name) &&
+                                            ((route.path !== '/book-tickets/success' &&
                                                 route.path !== '/order-food/success') ||
-                                            ((route.path === '/book-tickets/success' ||
-                                                route.path === '/order-food/success') &&
-                                                idOrder !== null),
+                                                (route.path === '/book-tickets/success' && idOrderTicket !== null) ||
+                                                (route.path === '/order-food/success' && idOrderCombo !== null)),
                                     ) ? (
                                         <MainLayout>
                                             <route.component />

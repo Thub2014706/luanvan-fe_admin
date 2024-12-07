@@ -31,7 +31,10 @@ const Menu = () => {
                 {itemMenu.map(
                     (item, index) =>
                         (user.data.access.includes(item.name) ||
-                            (user.data.role === 0 && item.link !== '/book-tickets' && item.link !== '/order-food')) && (
+                            (user.data.role === 0 &&
+                                !['/book-tickets', '/order-food', '/print-ticket', '/scan-ticket'].includes(
+                                    item.link,
+                                ))) && (
                             <Link key={index} to={item.link} className="text-decoration-none">
                                 <div
                                     className={`mx-2 align-items-center item-menu ${

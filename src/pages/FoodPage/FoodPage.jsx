@@ -9,9 +9,10 @@ import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import ShowPage from '~/components/ShowPage/ShowPage';
+import ToggleSwitch from '~/components/ToggleSwitch/ToggleSwitch';
 import { createAxios } from '~/createInstance';
 import { loginSuccess } from '~/features/auth/authSlice';
-import { allFood, deleteFood } from '~/services/FoodService';
+import { allFood, deleteFood, statusFood } from '~/services/FoodService';
 
 const FoodPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -33,10 +34,10 @@ const FoodPage = () => {
         setNumber(num);
     };
 
-    // const handleStatus = async (id) => {
-    //     await statusFood(id, user?.accessToken);
-    //     setAction(true);
-    // };
+    const handleStatus = async (id) => {
+        await statusFood(id, user?.accessToken, axiosJWT);
+        setAction(true);
+    };
 
     useEffect(() => {
         setAction(false);
@@ -116,7 +117,7 @@ const FoodPage = () => {
                             <th>Hình ảnh</th>
                             <th>Tên</th>
                             <th>Giá tiền</th>
-                            {/* <th>Trạng thái</th> */}
+                            <th>Trạng thái</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
@@ -132,9 +133,9 @@ const FoodPage = () => {
                                     {item.price.toLocaleString('it-IT')}
                                     <span>&#8363;</span>
                                 </td>
-                                {/* <td className="align-content-center">
+                                <td className="align-content-center">
                                     <ToggleSwitch status={item.status} handleClick={() => handleStatus(item._id)} />
-                                </td> */}
+                                </td>
                                 <td className="text-center align-middle">
                                     <FontAwesomeIcon
                                         className="me-4"
