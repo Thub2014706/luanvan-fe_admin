@@ -83,7 +83,7 @@ const UpdateSeat = ({ show, handleClose, id }) => {
                         />
                     </Form.Group>
 
-                    <Form.Group className="mt-3">
+                    {/* <Form.Group className="mt-3">
                         <Form.Label className="fw-bold">Căn phải</Form.Label>
                         <Form.Control
                             name="right"
@@ -91,7 +91,7 @@ const UpdateSeat = ({ show, handleClose, id }) => {
                             type="number"
                             onChange={(e) => setRight(Math.max(e.target.value, 0))}
                         />
-                    </Form.Group>
+                    </Form.Group> */}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="danger" onClick={handleDelete}>

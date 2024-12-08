@@ -253,7 +253,7 @@ const AddFilm = ({ id }) => {
                     </CCol>
                     <CCol>
                         <CFormLabel className="fw-bold" htmlFor="performer">
-                            Diễn viên <span style={{ color: 'red' }}>*</span>
+                            Diễn viên
                         </CFormLabel>
                         <CMultiSelect
                             id="performer"
