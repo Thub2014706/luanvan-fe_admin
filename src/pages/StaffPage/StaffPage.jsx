@@ -15,6 +15,7 @@ import ToggleSwitch from '~/components/ToggleSwitch/ToggleSwitch';
 import { createAxios } from '~/createInstance';
 import { loginSuccess } from '~/features/auth/authSlice';
 import { allStaff, deleteStaff, statusStaff } from '~/services/StaffService';
+import { detailTheater } from '~/services/TheaterService';
 
 const StaffPage = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -30,7 +31,7 @@ const StaffPage = () => {
     const [showAdd, setShowAdd] = useState(false);
     const [showAccess, setShowAccess] = useState(false);
     const [idAccess, setIdAccess] = useState(null);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleNumber = (num) => {
@@ -49,7 +50,17 @@ const StaffPage = () => {
     useEffect(() => {
         const fetch = async () => {
             const data = await allStaff(search, number, numberPage);
-            setStaff(data.data);
+            const dataFinal = await Promise.all(
+                data.data.map(async (item) => {
+                    if (item.role === 1) {
+                        const theater = await detailTheater(item.theater);
+                        console.log(theater);
+
+                        return { ...item, theater: theater.name };
+                    } else return item;
+                }),
+            );
+            setStaff(dataFinal);
             setSumPage(data.sumPage);
         };
         fetch();
@@ -129,6 +140,7 @@ const StaffPage = () => {
                             <th>Tên</th>
                             <th>Email</th>
                             <th>Số điện thoại</th>
+                            <th>Rạp</th>
                             <th>Vai trò</th>
                             <th>Quyền truy cập</th>
                             <th>Trạng thái</th>
@@ -157,6 +169,7 @@ const StaffPage = () => {
                                 <td className="text-center align-middle">{item.username}</td>
                                 <td className="text-center align-middle">{item.email}</td>
                                 <td className="text-center align-middle">{item.phone}</td>
+                                <td className="text-center align-middle">{item.theater}</td>
                                 <td className="text-center align-middle">{item.role === 0 ? 'Admin' : 'Nhân viên'}</td>
                                 <td
                                     className="text-center align-middle"

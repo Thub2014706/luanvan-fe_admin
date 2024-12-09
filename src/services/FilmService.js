@@ -95,3 +95,15 @@ export const listFilm = async () => {
         console.log('loi', error);
     }
 };
+
+export const deleteFilm = async (id, token, axiosJWT) => {
+    try {
+        await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/api/film/delete/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+        });
+        showToast('Xóa thành công', 'success');
+    } catch (error) {
+        showToast(error.response.data.message, 'error');
+        console.log(error, id, token);
+    }
+};

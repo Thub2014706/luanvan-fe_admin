@@ -67,7 +67,7 @@ const RefundedTicket = ({ theater, number, setNumber }) => {
                 </Col>
                 <Col>
                     <div className="button add float-end" style={{ width: '120px' }} onClick={handlExport}>
-                        Xuất báo cáo
+                        Tải xuống Excel
                     </div>
                 </Col>
             </Row>

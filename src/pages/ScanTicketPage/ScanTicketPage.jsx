@@ -59,14 +59,14 @@ const ScanTicketPage = () => {
                     const theater = await detailTheater(showTime.theater);
                     const room = await detailRoom(showTime.room);
                     const seats = await Promise.all(data1.seat.map(async (item) => await detailSeat(item)));
-                    const test = await testScanTicket(data1._id, user?.accessToken, axiosJWT);
+                    const test = await testScanTicket(data1._id, user?.accessToken, axiosJWT, user.data.id);
                     if (test.message === statusTicket[1]) {
                         await addScanTicket({ order: data1._id, type: 'OrderTicket' }, user?.accessToken, axiosJWT);
                     }
                     setOrderTicket({ data: data1, showTime, film, theater, room, seats, test });
                 } else if (data2) {
                     const theater = await detailTheater(data2.theater);
-                    const test = await testScanTicket(data2._id, user?.accessToken, axiosJWT);
+                    const test = await testScanTicket(data2._id, user?.accessToken, axiosJWT, user.data.id);
                     if (test.message === statusTicket[1]) {
                         await addScanTicket({ order: data2._id, type: 'OrderCombo' }, user?.accessToken, axiosJWT);
                     }

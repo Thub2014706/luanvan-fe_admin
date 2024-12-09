@@ -14,9 +14,9 @@ export const addScanTicket = async (order, token, axiosJWT) => {
     }
 };
 
-export const testScanTicket = async (order, token, axiosJWT) => {
+export const testScanTicket = async (order, token, axiosJWT, staff) => {
     try {
-        const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/scan-ticket/test/${order}`, {
+        const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/scan-ticket/test/${order}?staff=${staff}`, {
             headers: { authorization: `Bearer ${token}` },
         });
         return response.data;

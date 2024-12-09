@@ -1,4 +1,4 @@
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
@@ -6,6 +6,7 @@ import { Col, Row, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import ImageBase from '~/components/ImageBase/ImageBase';
+import ModalQuestion from '~/components/ModalQuestion/ModalQuestion';
 import Name from '~/components/Name/Name';
 import Pagination from '~/components/Pagination/Pagination';
 import SearchBar from '~/components/SearchBar/SearchBar';
@@ -13,7 +14,7 @@ import ShowPage from '~/components/ShowPage/ShowPage';
 import ToggleSwitch from '~/components/ToggleSwitch/ToggleSwitch';
 import { createAxios } from '~/createInstance';
 import { loginSuccess } from '~/features/auth/authSlice';
-import { allFilm, statusFilm } from '~/services/FilmService';
+import { allFilm, deleteFilm, statusFilm } from '~/services/FilmService';
 import { detailGenre } from '~/services/GenreService';
 
 const FilmPage = () => {
@@ -25,7 +26,10 @@ const FilmPage = () => {
     const [sumPage, setSumPage] = useState(0);
     const [numberPage, setNumberPage] = useState(5);
     const [action, setAction] = useState(false);
-    const dispatch = useDispatch()
+    const [showDelete, setShowDelete] = useState(false);
+    const [nameDelete, setNameDelete] = useState(null);
+    const [idDelete, setIdDelete] = useState(null);
+    const dispatch = useDispatch();
     let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
     const handleStatus = async (id) => {
@@ -36,6 +40,23 @@ const FilmPage = () => {
     useEffect(() => {
         setAction(false);
     }, [action]);
+
+    const handleShowDelete = (id, name) => {
+        setShowDelete(true);
+        setIdDelete(id);
+        setNameDelete(name);
+    };
+
+    const handleCloseDelete = () => {
+        setShowDelete(false);
+        setIdDelete(null);
+        setNameDelete(null);
+    };
+
+    const handleDelete = async () => {
+        await deleteFilm(idDelete, user?.accessToken, axiosJWT);
+        handleCloseDelete();
+    };
 
     useEffect(() => {
         const fetchFilms = async () => {
@@ -137,8 +158,15 @@ const FilmPage = () => {
                                             color="green"
                                             style={{ cursor: 'pointer' }}
                                             // onClick={() => handleShowAdd(item._id)}
+                                            className="me-4"
                                         />
                                     </Link>
+                                    <FontAwesomeIcon
+                                        color="red"
+                                        onClick={() => handleShowDelete(item._id, item.name)}
+                                        icon={faTrashCan}
+                                        style={{ cursor: 'pointer' }}
+                                    />
                                 </td>
                             </tr>
                         ))}
@@ -148,6 +176,20 @@ const FilmPage = () => {
             <Row>
                 <Pagination length={sumPage} selectNumber={handleNumber} currentPage={number} />
             </Row>
+            {idDelete !== null && (
+                <ModalQuestion
+                    text={
+                        <span>
+                            Bạn có chắc muốn xóa <strong>{nameDelete}</strong>?
+                        </span>
+                    }
+                    accept="Đồng ý"
+                    cancel="Hủy"
+                    show={showDelete}
+                    handleAction={handleDelete}
+                    handleClose={handleCloseDelete}
+                />
+            )}
         </div>
     );
 };

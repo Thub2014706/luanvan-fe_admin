@@ -58,7 +58,7 @@ const PrintTicketPage = () => {
                     const theater = await detailTheater(showTime.theater);
                     const room = await detailRoom(showTime.room);
                     const seats = await Promise.all(data.seat.map(async (item) => await detailSeat(item)));
-                    const test = await testPrintTicket(data._id, user?.accessToken, axiosJWT);
+                    const test = await testPrintTicket(data._id, user?.accessToken, axiosJWT, user?.data.id);
                     if (test.message === statusTicket[1]) {
                         await addPrintTicket({ order: data._id }, user?.accessToken, axiosJWT);
                     }
