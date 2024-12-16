@@ -57,8 +57,8 @@ const DetailShowTime = ({ props, theater, room, date, onAddSuccess }) => {
     };
 
     const handleDelete = async () => {
-        await deleteShowTime(idDelete, user?.accessToken, axiosJWT);
-        setDetailProps((prev) => prev.filter((item) => item._id !== idDelete));
+        const data = await deleteShowTime(idDelete, user?.accessToken, axiosJWT);
+        data && setDetailProps((prev) => prev.filter((item) => item._id !== idDelete));
         handleCloseDelete();
     };
 
